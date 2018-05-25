@@ -1,0 +1,276 @@
+body
+{
+    font-family: 'Rockwell Regular';
+}
+
+a
+{
+    text-decoration: none;
+
+    color: inherit;
+}
+
+#navigation
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: calc(100% - 60px);
+    padding: 10px 30px;
+
+    background: #151515;
+}
+
+nav
+{
+    float: right;
+
+    margin-top: 3px;
+
+    vertical-align: top;
+
+    color: white;
+}
+
+nav ul
+{
+    list-style-type: none;
+}
+
+nav li
+{
+    font-size: 12pt;
+
+    display: inline;
+
+    padding: 0 15px;
+}
+
+nav li a:hover
+{
+    color: gray;
+}
+
+#page_content
+{
+    position: absolute;
+    top: 75px;
+    left: 0;
+
+    width: 100%;
+}
+
+#banner
+{
+    display: table;
+
+    width: 100%;
+    height: calc(100px + 20vw);
+    min-height: 200px;
+    max-height: 450px;
+
+    text-align: center;
+
+    color: white;
+    background-image: url('/images/banner_background.jpg');
+    background-size: cover;
+}
+
+#banner #banner_content
+{
+    display: table-cell;
+
+    vertical-align: middle;
+}
+
+#banner #banner_description
+{
+    font-size: calc(13px + .8vw);
+    font-weight: normal;
+
+    margin-bottom: calc(5px + .5vw);
+
+    text-shadow: 2px 2px black;
+}
+
+#banner #call_to_action_button
+{
+    font-size: calc(11px + .8vw);
+
+    display: inline-block;
+
+    padding: 10px 20px;
+
+    border-radius: 5px;
+    background: #cdc321;
+    text-shadow: 1px 1px black;
+}
+
+#banner #call_to_action_button:hover
+{
+    background: #e4db49;
+}
+
+#highscores
+{
+    padding: 50px 0;
+
+    text-align: center;
+
+    background: #353535;
+}
+
+#highscores_container
+{
+    display: inline-block;
+
+    width: auto;
+}
+
+#highscores h1
+{
+    font-size: 30pt;
+    font-weight: normal;
+
+    text-align: left;
+
+    color: white;
+}
+
+#highscores_search
+{
+    display: inline-block;
+
+    height: 35px;
+
+    background: #151515;
+}
+
+#highscores_search img
+{
+    margin: 6px 0 0 6px;
+}
+
+#highscores_search input
+{
+    width: 165px;
+    height: 33px;
+
+    vertical-align: top;
+
+    color: white;
+    border: none;
+    background: inherit;
+}
+
+#highscores input:focus
+{
+    outline: none;
+}
+
+#highscores select
+{
+    font-family: 'Rockwell Regular';
+    font-size: 11pt;
+
+    min-width: 110px;
+    height: 35px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    padding: 0 8px;
+
+    vertical-align: top;
+
+    color: white;
+    border: none;
+    background: #151515;
+}
+
+#highscores select:focus
+{
+    outline: none;
+}
+
+#highscores_character_selector
+{
+    width: 158px;
+}
+
+#highscores table
+{
+    border-spacing: 3px;
+
+    color: white;
+}
+
+#highscores table td
+{
+    font-size: 11pt;
+
+    padding: 8px;
+
+    text-align: left;
+
+    background: #151515;
+}
+
+#highscores table th
+{
+    font-family: 'Rockwell Regular';
+    font-size: 12pt;
+    font-weight: normal;
+
+    padding: 8px;
+
+    text-align: left;
+
+    color: #cdc321;
+    background: #151515;
+}
+
+
+@media screen and (max-width: 768px)
+{
+    nav
+    {
+        z-index: 0;
+        top: 5px;
+        right: 5px;
+    }
+
+    nav::before
+    {
+        font-size: 1.4em;
+
+        position: absolute;
+        z-index: 998;
+        top: 23px;
+        right: 20px;
+
+        content: '\2630';
+    }
+
+    nav ul
+    {
+        position: absolute;
+        z-index: 999;
+        top: 60px;
+        right: 0;
+
+        width: 100%;
+
+        background: #383838;
+    }
+
+    nav ul li
+    {
+        font-size: .8em;
+
+        display: block;
+
+        padding: 10px 10px;
+
+        border-bottom: 1px solid gray;
+    }
+}
