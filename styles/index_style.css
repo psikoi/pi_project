@@ -73,7 +73,7 @@ nav li a:hover
     text-align: center;
 
     color: white;
-    background-image: url('/images/banner_background.jpg');
+    background-image: url('../images/banner_background.jpg');
     background-size: cover;
 }
 
