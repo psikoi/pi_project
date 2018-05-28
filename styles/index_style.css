@@ -355,8 +355,7 @@ footer a:hover
     position: relative;
     z-index: 150;
 
-    display: block;
-    display: inline-block;
+    display: none;
 
     margin-top: 100px;
     padding: 40px 80px;
@@ -455,31 +454,6 @@ form button:hover
 form input:focus
 {
     outline: none;
-}
-
-#login_form
-{
-    display: none;
-}
-
-#new_player_form
-{
-    display: none;
-}
-
-#edit_player_form
-{
-    display: none;
-}
-
-#new_session_form
-{
-    display: none;
-}
-
-#edit_session_form
-{
-    display: none;
 }
 
 
