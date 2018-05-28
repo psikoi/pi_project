@@ -1,4 +1,34 @@
 /**
+ * Shows the overview section, hiding the players and the sessions
+ * sections.
+ */
+function showOverview() {
+    $("#players").css("display", "none");
+    $("#sessions").css("display", "none");
+    $("#overview").css("display", "block");
+}
+
+/**
+ * Shows the players section, hiding the sessions and the overview
+ * sections.
+ */
+function showPlayers() {
+    $("#sessions").css("display", "none");
+    $("#overview").css("display", "none");
+    $("#players").css("display", "block");
+}
+
+/**
+ * Shows the sessions sections, hiding the players and the overview
+ * sections.
+ */
+function showSessions() {
+    $("#players").css("display", "none");
+    $("#overview").css("display", "none");
+    $("#sessions").css("display", "block");
+}
+
+/**
  * Stub method, this should scroll the page down to the Players section,
  * change the selector value to the appropriate time span
  * and populate it with only players registered during the timespan

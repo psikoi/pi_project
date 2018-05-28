@@ -4,6 +4,7 @@ body
 
     color: #282828;
     background: #f2f2f2;
+
 }
 
 a
@@ -74,6 +75,8 @@ nav li img
     left: 0;
 
     width: 100%;
+
+    /*min-height: calc(100% - 83px);*/
 }
 
 #page_content section
@@ -173,7 +176,12 @@ nav li img
 
 #players
 {
-    background: white;
+    display: none;
+}
+
+#sessions
+{
+    display: none;
 }
 
 table
@@ -313,6 +321,12 @@ td
 
 footer
 {
+    /*
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;*/
+
     font-size: 12px;
 
     padding: 15px;
