@@ -1,6 +1,9 @@
 body
 {
-    font-family: 'Rockwell Regular';
+    font-family: 'Open Sans', Helvetica, sans-serif;
+
+    color: #282828;
+    background: #f2f2f2;
 }
 
 a
@@ -12,14 +15,16 @@ a
 
 #navigation
 {
-    position: absolute;
+    position: fixed;
+    z-index: 100;
     top: 0;
     left: 0;
 
     width: calc(100% - 60px);
     padding: 10px 30px;
 
-    background: #151515;
+    background: white;
+    box-shadow: 0 1px 2px #c6c6c6;
 }
 
 nav
@@ -30,7 +35,7 @@ nav
 
     vertical-align: top;
 
-    color: white;
+    color: black;
 }
 
 nav ul
@@ -40,7 +45,7 @@ nav ul
 
 nav li
 {
-    font-size: 12pt;
+    font-size: 11pt;
 
     display: inline;
 
@@ -52,183 +57,430 @@ nav li a:hover
     color: gray;
 }
 
+nav li img
+{
+    max-width: 25px;
+    margin-right: 10px;
+
+    vertical-align: top;
+
+    border-radius: 100px;
+}
+
 #page_content
 {
     position: absolute;
-    top: 75px;
+    top: 83px;
     left: 0;
 
     width: 100%;
 }
 
-#banner
+#page_content section
 {
-    display: table;
+    padding: 80px 20px;
+}
+
+#page_content .section_container
+{
+    overflow: auto; /* Garante que a secção expande para conter o conteudo */
+
+    width: 800px;
+    max-width: calc(100% - 40px);
+    margin: auto;
+}
+
+.section_title
+{
+    margin-bottom: 30px;
+}
+
+.section_title h1
+{
+    font-weight: normal;
+
+    margin: 0;
+
+    color: #3585c3;
+}
+
+.section_title h2
+{
+    font-size: 14px;
+    font-weight: normal;
+
+    margin: 0;
+}
+
+.overview_info_container
+{
+    display: inline-block;
+
+    width: calc(50% - 10px);
+    margin-bottom: 20px;
+
+    border-radius: 3px;
+    background: white;
+    box-shadow: 0 1px 2px #c6c6c6;
+}
+
+.overview_info_container a:hover
+{
+    opacity: .7;
+}
+
+.left_info_container
+{
+    float: left;
+}
+
+.right_info_container
+{
+    float: right;
+}
+
+.overview_info_title
+{
+    font-family: 'Open Sans semibold', Helvetica, sans-serif;
+    font-size: 14px;
+
+    padding: 14px;
+
+    border-bottom: 1px solid #c8c8c8;
+}
+
+.overview_info_subtitle
+{
+    font-family: 'Open Sans', Helvetica, sans-serif;
+    font-size: 12px;
+
+    color: gray;
+}
+
+.overview_info_entry_container
+{
+    font-family: 'Open Sans semibold', Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+
+    padding: 10px 14px;
+}
+
+.overview_info_entry_positive
+{
+    color: green;
+}
+
+#players
+{
+    background: white;
+}
+
+table
+{
+    font-size: 14px;
 
     width: 100%;
-    height: calc(100px + 20vw);
-    min-height: 200px;
-    max-height: 450px;
-
-    text-align: center;
-
-    color: white;
-    background-image: url('../images/banner_background.jpg');
-    background-size: cover;
-}
-
-#banner #banner_content
-{
-    display: table-cell;
-
-    vertical-align: middle;
-}
-
-#banner #banner_description
-{
-    font-size: calc(13px + .8vw);
-    font-weight: normal;
-
-    margin-bottom: calc(5px + .5vw);
-
-    text-shadow: 2px 2px black;
-}
-
-#banner #call_to_action_button
-{
-    font-size: calc(11px + .8vw);
-
-    display: inline-block;
-
-    padding: 10px 20px;
-
-    border-radius: 5px;
-    background: #cdc321;
-    text-shadow: 1px 1px black;
-}
-
-#banner #call_to_action_button:hover
-{
-    background: #e4db49;
-}
-
-#highscores
-{
-    padding: 50px 0;
-
-    text-align: center;
-
-    background: #353535;
-}
-
-#highscores_container
-{
-    display: inline-block;
-
-    width: auto;
-}
-
-#highscores h1
-{
-    font-size: 30pt;
-    font-weight: normal;
 
     text-align: left;
 
-    color: white;
+    border-right: 1px solid gray;
+    border-left: 1px solid gray;
+    border-radius: 3px;
 }
 
-#highscores_search
+table thead
 {
-    display: inline-block;
-
-    height: 35px;
-
-    background: #151515;
-}
-
-#highscores_search img
-{
-    margin: 6px 0 0 6px;
-}
-
-#highscores_search input
-{
-    width: 165px;
-    height: 33px;
-
-    vertical-align: top;
+    font-family: 'Open Sans semibold', Helvetica, sans-serif;
 
     color: white;
-    border: none;
-    background: inherit;
+    background: #6096cd;
 }
 
-#highscores input:focus
+table th
 {
-    outline: none;
+    padding: 8px;
 }
 
-#highscores select
+td
 {
-    font-family: 'Rockwell Regular';
-    font-size: 11pt;
+    padding: 8px;
 
-    min-width: 110px;
-    height: 35px;
+    border-bottom: 1px solid gray;
+}
+
+.table_filter
+{
     margin-bottom: 10px;
-    margin-left: 10px;
-    padding: 0 8px;
+}
+
+.table_filter select
+{
+    height: 32px;
+    margin-left: 5px;
+    padding: 0 10px;
 
     vertical-align: top;
 
-    color: white;
-    border: none;
-    background: #151515;
+    border: 1px solid gray;
+    border-radius: 3px;
 }
 
-#highscores select:focus
+.table_filter select:focus
 {
     outline: none;
 }
 
-#highscores_character_selector
+#search_bar
 {
-    width: 158px;
+    display: inline-block;
+
+    width: 200px;
+    max-width: 100%;
+    padding: 3px 0;
+
+    border: 1px solid gray;
+    border-radius: 3px;
+    background: white;
 }
 
-#highscores table
+#search_bar img
 {
-    border-spacing: 3px;
+    margin-left: 5px;
 
+    vertical-align: top;
+}
+
+#search_bar input
+{
+    display: inline-block;
+
+    width: calc(100% - 50px);
+    height: 100%;
+
+    border: none;
+}
+
+#search_bar input:focus
+{
+    outline: none;
+}
+
+.table_actions
+{
+    float: right;
+
+    vertical-align: top;
+}
+
+.table_actions_button
+{
+    font-size: 14px;
+    line-height: 32px;
+
+    display: inline-block;
+
+    height: 32px;
+    margin-left: 5px;
+    padding: 0 10px;
+
+    border: 1px solid gray;
+    border-radius: 3px;
+    background: white;
+}
+
+.table_actions_button:hover
+{
+    color: white;
+    border-color: #6096cd;
+    background: #6096cd;
+}
+
+.table_actions_button:active
+{
+    opacity: .8;
+}
+
+.table_actions_button:focus
+{
+    outline: none;
+}
+
+.player_status_banned
+{
+    color: #c12d2d;
+}
+
+footer
+{
+    font-size: 12px;
+
+    padding: 15px;
+
+    text-align: center;
+
+    color: #bdbdbd;
+    background: #282828;
+}
+
+.footer_highlight
+{
     color: white;
 }
 
-#highscores table td
+footer a:hover
 {
-    font-size: 11pt;
-
-    padding: 8px;
-
-    text-align: left;
-
-    background: #151515;
+    color: #6096cd;
 }
 
-#highscores table th
+#dark_pane
 {
-    font-family: 'Rockwell Regular';
-    font-size: 12pt;
-    font-weight: normal;
+    position: fixed;
+    z-index: 120;
+    top: 0;
+    left: 0;
 
-    padding: 8px;
+    display: none;
 
-    text-align: left;
+    width: 100%;
+    height: 100%;
 
-    color: #cdc321;
-    background: #151515;
+    text-align: center;
+
+    background: rgba(0,0,0,.7);
 }
 
+.form_container
+{
+    position: relative;
+    z-index: 150;
+
+    display: block;
+    display: inline-block;
+
+    margin-top: 100px;
+    padding: 40px 80px;
+
+    text-align: center;
+
+    opacity: 1;
+    border-radius: 25px;
+    background: white;
+}
+
+.form_exit
+{
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.form_title
+{
+    font-size: 14px;
+
+    float: left;
+
+    margin-bottom: 10px;
+}
+
+form input
+{
+    margin-bottom: 10px;
+    padding: 12px 8px;
+
+    border: none;
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+}
+
+form input[type = 'date']
+{
+    width: 168px;
+    height: 20px;
+}
+
+.form_label
+{
+    font-size: 12px;
+
+    float: left;
+}
+
+form select
+{
+    width: 184px;
+    padding: 12px 6px;
+}
+
+form input::placeholder
+{
+    color: #bfbfbf;
+}
+
+:-ms-input-placeholder
+{
+    /* Internet Explorer 10-11 */
+    color: #bfbfbf;
+}
+
+::-ms-input-placeholder
+{
+    /* Microsoft Edge */
+    color: #bfbfbf;
+}
+
+form button
+{
+    font-size: 14px;
+    line-height: 40px;
+
+    float: right;
+
+    height: 40px;
+    margin-left: 5px;
+    padding: 0 25px;
+
+    color: white;
+    border: none;
+    border-radius: 3px;
+    background: #6096cd;
+}
+
+form button:hover
+{
+    opacity: .7;
+}
+
+form input:focus
+{
+    outline: none;
+}
+
+#login_form
+{
+    display: none;
+}
+
+#new_player_form
+{
+    display: none;
+}
+
+#edit_player_form
+{
+    display: none;
+}
+
+#new_session_form
+{
+    display: none;
+}
+
+#edit_session_form
+{
+    display: none;
+}
 
 @media screen and (max-width: 768px)
 {
@@ -245,7 +497,7 @@ nav li a:hover
 
         position: absolute;
         z-index: 998;
-        top: 23px;
+        top: 25px;
         right: 20px;
 
         content: '\2630';
@@ -255,12 +507,13 @@ nav li a:hover
     {
         position: absolute;
         z-index: 999;
-        top: 60px;
+        top: 63px;
         right: 0;
 
         width: 100%;
 
-        background: #383838;
+        color: white;
+        background: #282828;
     }
 
     nav ul li
@@ -271,6 +524,40 @@ nav li a:hover
 
         padding: 10px 10px;
 
-        border-bottom: 1px solid gray;
+        border-top: 1px solid #b6b6b6;
+    }
+
+    #nav_separator
+    {
+        display: none;
+    }
+
+    nav li img
+    {
+        max-width: 20px;
+    }
+}
+
+
+@media screen and (max-width: 650px)
+{
+    .overview_info_container
+    {
+        width: 100%;
+    }
+
+    .table_actions
+    {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .table_actions_button
+    {
+        font-size: 12px;
+        line-height: 25px;
+
+        height: 25px;
+        margin-bottom: 10px;
     }
 }
