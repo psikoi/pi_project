@@ -482,6 +482,7 @@ form input:focus
     display: none;
 }
 
+
 @media screen and (max-width: 768px)
 {
     nav
@@ -503,17 +504,22 @@ form input:focus
         content: '\2630';
     }
 
+    nav:hover ul{
+        display: inline-block;
+    }
+
     nav ul
     {
         position: absolute;
         z-index: 999;
         top: 63px;
-        right: 0;
+        right: 0; 
 
         width: 100%;
 
         color: white;
         background: #282828;
+        display: none;
     }
 
     nav ul li
