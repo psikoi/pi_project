@@ -4,6 +4,7 @@ body
 
     color: #282828;
     background: #f2f2f2;
+
 }
 
 a
@@ -74,6 +75,8 @@ nav li img
     left: 0;
 
     width: 100%;
+
+    /*min-height: calc(100% - 83px);*/
 }
 
 #page_content section
@@ -173,7 +176,12 @@ nav li img
 
 #players
 {
-    background: white;
+    display: none;
+}
+
+#sessions
+{
+    display: none;
 }
 
 table
@@ -313,6 +321,12 @@ td
 
 footer
 {
+    /*
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;*/
+
     font-size: 12px;
 
     padding: 15px;
@@ -355,8 +369,7 @@ footer a:hover
     position: relative;
     z-index: 150;
 
-    display: block;
-    display: inline-block;
+    display: none;
 
     margin-top: 100px;
     padding: 40px 80px;
@@ -457,30 +470,6 @@ form input:focus
     outline: none;
 }
 
-#login_form
-{
-    display: none;
-}
-
-#new_player_form
-{
-    display: none;
-}
-
-#edit_player_form
-{
-    display: none;
-}
-
-#new_session_form
-{
-    display: none;
-}
-
-#edit_session_form
-{
-    display: none;
-}
 
 @media screen and (max-width: 768px)
 {
@@ -503,17 +492,22 @@ form input:focus
         content: '\2630';
     }
 
+    nav:hover ul{
+        display: inline-block;
+    }
+
     nav ul
     {
         position: absolute;
         z-index: 999;
         top: 63px;
-        right: 0;
+        right: 0; 
 
         width: 100%;
 
         color: white;
         background: #282828;
+        display: none;
     }
 
     nav ul li
