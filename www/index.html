@@ -1,55 +1,27 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt">
 
 <head>
-    <meta charset="UTF-8"> 
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <meta name="description" content="An admin-only game management platform for the 2D game GhostRace.">
     <meta name="keywords" content="GhostRace,2D,Game,Manage,Management,Tool,Platform">
     <meta name="author" content="Ruben Amendoeira, Tiago Santos">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="icon" type="image/x-icon" href="images/icons/favicon.ico" />
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 
     <link type="text/css" href="styles/index_style.css" rel="stylesheet">
 
-    <script type="text/javascript" src="scripts/index_script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/index_script.js"></script>
 
     <title>GhostRace - Management Page</title>
 </head>
 
 <body>
-
-    <div id="navigation">
-
-        <img src="images/logo_navigation.png" />
-
-        <nav>
-            <ul>
-                <li>
-                    <a href="javascript:showOverview()">Home</a>
-                </li>
-                <li>
-                   <a href="javascript:showPlayers()">Players</a>
-                </li>
-                <li>
-                   <a href="javascript:showSessions()">Sessions</a>
-                </li>
-                <li id="nav_separator">
-                    |
-                </li>
-                <li>
-                    <a href="javascript:toggleForm('login_form', true)">
-                        <img src="images/user_profile.jpg" /> Ruben
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        
-    </div>
 
     <div id="page_content">
 
@@ -444,28 +416,28 @@
 
             <form action="javascript:submitSessionEdit()" id="edit_session_form" class="form_container">
 
-                    <a href="javascript:toggleForm('edit_session_form', false)" class="form_exit">
-                        <img src="images/icons/close.png" />
-                    </a>
-    
-                    <span class="form_title">Edit a game session</span>
-                    <br>
-    
-                    <input id="edit_session_username" type="text" placeholder="Username" />
-                    <br>
-    
-                    <input id="edit_session_level" type="text" placeholder="Level" />
-                    <br>
-    
-                    <input id="edit_session_character" type="text" placeholder="Character" />
-                    <br>
-    
-                    <input id="edit_session_time" type="text" placeholder="Time" />
-                    <br>
-    
-                    <button type="submit">Create</button>
-    
-                </form>
+                <a href="javascript:toggleForm('edit_session_form', false)" class="form_exit">
+                    <img src="images/icons/close.png" />
+                </a>
+
+                <span class="form_title">Edit a game session</span>
+                <br>
+
+                <input id="edit_session_username" type="text" placeholder="Username" />
+                <br>
+
+                <input id="edit_session_level" type="text" placeholder="Level" />
+                <br>
+
+                <input id="edit_session_character" type="text" placeholder="Character" />
+                <br>
+
+                <input id="edit_session_time" type="text" placeholder="Time" />
+                <br>
+
+                <button type="submit">Create</button>
+
+            </form>
 
         </div>
 

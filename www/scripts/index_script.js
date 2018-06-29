@@ -1,3 +1,68 @@
+$( document ).ready(function() {
+    buildNavigation();
+});
+
+function buildNavigation(){
+
+    var body = document.body;
+
+    var navigation = document.createElement("div");
+    navigation.id = "navigation";
+    navigation.className = "navigation";
+
+    var logo = document.createElement("img");
+    logo.src = "images/logo_navigation.png";
+
+    var nav = document.createElement("nav");
+    var ul = document.createElement("ul");
+
+    ul.appendChild(buildNavButton("Home", "javascript:showOverview()"));
+    ul.appendChild(buildNavButton("Players", "javascript:showPlayers()"));
+    ul.appendChild(buildNavButton("Sessions", "javascript:showSessions()"));
+
+    var separator = document.createElement("li");
+    separator.id = "nav_separator";
+    separator.textContent = "|";
+
+    ul.appendChild(separator);
+
+    var userNav = document.createElement("li");
+
+    var userNavA = document.createElement("a");
+    userNavA.href = "javascript:toggleForm('login_forn', true)";
+
+    var userNavImg = document.createElement("img");
+    userNavImg.src = "images/user_profile.jpg";
+
+    var userNavName = document.createElement("div");
+    userNavName.className = "nav_username";
+    userNavName.textContent = "Ruben";
+
+    userNavA.appendChild(userNavImg);
+    userNavA.appendChild(userNavName);
+
+    userNav.appendChild(userNavA);
+
+    ul.appendChild(userNav);
+
+    nav.appendChild(ul);
+
+    navigation.appendChild(logo);
+    navigation.appendChild(nav);
+
+    body.appendChild(navigation);
+
+}
+
+function buildNavButton(text, url){
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.textContent = text;
+    a.href = url;
+    li.appendChild(a);
+    return li;
+}
+
 /**
  * Shows the overview section, hiding the players and the sessions
  * sections.

@@ -68,6 +68,10 @@ nav li img
     border-radius: 100px;
 }
 
+.nav_username{
+    display: inline-block;
+}
+
 #page_content
 {
     position: absolute;
@@ -76,7 +80,7 @@ nav li img
 
     width: 100%;
 
-    /*min-height: calc(100% - 83px);*/
+    min-height: calc(100% - 83px);
 }
 
 #page_content section
@@ -321,11 +325,10 @@ td
 
 footer
 {
-    /*
     position: absolute;
     right: 0;
     left: 0;
-    bottom: 0;*/
+    bottom: 0;
 
     font-size: 12px;
 
