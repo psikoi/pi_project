@@ -1,0 +1,11 @@
+﻿{
+  "name": "pi_project",
+  "description": "Projeto de Programação para a Internet",
+  "version": "1.0.0",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mysql": "^2.15.0"
+  },
+  "license": "MIT"
+}
