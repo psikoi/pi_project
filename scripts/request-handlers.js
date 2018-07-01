@@ -6,12 +6,18 @@ const options = require("./connectionOptions.json");
 
 /* Endpoint - GET */
 
+/**
+ * Gets a list of countries from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function getCountries(req, res) {
     var connection = mysql.createConnection(options);
     var query = "SELECT id, name, short_name FROM country";
     connection.query(query, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.json({ "Message": "OK", "Countries": rows });
         }
@@ -19,13 +25,18 @@ function getCountries(req, res) {
 }
 module.exports.getCountries = getCountries;
 
-
+/**
+ * Gets a list of user types from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function getUserType(req, res) {
     var connection = mysql.createConnection(options);
     var query = "SELECT id, user_type FROM userType";
     connection.query(query, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.json({ "Message": "OK", "UserType": rows });
         }
@@ -33,13 +44,17 @@ function getUserType(req, res) {
 }
 module.exports.getUserType = getUserType;
 
-
+/**
+ * Gets a list of users from the database.
+ * @param {*} req 
+ * @param {*} res 
+ */
 function getUsers(req, res) {
     var connection = mysql.createConnection(options);
     var query = "SELECT id, username, password, birth_date, country_id, profile_pic_url, user_type_id FROM user";
     connection.query(query, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.json({ "Message": "OK", "Users": rows });
         }
@@ -47,13 +62,18 @@ function getUsers(req, res) {
 }
 module.exports.getUsers = getUsers;
 
-
+/**
+ * Gets a list of players from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function getPlayers(req, res) {
     var connection = mysql.createConnection(options);
     var query = "SELECT id, username, password, birth_date, country_id, registration_date, user_type_id FROM player";
     connection.query(query, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.json({ "Message": "OK", "Players": rows });
         }
@@ -61,13 +81,17 @@ function getPlayers(req, res) {
 }
 module.exports.getPlayers = getPlayers;
 
-
+/**
+ * Gets a list of levels from the database.
+ * @param {*} req 
+ * @param {*} res 
+ */
 function getLevels(req, res) {
     var connection = mysql.createConnection(options);
     var query = "SELECT id, name FROM level";
     connection.query(query, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.json({ "Message": "OK", "Levels": rows });
         }
@@ -75,13 +99,17 @@ function getLevels(req, res) {
 }
 module.exports.getLevels = getLevels;
 
-
+/**
+ * Gets a list of characters from the database.
+ * @param {*} req 
+ * @param {*} res 
+ */
 function getCharacters(req, res) {
     var connection = mysql.createConnection(options);
     var query = "SELECT id, name, endurance, strength, speed FROM character";
     connection.query(query, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.json({ "Message": "OK", "Characters": rows });
         }
@@ -89,13 +117,17 @@ function getCharacters(req, res) {
 }
 module.exports.getCharacters = getCharacters;
 
-
+/**
+ * Gets a list of sessions from the database.
+ * @param {*} req 
+ * @param {*} res 
+ */
 function getSessions(req, res) {
     var connection = mysql.createConnection(options);
     var query = "SELECT id, start_date, player_id, level_id, character_id FROM gameSession";
     connection.query(query, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.json({ "Message": "OK", "Sessions": rows });
         }
@@ -103,13 +135,17 @@ function getSessions(req, res) {
 }
 module.exports.getSessions = getSessions;
 
-
+/**
+ * Gets a list of statistic types from the database.
+ * @param {*} req 
+ * @param {*} res 
+ */
 function getStatisticType(req, res) {
     var connection = mysql.createConnection(options);
     var query = "SELECT id, name, description FROM statisticType";
     connection.query(query, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.json({ "Message": "OK", "StatisticTypes": rows });
         }
@@ -117,13 +153,17 @@ function getStatisticType(req, res) {
 }
 module.exports.getStatisticType = getStatisticType;
 
-
+/**
+ * Gets a list of statistics from the database.
+ * @param {*} req 
+ * @param {*} res 
+ */
 function getStatistics(req, res) {
     var connection = mysql.createConnection(options);
     var query = "SELECT id, value, registration_date, statistic_type_id, game_session_id FROM statistic";
     connection.query(query, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.json({ "Message": "OK", "Statistics": rows });
         }
@@ -134,6 +174,11 @@ module.exports.getStatistics = getStatistics;
 
 /* Endpoint - POST / PUT */
 
+/**
+ * Adds or updates a country in the database, based on the request method ("POST" or "PUT").
+ * @param {*} req 
+ * @param {*} res 
+ */
 function addUpdateCountry(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -150,14 +195,18 @@ function addUpdateCountry(req, res) {
 
     connection.query(sql, function(err, rows){
         if(err)
-            res.json({"Message": "Erro"});
+            res.json({"Message": "Error"});
         else
             res.send(rows);
     })
 }
 module.exports.addUpdateCountry = addUpdateCountry;
 
-
+/**
+ * Adds or updates a user type in the database, based on the request method ("POST" or "PUT").
+ * @param {*} req 
+ * @param {*} res 
+ */
 function addUpdateUserType(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -173,7 +222,7 @@ function addUpdateUserType(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -181,7 +230,11 @@ function addUpdateUserType(req, res) {
 }
 module.exports.addUpdateUserType = addUpdateUserType;
 
-
+/**
+ * Adds or updates a user in the database, based on the request method ("POST" or "PUT").
+ * @param {*} req 
+ * @param {*} res 
+ */
 function addUpdateUser(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -204,7 +257,7 @@ function addUpdateUser(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -212,7 +265,11 @@ function addUpdateUser(req, res) {
 }
 module.exports.addUpdateUser = addUpdateUser;
 
-
+/**
+ * Adds or updates a player in the database, based on the request method ("POST" or "PUT").
+ * @param {*} req 
+ * @param {*} res 
+ */
 function addUpdatePlayer(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -235,7 +292,7 @@ function addUpdatePlayer(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -243,7 +300,11 @@ function addUpdatePlayer(req, res) {
 }
 module.exports.addUpdatePlayer = addUpdatePlayer;
 
-
+/**
+ * Adds or updates a level in the database, based on the request method ("POST" or "PUT").
+ * @param {*} req 
+ * @param {*} res 
+ */
 function addUpdateLevel(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -259,7 +320,7 @@ function addUpdateLevel(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -267,7 +328,11 @@ function addUpdateLevel(req, res) {
 }
 module.exports.addUpdateLevel = addUpdateLevel;
 
-
+/**
+ * Adds or updates a character in the database, based on the request method ("POST" or "PUT").
+ * @param {*} req 
+ * @param {*} res 
+ */
 function addUpdateCharacter(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -286,7 +351,7 @@ function addUpdateCharacter(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -294,7 +359,11 @@ function addUpdateCharacter(req, res) {
 }
 module.exports.addUpdateCharacter = addUpdateCharacter;
 
-
+/**
+ * Adds or updates a session in the database, based on the request method ("POST" or "PUT").
+ * @param {*} req 
+ * @param {*} res 
+ */
 function addUpdateSession(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -313,7 +382,7 @@ function addUpdateSession(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -321,7 +390,11 @@ function addUpdateSession(req, res) {
 }
 module.exports.addUpdateSession = addUpdateSession;
 
-
+/**
+ * Adds or updates a statistic type in the database, based on the request method ("POST" or "PUT").
+ * @param {*} req 
+ * @param {*} res 
+ */
 function addUpdateStatisticType(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -338,7 +411,7 @@ function addUpdateStatisticType(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -346,7 +419,11 @@ function addUpdateStatisticType(req, res) {
 }
 module.exports.addUpdateStatisticType = addUpdateStatisticType;
 
-
+/**
+ * Adds or updates a statistic in the database, based on the request method ("POST" or "PUT").
+ * @param {*} req 
+ * @param {*} res 
+ */
 function addUpdateStatistic(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -367,7 +444,7 @@ function addUpdateStatistic(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -378,6 +455,12 @@ module.exports.addUpdateStatistic = addUpdateStatistic;
 
 /* Endpoint - DELETE */
 
+/**
+ * Removes a certain country from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function deleteCountry(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -389,13 +472,19 @@ function deleteCountry(req, res) {
 
     connection.query(sql, function(err, rows){
         if(err)
-            res.json({"Message": "Erro"});
+            res.json({"Message": "Error"});
         else
             res.send(rows);
     })
 }
 module.exports.deleteCountry = deleteCountry;
 
+/**
+ * Removes a certain user type from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function deleteUserType(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -407,7 +496,7 @@ function deleteUserType(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -415,7 +504,12 @@ function deleteUserType(req, res) {
 }
 module.exports.deleteUserType = deleteUserType;
 
-
+/**
+ * Removes a certain user from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function deleteUser(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -427,7 +521,7 @@ function deleteUser(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -435,7 +529,12 @@ function deleteUser(req, res) {
 }
 module.exports.deleteUser = deleteUser;
 
-
+/**
+ * Removes a certain player from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function deletePlayer(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -447,7 +546,7 @@ function deletePlayer(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -455,7 +554,12 @@ function deletePlayer(req, res) {
 }
 module.exports.deletePlayer = deletePlayer;
 
-
+/**
+ * Removes a certain level from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function deleteLevel(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -467,7 +571,7 @@ function deleteLevel(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -475,7 +579,12 @@ function deleteLevel(req, res) {
 }
 module.exports.deleteLevel = deleteLevel;
 
-
+/**
+ * Removes a certain character from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function deleteCharacter(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -487,7 +596,7 @@ function deleteCharacter(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -495,7 +604,12 @@ function deleteCharacter(req, res) {
 }
 module.exports.deleteCharacter = deleteCharacter;
 
-
+/**
+ * Removes a certain session from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function deleteSession(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -507,7 +621,7 @@ function deleteSession(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -515,7 +629,12 @@ function deleteSession(req, res) {
 }
 module.exports.deleteSession = deleteSession;
 
-
+/**
+ * Removes a certain statistic type from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function deleteStatisticType(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -527,7 +646,7 @@ function deleteStatisticType(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
@@ -535,7 +654,12 @@ function deleteStatisticType(req, res) {
 }
 module.exports.deleteStatisticType = deleteStatisticType;
 
-
+/**
+ * Removes a certain statistic from the database.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 function deleteStatistic(req, res) {
     var connection = mysql.createConnection(options);
 
@@ -546,7 +670,7 @@ function deleteStatistic(req, res) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            res.json({ "Message": "Erro" });
+            res.json({ "Message": "Error" });
         } else {
             res.send(rows);
         }
