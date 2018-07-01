@@ -14,9 +14,9 @@ app.get("/session", requestHandlers.getSessions);
 app.get("/statistic", requestHandlers.getStatistics);
 
 // POST
-app.post("/player", requestHandlers.addPlayer);
-app.post("/session", requestHandlers.addSession);
-app.post("/statistic", requestHandlers.addStatistic);
+app.post("/player", requestHandlers.addUpdatePlayer);
+app.post("/session", requestHandlers.addUpdateSession);
+app.post("/statistic", requestHandlers.addUpdateStatistic);
 
 // DELETE
 app.delete("/player", requestHandlers.deletePlayer);

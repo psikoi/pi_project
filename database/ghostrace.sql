@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS `userType`;
 CREATE TABLE `country` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `shortName` varchar(255) NOT NULL,
+  `short_name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `birthDate` date NOT NULL,
+  `birth_date` date NOT NULL,
   `country_id` int(11) NOT NULL,
   `profile_pic_url` varchar(255) NOT NULL,
   `user_type_id` int(11) NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE `player` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `birthDate` date NOT NULL,
+  `birth_date` date NOT NULL,
   `country_id` int(11) NOT NULL,
   `registration_date` date NOT NULL,
   `user_type_id` int(11) NOT NULL,
@@ -109,7 +109,7 @@ ALTER TABLE `statistic`
 	ADD CONSTRAINT `statistic_gameSession` FOREIGN KEY (`game_session_id`) REFERENCES `gameSession` (`id`);
     
 
-INSERT INTO `country` (`id`, `name`, `shortName`) VALUES
+INSERT INTO `country` (`id`, `name`, `short_name`) VALUES
 (1, 'Andorra', 'AD'),
 (2, 'United Arab Emirates', 'AE'),
 (3, 'Afghanistan', 'AF'),
@@ -362,10 +362,10 @@ INSERT INTO `userType` (`id`, `user_type`) VALUES
 (1, 'Administrator'),
 (2, 'Normal');
 
-INSERT INTO `user` (`id`, `username`, `password`, `birthdate`, `country_id`, `profile_pic_url`, `user_type_id`) VALUES
+INSERT INTO `user` (`id`, `username`, `password`, `birth_date`, `country_id`, `profile_pic_url`, `user_type_id`) VALUES
 (1, 'admin', '321', STR_TO_DATE('03-03-1998', '%d-%m-%Y'), 183, 'profilepic1', 1);
 
-INSERT INTO `player` (`id`, `username`, `password`, `birthdate`, `country_id`, `registration_date`, `user_type_id`) VALUES
+INSERT INTO `player` (`id`, `username`, `password`, `birth_date`, `country_id`, `registration_date`, `user_type_id`) VALUES
 (1, 'tiagosantos', '123', STR_TO_DATE('01-01-1998', '%d-%m-%Y'), 183, STR_TO_DATE('01-01-2018', '%d-%m-%Y'), 2),
 (2, 'rubenamendoeira', '456', STR_TO_DATE('02-02-1998', '%d-%m-%Y'), 67, STR_TO_DATE('02-02-2018', '%d-%m-%Y'), 1);
 
