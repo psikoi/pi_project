@@ -1,6 +1,6 @@
 $(document).ready(function () {
     buildNavigation();
-    switchPage("players");
+    switchPage("sessions");
 });
 
 
@@ -11,6 +11,8 @@ function switchPage(page) {
         buildOverview();
     } else if (page === "players") {
         buildPlayers();
+    } else if (page === "sessions") {
+        buildSessions();
     }
 }
 
@@ -106,7 +108,6 @@ function showSessionsList(timeSpan) {
 
 function addPlayer() {
     //TO-DO clear all the form fields
-    alert("yeaa");
     toggleForm("new_player_form", true);
 }
 

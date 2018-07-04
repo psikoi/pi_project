@@ -1,34 +1,34 @@
-var selectedPlayerId;
+var selectedSessionId;
 
 /**
  * Updates the filters with the value of the 
  * filter selector and input. Then calls for a table update.
  */
-function updatePlayersFilters() {
-    var search = document.getElementById("players_search");
-    var selector = document.getElementById("players_timespan");
+function updateSessionsFilters() {
+    var search = document.getElementById("sessions_search");
+    var selector = document.getElementById("sessions_timespan");
 
     var filters = new Object();
     filters.search = search.value;
     filters.timespan = selector.value;
 
-    updatePlayersTable(filters);
+    updateSessionsTable(filters);
 }
 
 /**
  * Updates the table, deleting the outdated one, recreating
  * a new and updated table, using the filters given by parameter.
  */
-function updatePlayersTable(filters) {
-    var parent = document.getElementById("players").children[0];
-    parent.removeChild(document.getElementById("players_table"));
-    parent.appendChild(buildPlayersTable(filters));
+function updateSessionsTable(filters) {
+    var parent = document.getElementById("sessions").children[0];
+    parent.removeChild(document.getElementById("sessions_table"));
+    parent.appendChild(buildSessionsTable(filters));
 }
 
 /**
  * Fetches and builds a data table with given filters.
  */
-function buildPlayersTable(filters) {
+function buildSessionsTable(filters) {
 
     if (filters != null) {
         //TODO enviar pedido com os filters tipo:
@@ -41,27 +41,27 @@ function buildPlayersTable(filters) {
     var data = [
         {
             id: 0,
-            rank: 567,
+            date: "27/03/2018 16:32",
             username: "tiagofsantos",
-            age: 19,
-            country: "PT",
-            status: "Banned"
+            leve: 1,
+            character: "Scout",
+            time: "02:50"
         },
         {
-            id: 1,
-            rank: 8310,
-            username: "baziiK",
-            age: 20,
-            country: "PT",
-            status: "N/A"
+            id: 0,
+            date: "27/03/2018 18:09",
+            username: "Ruben",
+            leve: 3,
+            character: "Sargent",
+            time: "03:18"
         }
     ];
 
     var table = document.createElement("table");
-    table.id = "players_table";
+    table.id = "sessions_table";
     table.cellSpacing = "0";
 
-    var columns = ["Id", "Rank", "Username", "Age", "Country", "Status"];
+    var columns = ["Id", "Date", "Username", "Level", "Character", "Time"];
     var thead = document.createElement("thead");
     var headRow = document.createElement("tr");
     columns.forEach(function (c) {
@@ -77,10 +77,6 @@ function buildPlayersTable(filters) {
         Object.keys(row).forEach(function (field) {
             var td = document.createElement("td");
             td.textContent = row[field];
-            if (row[field] == "Banned") {
-                td.className = "player_status_banned";
-            }
-
             tableRow.appendChild(td);
         })
         tbody.appendChild(tableRow);
@@ -92,10 +88,10 @@ function buildPlayersTable(filters) {
 }
 
 /**
- * Builds the entire players page with its title, subtitle, table filters,
+ * Builds the entire sessions page with its title, subtitle, table filters,
  * table actions and data table.
  */
-function buildPlayers() {
+function buildSessions() {
 
     var createActionButton = function (id, event, text) {
         var btn = document.createElement("button");
@@ -108,7 +104,7 @@ function buildPlayers() {
     var pageContent = document.getElementById("page_content");
 
     var section = document.createElement("section");
-    section.id = "players";
+    section.id = "sessions";
 
     var sectionContainer = document.createElement("div");
     sectionContainer.className = "section_container";
@@ -117,10 +113,10 @@ function buildPlayers() {
     sectionTitle.className = "section_title";
 
     var header = document.createElement("h1");
-    header.textContent = "Players";
+    header.textContent = "Sessions";
 
     var subheader = document.createElement("h2");
-    subheader.textContent = "Manage and browse through our entire player base.";
+    subheader.textContent = "Manage and browse through all of our game sessions.";
 
     sectionTitle.appendChild(header);
     sectionTitle.appendChild(subheader);
@@ -135,12 +131,12 @@ function buildPlayers() {
     searchImg.src = "images/icons/search.png";
 
     var input = document.createElement("input");
-    input.id = "players_search";
+    input.id = "sessions_search";
     input.type = "text";
     input.addEventListener("keyup", function (event) {
         // Update filters when the Enter key is pressed up.
         if (event.keyCode === 13) {
-            updatePlayersFilters();
+            updateSessionsFilters();
         }
     });
 
@@ -148,8 +144,8 @@ function buildPlayers() {
     searchContainer.appendChild(input);
 
     var selector = document.createElement("select");
-    selector.id = "players_timespan";
-    selector.onchange = updatePlayersFilters;
+    selector.id = "sessions_timespan";
+    selector.onchange = updateSessionsFilters;
 
     const options = ["All time", "This month", "This week", "Today"];
 
@@ -163,10 +159,9 @@ function buildPlayers() {
     var buttonsContainer = document.createElement("div");
     buttonsContainer.className = "table_actions";
 
-    buttonsContainer.appendChild(createActionButton("players_add", addPlayer, "Add"));
-    buttonsContainer.appendChild(createActionButton("players_edit", editPlayer, "Edit"));
-    buttonsContainer.appendChild(createActionButton("players_ban", banPlayer, "Ban"));
-    buttonsContainer.appendChild(createActionButton("players_remove", removePlayer, "Remove"));
+    buttonsContainer.appendChild(createActionButton("sessions_add", addSession, "Add"));
+    buttonsContainer.appendChild(createActionButton("sessions_edit", editSession, "Edit"));
+    buttonsContainer.appendChild(createActionButton("sessions_remove", removeSession, "Remove"));
 
     tableFilter.appendChild(searchContainer);
     tableFilter.appendChild(selector);
@@ -174,33 +169,33 @@ function buildPlayers() {
 
     sectionContainer.appendChild(sectionTitle);
     sectionContainer.appendChild(tableFilter);
-    sectionContainer.appendChild(buildPlayersTable());
+    sectionContainer.appendChild(buildSessionsTable());
 
     section.appendChild(sectionContainer);
     pageContent.appendChild(section);
 
-    togglePlayerActions(false);
-    preparePlayerSelectionEvents();
+    toggleSessionActions(false);
+    prepareSessionSelectionEvents();
 }
 
 /**
  * Sets up the table row selection events.
  */
-function preparePlayerSelectionEvents() {
+function prepareSessionSelectionEvents() {
     $("table tbody tr").click(function () {
 
         var row = $(this);
 
         if (row.hasClass("selected_table_row")) {
             row.removeClass('selected_table_row');
-            togglePlayerActions(false);
+            toggleSessionActions(false);
         } else {
             row.addClass('selected_table_row');
             row.siblings().removeClass('selected_table_row');
-            togglePlayerActions(true);
+            toggleSessionActions(true);
         }
 
-        selectedPlayerId = row.find('td:first').html();
+        selectedSessionId = row.find('td:first').html();
     });
 }
 
@@ -208,14 +203,13 @@ function preparePlayerSelectionEvents() {
  * Toggles the specified buttons depending on the
  * value of selected.
  */
-function togglePlayerActions(selected) {
+function toggleSessionActions(selected) {
     var toggle = function (id) {
         var btn = document.getElementById(id);
         btn.disabled = !selected;
         btn.className = selected ? "" : "disabled_button";
     }
 
-    toggle("players_edit");
-    toggle("players_ban");
-    toggle("players_remove");
+    toggle("sessions_edit");
+    toggle("sessions_remove");
 }
