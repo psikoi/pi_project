@@ -183,6 +183,9 @@ function buildPlayers() {
     preparePlayerSelectionEvents();
 }
 
+/**
+ * Sets up the table row selection events.
+ */
 function preparePlayerSelectionEvents() {
     $("table tbody tr").click(function () {
 
@@ -201,6 +204,10 @@ function preparePlayerSelectionEvents() {
     });
 }
 
+/**
+ * Toggles the specified buttons depending on the
+ * value of selected.
+ */
 function togglePlayerActions(selected) {
     var toggle = function (id) {
         var btn = document.getElementById(id);
