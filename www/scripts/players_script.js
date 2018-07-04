@@ -1,10 +1,10 @@
-var selectedId;
+var selectedPlayerId;
 
 /**
  * Updates the filters with the value of the 
  * filter selector and input. Then calls for a table update.
  */
-function updateFilters() {
+function updatePlayersFilters() {
     var search = document.getElementById("players_search");
     var selector = document.getElementById("players_timespan");
 
@@ -12,23 +12,23 @@ function updateFilters() {
     filters.search = search.value;
     filters.timespan = selector.value;
 
-    updateTable(filters);
+    updatePlayersTable(filters);
 }
 
 /**
  * Updates the table, deleting the outdated one, recreating
  * a new and updated table, using the filters given by parameter.
  */
-function updateTable(filters) {
+function updatePlayersTable(filters) {
     var parent = document.getElementById("players").children[0];
     parent.removeChild(document.getElementById("players_table"));
-    parent.appendChild(buildTable(filters));
+    parent.appendChild(buildPlayersTable(filters));
 }
 
 /**
  * Fetches and builds a data table with given filters.
  */
-function buildTable(filters) {
+function buildPlayersTable(filters) {
 
     if (filters != null) {
         //TODO enviar pedido com os filters tipo:
@@ -140,7 +140,7 @@ function buildPlayers() {
     input.addEventListener("keyup", function (event) {
         // Update filters when the Enter key is pressed up.
         if (event.keyCode === 13) {
-            updateFilters();
+            updatePlayersFilters();
         }
     });
 
@@ -149,7 +149,7 @@ function buildPlayers() {
 
     var selector = document.createElement("select");
     selector.id = "players_timespan";
-    selector.onchange = updateFilters;
+    selector.onchange = updatePlayersFilters;
 
     const options = ["All time", "This month", "This week", "Today"];
 
@@ -174,16 +174,16 @@ function buildPlayers() {
 
     sectionContainer.appendChild(sectionTitle);
     sectionContainer.appendChild(tableFilter);
-    sectionContainer.appendChild(buildTable());
+    sectionContainer.appendChild(buildPlayersTable());
 
     section.appendChild(sectionContainer);
     pageContent.appendChild(section);
 
     togglePlayerActions(false);
-    prepareEvents();
+    preparePlayerSelectionEvents();
 }
 
-function prepareEvents() {
+function preparePlayerSelectionEvents() {
     $("table tbody tr").click(function () {
 
         var row = $(this);
