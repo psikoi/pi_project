@@ -1,6 +1,26 @@
 var selectedSessionId;
 
 /**
+ * Creates the add session form.
+ */
+function addSession() {
+}
+
+/**
+ * Creates the edit session form.
+ */
+function editSession() {
+}
+
+/**
+ * Stub method, this should call backend methods to
+ * delete a game session and also remove that session
+ * from the sessions table.
+ */
+function removeSession() {
+}
+
+/**
  * Updates the filters with the value of the 
  * filter selector and input. Then calls for a table update.
  */

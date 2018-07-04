@@ -1,6 +1,34 @@
 var selectedPlayerId;
 
 /**
+ * Creates the add player form.
+ */
+function addPlayer() {
+}
+
+/**
+ * Creates the edit player form.
+ */
+function editPlayer() {
+}
+
+/**
+ * Stub method, this should call backend methods to
+ * change a player's status to banned and also
+ * update the players table.
+ */
+function banPlayer() {
+}
+
+/**
+ * Stub method, this should call backend methods to
+ * delete a player account and also remove that player
+ * from the players table.
+ */
+function removePlayer() {
+}
+
+/**
  * Updates the filters with the value of the 
  * filter selector and input. Then calls for a table update.
  */
