@@ -1,252 +1,33 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt">
 
 <head>
-    <meta charset="UTF-8"> 
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <meta name="description" content="An admin-only game management platform for the 2D game GhostRace.">
     <meta name="keywords" content="GhostRace,2D,Game,Manage,Management,Tool,Platform">
     <meta name="author" content="Ruben Amendoeira, Tiago Santos">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="icon" type="image/x-icon" href="images/icons/favicon.ico" />
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 
     <link type="text/css" href="styles/index_style.css" rel="stylesheet">
 
-    <script type="text/javascript" src="scripts/index_script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    <script type="text/javascript" src="scripts/overview_script.js"></script>
+    <script type="text/javascript" src="scripts/players_script.js"></script>
+    <script type="text/javascript" src="scripts/index_script.js"></script>
+
 
     <title>GhostRace - Management Page</title>
 </head>
 
 <body>
 
-    <div id="navigation">
-
-        <img src="images/logo_navigation.png" />
-
-        <nav>
-            <ul>
-                <li>
-                    <a href="javascript:showOverview()">Home</a>
-                </li>
-                <li>
-                   <a href="javascript:showPlayers()">Players</a>
-                </li>
-                <li>
-                   <a href="javascript:showSessions()">Sessions</a>
-                </li>
-                <li id="nav_separator">
-                    |
-                </li>
-                <li>
-                    <a href="javascript:toggleForm('login_form', true)">
-                        <img src="images/user_profile.jpg" /> Ruben
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        
-    </div>
-
     <div id="page_content">
-
-        <section id="overview">
-
-            <div class="section_container">
-
-                <div class="section_title">
-                    <h1>Overview</h1>
-                    <h2>A general view of the game’s performance and statistics.</h2>
-                </div>
-
-                <div class="overview_info_container left_info_container">
-
-                    <div class="overview_info_title">
-                        Today
-                        <span class="overview_info_subtitle">(Last 24 hours)</span>
-                    </div>
-
-                    <div class="overview_info_entry_container">
-
-                        <div class="overview_info_entry">
-                            <a href="javascript:showPlayersList('Today')">
-                                Player growth:
-                                <span class="overview_info_entry_positive">+141 (+3.47%)</span>
-                            </a>
-                        </div>
-
-                        <div class="overview_info_entry">
-                            <a href="javascript:showSessionsList('Today')">
-                                Session growth:
-                                <span class="overview_info_entry_positive">+831 (+2.89%)</span>
-                            </a>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="overview_info_container right_info_container">
-
-                    <div class="overview_info_title">
-                        Week
-                        <span class="overview_info_subtitle">(Last 7 days)</span>
-                    </div>
-
-                    <div class="overview_info_entry_container">
-
-                        <div class="overview_info_entry">
-                            <a href="javascript:showPlayersList('Week')">
-                                Player growth:
-                                <span class="overview_info_entry_positive">+923 (+12.19%)</span>
-                            </a>
-                        </div>
-
-                        <div class="overview_info_entry">
-                            <a href="javascript:showSessionsList('Week')">
-                                Session growth:
-                                <span class="overview_info_entry_positive">+4,317 (+9.16%)</span>
-                            </a>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="overview_info_container left_info_container">
-
-                    <div class="overview_info_title">
-                        Month
-                        <span class="overview_info_subtitle">(Last 30 days)</span>
-                    </div>
-
-                    <div class="overview_info_entry_container">
-
-                        <div class="overview_info_entry">
-                            <a href="javascript:showPlayersList('Month')">
-                                Player growth:
-                                <span class="overview_info_entry_positive">+2,811 (+23.89%)</span>
-                            </a>
-                        </div>
-
-                        <div class="overview_info_entry">
-                            <a href="javascript:showSessionsList('Month')">
-                                Session growth:
-                                <span class="overview_info_entry_positive">+18,327 (+19.31%)</span>
-                            </a>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="overview_info_container right_info_container">
-
-                    <div class="overview_info_title">
-                        All time
-                    </div>
-
-                    <div class="overview_info_entry_container">
-
-                        <div class="overview_info_entry">
-                            <a href="javascript:showPlayersList('All time')">
-                                Player growth:
-                                <span class="overview_info_entry_positive">+11,516</span>
-                            </a>
-                        </div>
-
-                        <div class="overview_info_entry">
-                            <a href="javascript:showSessionsList('All time')">
-                                Session growth:
-                                <span class="overview_info_entry_positive">+74,135</span>
-                            </a>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <section id="players">
-
-            <div class="section_container">
-
-                <div class="section_title">
-                    <h1>Players</h1>
-                    <h2>Manage and browse through our entire player base.</h2>
-                </div>
-
-                <div class="table_filter">
-
-                    <div id="search_bar">
-                        <img src="images/icons/search.png" />
-                        <input type="text" />
-                    </div>
-
-                    <select>
-                        <option>All time</option>
-                        <option>This month</option>
-                        <option>This week</option>
-                        <option>Today</option>
-                    </select>
-
-                    <div class="table_actions">
-                        <button class="table_actions_button" onclick="javascrit:addPlayer()">Add</button>
-                        <button class="table_actions_button" onclick="javascrit:editPlayer()">Edit</button>
-                        <button class="table_actions_button" onclick="javascrit:banPlayer()">Ban</button>
-                        <button class="table_actions_button" onclick="javascrit:removePlayer()">Remove</button>
-                    </div>
-
-                </div>
-
-                <table cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Rank</th>
-                            <th>Username</th>
-                            <th>Age</th>
-                            <th>Country</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>0</td>
-                            <td>567</td>
-                            <td>tiagofsantos</td>
-                            <td>19</td>
-                            <td>PT</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>8130</td>
-                            <td>baziiK</td>
-                            <td>20</td>
-                            <td>PT</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>690</td>
-                            <td>KingPong</td>
-                            <td>19</td>
-                            <td>PT</td>
-                            <td class="player_status_banned">Banned</td>
-                        </tr>
-                    </tbody>
-
-                </table>
-            </div>
-        </section>
-
 
         <section id="sessions">
 
@@ -444,41 +225,36 @@
 
             <form action="javascript:submitSessionEdit()" id="edit_session_form" class="form_container">
 
-                    <a href="javascript:toggleForm('edit_session_form', false)" class="form_exit">
-                        <img src="images/icons/close.png" />
-                    </a>
-    
-                    <span class="form_title">Edit a game session</span>
-                    <br>
-    
-                    <input id="edit_session_username" type="text" placeholder="Username" />
-                    <br>
-    
-                    <input id="edit_session_level" type="text" placeholder="Level" />
-                    <br>
-    
-                    <input id="edit_session_character" type="text" placeholder="Character" />
-                    <br>
-    
-                    <input id="edit_session_time" type="text" placeholder="Time" />
-                    <br>
-    
-                    <button type="submit">Create</button>
-    
-                </form>
+                <a href="javascript:toggleForm('edit_session_form', false)" class="form_exit">
+                    <img src="images/icons/close.png" />
+                </a>
+
+                <span class="form_title">Edit a game session</span>
+                <br>
+
+                <input id="edit_session_username" type="text" placeholder="Username" />
+                <br>
+
+                <input id="edit_session_level" type="text" placeholder="Level" />
+                <br>
+
+                <input id="edit_session_character" type="text" placeholder="Character" />
+                <br>
+
+                <input id="edit_session_time" type="text" placeholder="Time" />
+                <br>
+
+                <button type="submit">Create</button>
+
+            </form>
 
         </div>
 
-
-        <footer>
-            This page is a admin-only management page for the GhostRace game, if you participate in the activities it facilitates then
-            you are agreeing to our
-            <a href="tos.html" class="footer_highlight">Terms of Service.</a>
-            <br>
-            <span class="footer_highlight">GhostRace © All rights reserved, 2018</span>
-        </footer>
-
     </div>
+
+    <footer>
+        <span class="footer_highlight">GhostRace © All rights reserved, 2018</span>
+    </footer>
 
 </body>
 
