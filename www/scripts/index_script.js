@@ -1,8 +1,40 @@
-$( document ).ready(function() {
+$(document).ready(function () {
     buildNavigation();
+    switchPage("players");
 });
 
-function buildNavigation(){
+
+function switchPage(page) {
+    clearContent();
+
+    if (page === "overview") {
+        buildOverview();
+    } else if (page === "players") {
+        buildPlayers();
+    }
+}
+
+function clearContent() {
+    var pageContent = document.getElementById("page_content");
+    while (pageContent.firstChild) {
+        pageContent.removeChild(pageContent.firstChild);
+    }
+}
+
+/**
+ * Builds the top navigation bar, including all,
+ * the navigation links, username and profile picture.
+ */
+function buildNavigation() {
+
+    var buildNavBtn = function (text, url) {
+        var li = document.createElement("li");
+        var a = document.createElement("a");
+        a.textContent = text;
+        a.href = url;
+        li.appendChild(a);
+        return li;
+    }
 
     var body = document.body;
 
@@ -16,9 +48,9 @@ function buildNavigation(){
     var nav = document.createElement("nav");
     var ul = document.createElement("ul");
 
-    ul.appendChild(buildNavButton("Home", "javascript:showOverview()"));
-    ul.appendChild(buildNavButton("Players", "javascript:showPlayers()"));
-    ul.appendChild(buildNavButton("Sessions", "javascript:showSessions()"));
+    ul.appendChild(buildNavBtn("Home", "javascript:switchPage('overview')"));
+    ul.appendChild(buildNavBtn("Players", "javascript:switchPage('players')"));
+    ul.appendChild(buildNavBtn("Sessions", "javascript:switchPage('sessions')"));
 
     var separator = document.createElement("li");
     separator.id = "nav_separator";
@@ -26,6 +58,7 @@ function buildNavigation(){
 
     ul.appendChild(separator);
 
+    //TODO CHANGE THIS TO REAL VALUES
     var userNav = document.createElement("li");
 
     var userNavA = document.createElement("a");
@@ -51,46 +84,6 @@ function buildNavigation(){
     navigation.appendChild(nav);
 
     body.appendChild(navigation);
-
-}
-
-function buildNavButton(text, url){
-    var li = document.createElement("li");
-    var a = document.createElement("a");
-    a.textContent = text;
-    a.href = url;
-    li.appendChild(a);
-    return li;
-}
-
-/**
- * Shows the overview section, hiding the players and the sessions
- * sections.
- */
-function showOverview() {
-    $("#players").css("display", "none");
-    $("#sessions").css("display", "none");
-    $("#overview").css("display", "block");
-}
-
-/**
- * Shows the players section, hiding the sessions and the overview
- * sections.
- */
-function showPlayers() {
-    $("#sessions").css("display", "none");
-    $("#overview").css("display", "none");
-    $("#players").css("display", "block");
-}
-
-/**
- * Shows the sessions sections, hiding the players and the overview
- * sections.
- */
-function showSessions() {
-    $("#players").css("display", "none");
-    $("#overview").css("display", "none");
-    $("#sessions").css("display", "block");
 }
 
 /**
@@ -113,6 +106,7 @@ function showSessionsList(timeSpan) {
 
 function addPlayer() {
     //TO-DO clear all the form fields
+    alert("yeaa");
     toggleForm("new_player_form", true);
 }
 
