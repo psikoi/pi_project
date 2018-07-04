@@ -1,31 +1,89 @@
-/**
- * Shows the overview section, hiding the players and the sessions
- * sections.
- */
-function showOverview() {
-    $("#players").css("display", "none");
-    $("#sessions").css("display", "none");
-    $("#overview").css("display", "block");
+$(document).ready(function () {
+    buildNavigation();
+    switchPage("players");
+});
+
+
+function switchPage(page) {
+    clearContent();
+
+    if (page === "overview") {
+        buildOverview();
+    } else if (page === "players") {
+        buildPlayers();
+    }
+}
+
+function clearContent() {
+    var pageContent = document.getElementById("page_content");
+    while (pageContent.firstChild) {
+        pageContent.removeChild(pageContent.firstChild);
+    }
 }
 
 /**
- * Shows the players section, hiding the sessions and the overview
- * sections.
+ * Builds the top navigation bar, including all,
+ * the navigation links, username and profile picture.
  */
-function showPlayers() {
-    $("#sessions").css("display", "none");
-    $("#overview").css("display", "none");
-    $("#players").css("display", "block");
-}
+function buildNavigation() {
 
-/**
- * Shows the sessions sections, hiding the players and the overview
- * sections.
- */
-function showSessions() {
-    $("#players").css("display", "none");
-    $("#overview").css("display", "none");
-    $("#sessions").css("display", "block");
+    var buildNavBtn = function (text, url) {
+        var li = document.createElement("li");
+        var a = document.createElement("a");
+        a.textContent = text;
+        a.href = url;
+        li.appendChild(a);
+        return li;
+    }
+
+    var body = document.body;
+
+    var navigation = document.createElement("div");
+    navigation.id = "navigation";
+    navigation.className = "navigation";
+
+    var logo = document.createElement("img");
+    logo.src = "images/logo_navigation.png";
+
+    var nav = document.createElement("nav");
+    var ul = document.createElement("ul");
+
+    ul.appendChild(buildNavBtn("Home", "javascript:switchPage('overview')"));
+    ul.appendChild(buildNavBtn("Players", "javascript:switchPage('players')"));
+    ul.appendChild(buildNavBtn("Sessions", "javascript:switchPage('sessions')"));
+
+    var separator = document.createElement("li");
+    separator.id = "nav_separator";
+    separator.textContent = "|";
+
+    ul.appendChild(separator);
+
+    //TODO CHANGE THIS TO REAL VALUES
+    var userNav = document.createElement("li");
+
+    var userNavA = document.createElement("a");
+    userNavA.href = "javascript:toggleForm('login_forn', true)";
+
+    var userNavImg = document.createElement("img");
+    userNavImg.src = "images/user_profile.jpg";
+
+    var userNavName = document.createElement("div");
+    userNavName.className = "nav_username";
+    userNavName.textContent = "Ruben";
+
+    userNavA.appendChild(userNavImg);
+    userNavA.appendChild(userNavName);
+
+    userNav.appendChild(userNavA);
+
+    ul.appendChild(userNav);
+
+    nav.appendChild(ul);
+
+    navigation.appendChild(logo);
+    navigation.appendChild(nav);
+
+    body.appendChild(navigation);
 }
 
 /**
@@ -48,6 +106,7 @@ function showSessionsList(timeSpan) {
 
 function addPlayer() {
     //TO-DO clear all the form fields
+    alert("yeaa");
     toggleForm("new_player_form", true);
 }
 
