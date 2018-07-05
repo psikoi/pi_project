@@ -15,15 +15,6 @@ function buildAddSession() {
 }
 
 /**
- * Builds the remove session dialog.
- */
-function buildRemoveSession() {
-    if (confirm("Are you sure? This session will be permanently removed.")) {
-        removeSession();
-    }
-}
-
-/**
  * Builds the edit session form.
  */
 function buildEditSession() {
@@ -57,6 +48,15 @@ function buildEditSession() {
     form.appendChild(character);
     form.appendChild(time);
     form.appendChild(buildBasicSubmit("Confirm"));
+}
+
+/**
+ * Builds the remove session dialog.
+ */
+function buildRemoveSession() {
+    if (confirm("Are you sure? This session will be permanently removed.")) {
+        removeSession();
+    }
 }
 
 /**
@@ -111,6 +111,7 @@ function addSession() {
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
         alert("Session added");
         closeForm();
+        updateSessionsTable();
     } else {
         alert("Session failed to add")
     }
@@ -169,6 +170,7 @@ function editSession() {
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
         alert("Session edited");
         closeForm();
+        updateSessionsTable();
     } else {
         alert("Session failed to edit")
     }
@@ -184,6 +186,7 @@ function removeSession() {
 
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
         alert("Session removed");
+        updateSessionsTable();
     } else {
         alert("Session failed to remove")
     }

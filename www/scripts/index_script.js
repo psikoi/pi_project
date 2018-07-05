@@ -1,6 +1,6 @@
 $(document).ready(function () {
     buildNavigation();
-    switchPage("sessions");
+    switchPage("players");
 });
 
 function switchPage(page) {
@@ -106,6 +106,35 @@ function buildBasicInput(id, placeholder) {
     input.id = id;
     input.placeholder = placeholder;
     return input;
+}
+
+/* Builds a simple password input */
+function buildPasswordInput(id, placeholder) {
+    var input = document.createElement("input");
+    input.type = "password";
+    input.id = id;
+    input.placeholder = placeholder;
+    return input;
+}
+
+/* Builds a simple date input */
+function buildDateInput(id) {
+    var input = document.createElement("input");
+    input.type = "date";
+    input.id = id;
+    return input;
+}
+
+/* Builds a simple selector with the given options */
+function buildSelector(id, options) {
+    var selector = document.createElement("select");
+    selector.id = id;
+    options.forEach(element => {
+        var option = document.createElement("option");
+        option.textContent = element;
+        selector.appendChild(option);
+    });
+    return selector;
 }
 
 /* Builds a simple submit button */

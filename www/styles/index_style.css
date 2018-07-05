@@ -459,9 +459,6 @@ form input:focus
     outline: none;
 }
 
-/*
-
-
 form input[type = 'date']
 {
     width: 168px;
@@ -471,16 +468,17 @@ form input[type = 'date']
 .form_label
 {
     font-size: 12px;
-
+    margin-left: 8px;
+    margin-bottom: 3px;
     float: left;
 }
 
 form select
 {
     width: 184px;
-    padding: 12px 6px;
+    padding: 7px 6px;
+    margin-bottom: 10px;
 }
-*/
 
 @media screen and (max-width: 768px)
 {
