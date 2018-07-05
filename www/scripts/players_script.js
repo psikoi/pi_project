@@ -37,8 +37,10 @@ function updatePlayersFilters() {
     var selector = document.getElementById("players_timespan");
 
     var filters = new Object();
-    filters.search = search.value;
     filters.timespan = selector.value;
+    
+    if (search.value.length > 0)
+        filters.search = search.value;
 
     updatePlayersTable(filters);
 }
@@ -51,6 +53,9 @@ function updatePlayersTable(filters) {
     var parent = document.getElementById("players").children[0];
     parent.removeChild(document.getElementById("players_table"));
     parent.appendChild(buildPlayersTable(filters));
+
+    selectedPlayerId = -1;
+    preparePlayerSelectionEvents();
 }
 
 /**

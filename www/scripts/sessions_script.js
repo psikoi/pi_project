@@ -29,8 +29,10 @@ function updateSessionsFilters() {
     var selector = document.getElementById("sessions_timespan");
 
     var filters = new Object();
-    filters.search = search.value;
     filters.timespan = selector.value;
+    
+    if (search.value.length > 0)
+        filters.search = search.value;
 
     updateSessionsTable(filters);
 }
@@ -43,6 +45,9 @@ function updateSessionsTable(filters) {
     var parent = document.getElementById("sessions").children[0];
     parent.removeChild(document.getElementById("sessions_table"));
     parent.appendChild(buildSessionsTable(filters));
+
+    selectedSessionId = -1;
+    prepareSessionSelectionEvents();
 }
 
 /**
@@ -104,6 +109,7 @@ function buildSessionsTable(filters) {
 
     table.appendChild(thead);
     table.appendChild(tbody);
+
     return table;
 }
 
