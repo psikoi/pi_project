@@ -94,8 +94,8 @@ function buildOverviewStat(titleText, subtitleText, data, left) {
             var entry = document.createElement("div");
             entry.className = "overview_info_entry";
 
-            var a = document.createElement("a");
-            a.textContent = key + ":";
+            var entryTitle = document.createElement("span");
+            entryTitle.textContent = key + ":";
 
             var valueStr = data[key];
 
@@ -103,8 +103,8 @@ function buildOverviewStat(titleText, subtitleText, data, left) {
             value.textContent = " " + valueStr;
             value.className = "overview_info_entry_" + (valueStr.startsWith("+") ? "positive" : "negative");
 
-            a.appendChild(value);
-            entry.appendChild(a);
+            entry.appendChild(entryTitle);
+            entry.appendChild(value);
             entryContainer.appendChild(entry);
         });
     }

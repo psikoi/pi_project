@@ -1,6 +1,198 @@
 var selectedSessionId;
 
 /**
+ * Builds the add session form.
+ */
+function buildAddSession() {
+    var pane = buildBaseForm("Add a new game session", "javascript: addSession()");
+    var form = pane.children[0];
+
+    form.appendChild(buildBasicInput("session_username", "Username"));
+    form.appendChild(buildBasicInput("session_level", "Level"));
+    form.appendChild(buildBasicInput("session_character", "Character"));
+    form.appendChild(buildBasicInput("session_time", "Time (mm:ss)"));
+    form.appendChild(buildBasicSubmit("Add"));
+}
+
+/**
+ * Builds the edit session form.
+ */
+function buildEditSession() {
+
+    //fazer request de get session usando o id que tá na variavel selectedSessionId
+    //TODO TROCAR POR SESSION REAL
+    var session = {
+        id: 0,
+        date: "27/03/2018 18:09",
+        username: "Ruben",
+        level: 3,
+        character: "Sargent",
+        time: "03:18"
+    }
+
+    var pane = buildBaseForm("Edit a game session", "javascript: editSession()");
+    var form = pane.children[0];
+
+    var username = buildBasicInput("session_username", "Username");
+    var level = buildBasicInput("session_level", "Level");
+    var character = buildBasicInput("session_character", "Character");
+    var time = buildBasicInput("session_time", "Time (mm:ss)");
+
+    username.value = session.username;
+    level.value = session.level;
+    character.value = session.character;
+    time.value = session.time;
+
+    form.appendChild(username);
+    form.appendChild(level);
+    form.appendChild(character);
+    form.appendChild(time);
+    form.appendChild(buildBasicSubmit("Confirm"));
+}
+
+/**
+ * Builds the remove session dialog.
+ */
+function buildRemoveSession() {
+    if (confirm("Are you sure? This session will be permanently removed.")) {
+        removeSession();
+    }
+}
+
+/**
+ * Adds a new game session.
+ * This method verifies the user inputs and makes a add session
+ * request to the server.
+ */
+function addSession() {
+
+    var username = document.getElementById("session_username").value;
+    var level = document.getElementById("session_level").value;
+    var character = document.getElementById("session_character").value;
+    var time = document.getElementById("session_time").value;
+
+    if (username.length == 0) {
+        alert("That username is not valid");
+        return;
+    }
+
+    if (!nameExists) { //TROCAR POR VERIFICAÇÃO REAL
+        alert("That username does not exist.");
+        return;
+    }
+
+    if (level.length == 0 || !isInt(level)) {
+        alert("That level is not valid");
+        return;
+    }
+
+    if (!levelExists) {
+        alert("That level does not exist");
+        return;
+    }
+
+    if (character.length == 0) {
+        alert("That character is not valid");
+        return;
+    }
+
+    if (!characterExists) { //TROCAR POR VERIFICAÇÃO REAL
+        alert("That character does not exist.");
+        return;
+    }
+
+    if (time.length == 0 || !isTime(time)) {
+        alert("That time is not valid (mm:ss)");
+        return;
+    }
+
+    //enviar pedido aqui
+
+    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+        alert("Session added");
+        closeForm();
+        updateSessionsTable();
+    } else {
+        alert("Session failed to add")
+    }
+}
+
+
+/**
+ * Edits a game session.
+ * This method verifies the user inputs and makes a edit session
+ * request to the server.
+ */
+function editSession() {
+
+    var username = document.getElementById("session_username").value;
+    var level = document.getElementById("session_level").value;
+    var character = document.getElementById("session_character").value;
+    var time = document.getElementById("session_time").value;
+
+    if (username.length == 0) {
+        alert("That username is not valid");
+        return;
+    }
+
+    if (!nameExists) { //TROCAR POR VERIFICAÇÃO REAL
+        alert("That username does not exist.");
+        return;
+    }
+
+    if (level.length == 0 || !isInt(level)) {
+        alert("That level is not valid");
+        return;
+    }
+
+    if (!levelExists) {
+        alert("That level does not exist");
+        return;
+    }
+
+    if (character.length == 0) {
+        alert("That character is not valid");
+        return;
+    }
+
+    if (!characterExists) { //TROCAR POR VERIFICAÇÃO REAL
+        alert("That character does not exist.");
+        return;
+    }
+
+    if (time.length == 0 || !isTime(time)) {
+        alert("That time is not valid (mm:ss)");
+        return;
+    }
+
+    //enviar pedido aqui
+
+    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+        alert("Session edited");
+        closeForm();
+        updateSessionsTable();
+    } else {
+        alert("Session failed to edit")
+    }
+}
+
+
+/**
+ * Makes a server request to remove a session.
+ */
+function removeSession() {
+
+    //enviar pedido aqui
+
+    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+        alert("Session removed");
+        updateSessionsTable();
+    } else {
+        alert("Session failed to remove")
+    }
+}
+
+/**
  * Updates the filters with the value of the 
  * filter selector and input. Then calls for a table update.
  */
@@ -9,8 +201,10 @@ function updateSessionsFilters() {
     var selector = document.getElementById("sessions_timespan");
 
     var filters = new Object();
-    filters.search = search.value;
     filters.timespan = selector.value;
+
+    if (search.value.length > 0)
+        filters.search = search.value;
 
     updateSessionsTable(filters);
 }
@@ -23,6 +217,9 @@ function updateSessionsTable(filters) {
     var parent = document.getElementById("sessions").children[0];
     parent.removeChild(document.getElementById("sessions_table"));
     parent.appendChild(buildSessionsTable(filters));
+
+    selectedSessionId = -1;
+    prepareSessionSelectionEvents();
 }
 
 /**
@@ -43,7 +240,7 @@ function buildSessionsTable(filters) {
             id: 0,
             date: "27/03/2018 16:32",
             username: "tiagofsantos",
-            leve: 1,
+            level: 1,
             character: "Scout",
             time: "02:50"
         },
@@ -51,7 +248,7 @@ function buildSessionsTable(filters) {
             id: 0,
             date: "27/03/2018 18:09",
             username: "Ruben",
-            leve: 3,
+            level: 3,
             character: "Sargent",
             time: "03:18"
         }
@@ -84,6 +281,7 @@ function buildSessionsTable(filters) {
 
     table.appendChild(thead);
     table.appendChild(tbody);
+
     return table;
 }
 
@@ -159,9 +357,9 @@ function buildSessions() {
     var buttonsContainer = document.createElement("div");
     buttonsContainer.className = "table_actions";
 
-    buttonsContainer.appendChild(createActionButton("sessions_add", addSession, "Add"));
-    buttonsContainer.appendChild(createActionButton("sessions_edit", editSession, "Edit"));
-    buttonsContainer.appendChild(createActionButton("sessions_remove", removeSession, "Remove"));
+    buttonsContainer.appendChild(createActionButton("sessions_add", buildAddSession, "Add"));
+    buttonsContainer.appendChild(createActionButton("sessions_edit", buildEditSession, "Edit"));
+    buttonsContainer.appendChild(createActionButton("sessions_remove", buildRemoveSession, "Remove"));
 
     tableFilter.appendChild(searchContainer);
     tableFilter.appendChild(selector);

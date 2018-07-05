@@ -1,6 +1,236 @@
 var selectedPlayerId;
 
 /**
+ * Builds the add player form.
+ */
+function buildAddPlayer() {
+    var pane = buildBaseForm("Add a new player account", "javascript: addPlayer()");
+    var form = pane.children[0];
+
+    form.appendChild(buildBasicInput("player_username", "Username"));
+    form.appendChild(buildPasswordInput("player_password", "Password"));
+    form.appendChild(buildPasswordInput("player_password_confirm", "Password (Confirmation)"));
+
+    var birthdateLabel = document.createElement("span");
+    birthdateLabel.className = "form_label";
+    birthdateLabel.textContent = "Birthdate";
+    form.appendChild(birthdateLabel);
+
+    form.appendChild(buildDateInput("player_birthdate"));
+
+    var countryLabel = document.createElement("span");
+    countryLabel.className = "form_label";
+    countryLabel.textContent = "Country";
+    form.appendChild(countryLabel);
+
+    //TODO TROCAR POR ARRAY DE PAISES NA BD
+    form.appendChild(buildSelector("player_country", ["Portugal", "France"]));
+    form.appendChild(buildBasicSubmit("Add"));
+}
+
+/**
+ * Builds the edit player form.
+ */
+function buildEditPlayer() {
+
+    //fazer request de get player usando o id que tá na variavel selectedPlayerId
+    //TODO TROCAR POR PLAYER REAL
+    var player = {
+        id: 1,
+        rank: 8310,
+        username: "baziiK",
+        birthdate: "1996-06-30", //ano, mês, dia
+        country: "France",
+        status: "N/A"
+    }
+
+    var pane = buildBaseForm("Edit a player account", "javascript: editPlayer()");
+    var form = pane.children[0];
+
+    var username = buildBasicInput("player_username", "Username");
+    var password = buildBasicInput("player_password", "Password");
+    var passwordConfirm = buildPasswordInput("player_password_confirm", "Password (Confirmation)");
+
+    username.value = player.username;
+
+    form.appendChild(username);
+    form.appendChild(password);
+    form.appendChild(passwordConfirm);
+
+    var birthdateLabel = document.createElement("span");
+    birthdateLabel.className = "form_label";
+    birthdateLabel.textContent = "Birthdate";
+    form.appendChild(birthdateLabel);
+
+    var birthdate = buildDateInput("player_birthdate");
+    birthdate.value = player.birthdate;
+
+    form.appendChild(birthdate);
+
+    var countryLabel = document.createElement("span");
+    countryLabel.className = "form_label";
+    countryLabel.textContent = "Country";
+    form.appendChild(countryLabel);
+
+    //TODO TROCAR POR ARRAY DE PAISES NA BD
+    var country = buildSelector("player_country", ["Portugal", "France"]);
+    country.value = player.country;
+
+    form.appendChild(country);
+
+    form.appendChild(buildBasicSubmit("Confirm"));
+}
+
+/**
+ * Builds the remove player dialog.
+ */
+function buildRemovePlayer() {
+    if (confirm("Are you sure? This player will be permanently removed.")) {
+        removePlayer();
+    }
+}
+
+/**
+ * Builds the ban player dialog.
+ */
+function buildBanPlayer() {
+    if (confirm("Are you sure? This player will be banned.")) {
+        banPlayer();
+    }
+}
+
+/**
+ * Adds a new player account.
+ * This method verifies the user inputs and makes a add player
+ * request to the server.
+ */
+function addPlayer() {
+
+    const minimumPasswordLength = 8;
+
+    var username = document.getElementById("player_username").value;
+    var password = document.getElementById("player_password").value;
+    var passwordConfirm = document.getElementById("player_password_confirm").value;
+    var birthDate = document.getElementById("player_birthdate").value;
+    var country = document.getElementById("player_country").value;
+
+    if (username.length == 0) {
+        alert("That username is not valid");
+        return;
+    }
+
+    if (nameExists) { //TROCAR POR VERIFICAÇÃO REAL
+        alert("That username already exist.");
+        return;
+    }
+
+    if (password.length < minimumPasswordLength) {
+        alert("The password must be " + minimumPasswordLength + " characters or more long.");
+        return;
+    }
+
+    if (password !== passwordConfirm) {
+        alert("The passwords do not match");
+        return;
+    }
+
+    if (birthDate.length == 0) {
+        alert("That date is invalid");
+        return;
+    }
+
+    //enviar pedido aqui
+
+    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+        alert("Player added");
+        closeForm();
+        updatePlayersTable();
+    } else {
+        alert("Player failed to add")
+    }
+}
+
+/**
+ * Edits a player account.
+ * This method verifies the user inputs and makes a edit player
+ * request to the server.
+ */
+function editPlayer() {
+
+    const minimumPasswordLength = 8;
+
+    var username = document.getElementById("player_username").value;
+    var password = document.getElementById("player_password").value;
+    var passwordConfirm = document.getElementById("player_password_confirm").value;
+    var birthDate = document.getElementById("player_birthdate").value;
+    var country = document.getElementById("player_country").value;
+
+    if (username.length == 0) {
+        alert("That username is not valid");
+        return;
+    }
+
+    if (nameExists) { //TROCAR POR VERIFICAÇÃO REAL
+        alert("That username already exist.");
+        return;
+    }
+
+    if (password.length < minimumPasswordLength) {
+        alert("The password must be " + minimumPasswordLength + " characters or more long.");
+        return;
+    }
+
+    if (password !== passwordConfirm) {
+        alert("The passwords do not match");
+        return;
+    }
+
+    if (birthDate.length == 0) {
+        alert("That date is invalid");
+        return;
+    }
+
+    //enviar pedido aqui
+
+    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+        alert("Player edited");
+        closeForm();
+        updatePlayersTable();
+    } else {
+        alert("Player failed to edit")
+    }
+}
+
+/**
+ * Makes a server request to ban a player.
+ */
+function banPlayer() {
+
+    //enviar pedido aqui
+
+    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+        alert("Player banned");
+        updatePlayersTable();
+    } else {
+        alert("Player failed to ban")
+    }
+}
+
+/**
+ * Makes a server request to remove a player.
+ */
+function removePlayer() {
+    //enviar pedido aqui
+
+    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+        alert("Player removed");
+        updatePlayersTable();
+    } else {
+        alert("Player failed to remove")
+    }
+}
+
+/**
  * Updates the filters with the value of the 
  * filter selector and input. Then calls for a table update.
  */
@@ -9,8 +239,10 @@ function updatePlayersFilters() {
     var selector = document.getElementById("players_timespan");
 
     var filters = new Object();
-    filters.search = search.value;
     filters.timespan = selector.value;
+
+    if (search.value.length > 0)
+        filters.search = search.value;
 
     updatePlayersTable(filters);
 }
@@ -23,6 +255,9 @@ function updatePlayersTable(filters) {
     var parent = document.getElementById("players").children[0];
     parent.removeChild(document.getElementById("players_table"));
     parent.appendChild(buildPlayersTable(filters));
+
+    selectedPlayerId = -1;
+    preparePlayerSelectionEvents();
 }
 
 /**
@@ -163,10 +398,10 @@ function buildPlayers() {
     var buttonsContainer = document.createElement("div");
     buttonsContainer.className = "table_actions";
 
-    buttonsContainer.appendChild(createActionButton("players_add", addPlayer, "Add"));
-    buttonsContainer.appendChild(createActionButton("players_edit", editPlayer, "Edit"));
-    buttonsContainer.appendChild(createActionButton("players_ban", banPlayer, "Ban"));
-    buttonsContainer.appendChild(createActionButton("players_remove", removePlayer, "Remove"));
+    buttonsContainer.appendChild(createActionButton("players_add", buildAddPlayer, "Add"));
+    buttonsContainer.appendChild(createActionButton("players_edit", buildEditPlayer, "Edit"));
+    buttonsContainer.appendChild(createActionButton("players_ban", buildBanPlayer, "Ban"));
+    buttonsContainer.appendChild(createActionButton("players_remove", buildRemovePlayer, "Remove"));
 
     tableFilter.appendChild(searchContainer);
     tableFilter.appendChild(selector);

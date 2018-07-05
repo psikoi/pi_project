@@ -1,8 +1,7 @@
 $(document).ready(function () {
     buildNavigation();
-    switchPage("sessions");
+    switchPage("players");
 });
-
 
 function switchPage(page) {
     clearContent();
@@ -88,102 +87,97 @@ function buildNavigation() {
     body.appendChild(navigation);
 }
 
-/**
- * Stub method, this should scroll the page down to the Players section,
- * change the selector value to the appropriate time span
- * and populate it with only players registered during the timespan
- * given by the parameter.
- */
-function showPlayersList(timeSpan) {
+/* Returns whether or not the given parameter is an integer */
+function isInt(num) {
+    return !isNaN(num) &&
+        parseInt(Number(num)) == num &&
+        !isNaN(parseInt(num, 10));
 }
 
-/**
- * Stub method, this should scroll the page down to the Sessions section,
- * change the selector value to the appropriate time span
- * and populate it with only sessions played during the timespan
- * given by the parameter.
- */
-function showSessionsList(timeSpan) {
+/* Returns whether or not the given string is in a mm:ss time format */
+function isTime(str) {
+    return (/^(?:[0-5][0-9]):[0-5][0-9]$/).test(str);
 }
 
-function addPlayer() {
-    //TO-DO clear all the form fields
-    toggleForm("new_player_form", true);
+/* Builds a simple text input */
+function buildBasicInput(id, placeholder) {
+    var input = document.createElement("input");
+    input.type = "text";
+    input.id = id;
+    input.placeholder = placeholder;
+    return input;
 }
 
-function editPlayer() {
-    //TO-DO clear all the form fields
-    toggleForm("edit_player_form", true);
+/* Builds a simple password input */
+function buildPasswordInput(id, placeholder) {
+    var input = document.createElement("input");
+    input.type = "password";
+    input.id = id;
+    input.placeholder = placeholder;
+    return input;
 }
 
-/**
- * Stub method, this should call backend methods to
- * change a player's status to banned and also
- * display that change on the player table.
- */
-function banPlayer() {
+/* Builds a simple date input */
+function buildDateInput(id) {
+    var input = document.createElement("input");
+    input.type = "date";
+    input.id = id;
+    return input;
 }
 
-/**
- * Stub method, this should call backend methods to
- * delete a player account and also remove that player
- * from the players table.
- */
-function removePlayer() {
+/* Builds a simple selector with the given options */
+function buildSelector(id, options) {
+    var selector = document.createElement("select");
+    selector.id = id;
+    options.forEach(element => {
+        var option = document.createElement("option");
+        option.textContent = element;
+        selector.appendChild(option);
+    });
+    return selector;
 }
 
-function addSession() {
-    //TO-DO clear all the form fields
-    toggleForm("new_session_form", true);
+/* Builds a simple submit button */
+function buildBasicSubmit(text) {
+    var button = document.createElement("button");
+    button.type = "submit";
+    button.textContent = text;
+    return button;
 }
 
-function editSession() {
-    //TO-DO clear all the form fields
-    toggleForm("edit_session_form", true);
+/* Builds a base form that can be used to build on top of. */
+function buildBaseForm(titleText, action) {
+    var pageContent = document.getElementById("page_content");
+
+    var darkPane = document.createElement("div");
+    darkPane.id = "dark_pane";
+
+    var form = document.createElement("form");
+    form.action = action;
+
+    var close = document.createElement("a");
+    close.className = "form_exit";
+    close.href = "javascript: closeForm()";
+
+    var closeImg = document.createElement("img");
+    closeImg.src = "images/icons/close.png";
+
+    close.appendChild(closeImg);
+
+    var title = document.createElement("div");
+    title.className = "form_title";
+    title.textContent = titleText;
+
+    form.appendChild(close);
+    form.appendChild(title);
+    darkPane.appendChild(form);
+
+    pageContent.appendChild(darkPane);
+    return darkPane;
 }
 
-/**
- * Stub method, this should call backend methods to
- * delete a game session and also remove that player
- * from the sessions table.
- */
-function removeSession() {
-}
-
-/**
- * Stub method, this should call backend methods to
- * authenticate and login a user account.
- */
-function login() {
-    toggleForm("login_form", false);
-}
-
-function submitPlayerRegister() {
-    toggleForm("new_player_form", false);
-}
-
-function submitPlayerEdit() {
-    toggleForm("edit_player_form", false);
-}
-
-function submitSessionRegister() {
-    toggleForm("new_session_form", false);
-}
-
-function submitSessionEdit() {
-    toggleForm("edit_session_form", false);
-}
-
-function toggleForm(formId, on) {
-
-    var form = $("#" + formId);
-    var darkPane = $("#dark_pane");
-
-    if (on) {
-        form.css("display", "inline-block");
-        darkPane.show();
-    } else {
-        form.css("display", "none");
-        darkPane.hide();
-    }
+/* Closes the currently opened form */
+function closeForm() {
+    var pageContent = document.getElementById("page_content");
+    pageContent.removeChild(document.getElementById("dark_pane"));
 }
