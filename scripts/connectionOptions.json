@@ -1,6 +1,6 @@
 {
     "host": "localhost",
     "user": "root",
-    "database": "pi_project",
-    "password": ""
+    "database": "ghostrace",
+    "password": "123"
 }
