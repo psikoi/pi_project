@@ -153,7 +153,7 @@ INSERT INTO `country` (`id`, `name`, `short_name`) VALUES
 (41, 'Central African Republic', 'CF'),
 (42, 'Congo (Brazzaville)', 'CG'),
 (43, 'Switzerland', 'CH'),
-(44, 'C?te d\'Ivoire', 'CI'),
+(44, "Cote d'Ivoire", 'CI'),
 (45, 'Cook Islands ', 'CK'),
 (46, 'Chile', 'CL'),
 (47, 'Cameroon', 'CM'),
