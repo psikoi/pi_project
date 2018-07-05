@@ -3,7 +3,6 @@ $(document).ready(function () {
     switchPage("sessions");
 });
 
-
 function switchPage(page) {
     clearContent();
 
@@ -86,4 +85,70 @@ function buildNavigation() {
     navigation.appendChild(nav);
 
     body.appendChild(navigation);
+}
+
+/* Returns whether or not the given parameter is an integer */
+function isInt(num) {
+    return !isNaN(num) &&
+        parseInt(Number(num)) == num &&
+        !isNaN(parseInt(num, 10));
+}
+
+/* Returns whether or not the given string is in a mm:ss time format */
+function isTime(str) {
+    return (/^(?:[0-5][0-9]):[0-5][0-9]$/).test(str);
+}
+
+/* Builds a simple text input */
+function buildBasicInput(id, placeholder) {
+    var input = document.createElement("input");
+    input.type = "text";
+    input.id = id;
+    input.placeholder = placeholder;
+    return input;
+}
+
+/* Builds a simple submit button */
+function buildBasicSubmit(text) {
+    var button = document.createElement("button");
+    button.type = "submit";
+    button.textContent = text;
+    return button;
+}
+
+/* Builds a base form that can be used to build on top of. */
+function buildBaseForm(titleText, action) {
+    var pageContent = document.getElementById("page_content");
+
+    var darkPane = document.createElement("div");
+    darkPane.id = "dark_pane";
+
+    var form = document.createElement("form");
+    form.action = action;
+
+    var close = document.createElement("a");
+    close.className = "form_exit";
+    close.href = "javascript: closeForm()";
+
+    var closeImg = document.createElement("img");
+    closeImg.src = "images/icons/close.png";
+
+    close.appendChild(closeImg);
+
+    var title = document.createElement("div");
+    title.className = "form_title";
+    title.textContent = titleText;
+
+    form.appendChild(close);
+    form.appendChild(title);
+    darkPane.appendChild(form);
+
+    pageContent.appendChild(darkPane);
+    return darkPane;
+}
+
+/* Closes the currently opened form */
+function closeForm() {
+    var pageContent = document.getElementById("page_content");
+    pageContent.removeChild(document.getElementById("dark_pane"));
 }
