@@ -87,6 +87,12 @@ CREATE TABLE `statistic` (
   PRIMARY KEY (`id`)
 );
 
+ALTER TABLE `user`
+	ADD CONSTRAINT `user_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`);
+
+ALTER TABLE `user`
+	ADD CONSTRAINT `user_userType` FOREIGN KEY (`user_type_id`) REFERENCES `userType` (`id`);
+
 ALTER TABLE `player`
 	ADD CONSTRAINT `player_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`);
     
@@ -94,7 +100,7 @@ ALTER TABLE `player`
 	ADD CONSTRAINT `player_userType` FOREIGN KEY (`user_type_id`) REFERENCES `userType` (`id`);
 
 ALTER TABLE `gameSession`
-	ADD CONSTRAINT `gameSession_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`);
+	ADD CONSTRAINT `gameSession_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE;
 
 ALTER TABLE `gameSession`
 	ADD CONSTRAINT `gameSession_level` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`);
@@ -103,7 +109,7 @@ ALTER TABLE `gameSession`
 	ADD CONSTRAINT `gameSession_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`);
     
 ALTER TABLE `statistic`
-	ADD CONSTRAINT `statistic_statisticType` FOREIGN KEY (`statistic_type_id`) REFERENCES `statisticType` (`id`);
+	ADD CONSTRAINT `statistic_statisticType` FOREIGN KEY (`statistic_type_id`) REFERENCES `statisticType` (`id`) ON DELETE CASCADE;
     
 ALTER TABLE `statistic`
 	ADD CONSTRAINT `statistic_gameSession` FOREIGN KEY (`game_session_id`) REFERENCES `gameSession` (`id`);
