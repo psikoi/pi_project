@@ -1,17 +1,21 @@
 $(document).ready(function () {
     buildNavigation();
-    switchPage("players");
+    switchPage("statistics");
 });
 
 function switchPage(page) {
     clearContent();
 
-    if (page === "overview") {
+    if (page === "landing") {
+        buildLandingPage();
+    } else if (page === "overview") {
         buildOverview();
     } else if (page === "players") {
         buildPlayers();
     } else if (page === "sessions") {
         buildSessions();
+    } else if (page === "statistics") {
+        buildStatistics();
     }
 }
 
@@ -23,20 +27,111 @@ function clearContent() {
 }
 
 /**
+ * Builds the simple landing page that informs the user that
+ * he needs to login to access the platform.
+ */
+function buildLandingPage() {
+
+    var pageContent = document.getElementById("page_content");
+
+    var section = document.createElement("section");
+    section.id = "landing";
+
+    var header = document.createElement("h3");
+    header.textContent = "You must be logged in to access this platform.";
+
+    var a = document.createElement("a");
+    a.textContent = "Click here to login";
+    a.href = "javascript:buildLogin()";
+
+    pageContent.appendChild(section);
+
+    section.appendChild(header);
+    section.appendChild(a);
+}
+
+/**
+ * If user is null, it will display the default Login and Register actions,
+ * otherwise it will display the page navigation and username/profile picture.
+ */
+function displayUserNavigation(user) {
+
+    var ul = document.getElementById("navigation_list");
+    while (ul.firstChild) {
+        ul.removeChild(ul.firstChild);
+    }
+
+    if (user === null) {
+
+        ul.appendChild(buildNavBtn("Login", "javascript:buildLogin()"));
+        ul.appendChild(buildNavBtn("Register", "javascript:buildRegister()"));
+
+    } else {
+
+        ul.appendChild(buildNavBtn("Home", "javascript:switchPage('overview')"));
+        ul.appendChild(buildNavBtn("Players", "javascript:switchPage('players')"));
+        ul.appendChild(buildNavBtn("Sessions", "javascript:switchPage('sessions')"));
+        ul.appendChild(buildNavBtn("Statistics", "javascript:switchPage('statistics')"));
+
+        var separator = document.createElement("li");
+        separator.id = "nav_separator";
+        separator.textContent = "|";
+
+        ul.appendChild(separator);
+
+        var userNav = document.createElement("li");
+
+        var userNavA = document.createElement("a");
+        userNavA.href = "javascript:logout()";
+
+        var userNavImg = document.createElement("img");
+        userNavImg.src = user.profilePic;
+
+        var userNavName = document.createElement("div");
+        userNavName.className = "nav_username";
+        userNavName.textContent = user.username;
+
+        userNavA.appendChild(userNavImg);
+        userNavA.appendChild(userNavName);
+
+        userNav.appendChild(userNavA);
+        ul.appendChild(userNav);
+    }
+}
+
+/**
+ * Builds a basic navigation button.
+ */
+var buildNavBtn = function (text, url) {
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.textContent = text;
+    a.href = url;
+    li.appendChild(a);
+    return li;
+}
+
+/**
+ * Toggles the mobile navigation when the hamburger icon gets clicked.
+ */
+function toggleNav() {
+    if ($(window).width() > 768)
+        return;
+
+    var ul = $('#navigation_list');
+
+    if (ul.css('display') === 'none')
+        ul.css('display', "inline-block");
+    else
+        ul.css('display', "none");
+
+}
+
+/**
  * Builds the top navigation bar, including all,
  * the navigation links, username and profile picture.
  */
 function buildNavigation() {
-
-    var buildNavBtn = function (text, url) {
-        var li = document.createElement("li");
-        var a = document.createElement("a");
-        a.textContent = text;
-        a.href = url;
-        li.appendChild(a);
-        return li;
-    }
-
     var body = document.body;
 
     var navigation = document.createElement("div");
@@ -47,37 +142,10 @@ function buildNavigation() {
     logo.src = "images/logo_navigation.png";
 
     var nav = document.createElement("nav");
+    nav.onclick = toggleNav;
+
     var ul = document.createElement("ul");
-
-    ul.appendChild(buildNavBtn("Home", "javascript:switchPage('overview')"));
-    ul.appendChild(buildNavBtn("Players", "javascript:switchPage('players')"));
-    ul.appendChild(buildNavBtn("Sessions", "javascript:switchPage('sessions')"));
-
-    var separator = document.createElement("li");
-    separator.id = "nav_separator";
-    separator.textContent = "|";
-
-    ul.appendChild(separator);
-
-    //TODO CHANGE THIS TO REAL VALUES
-    var userNav = document.createElement("li");
-
-    var userNavA = document.createElement("a");
-    userNavA.href = "javascript:toggleForm('login_forn', true)";
-
-    var userNavImg = document.createElement("img");
-    userNavImg.src = "images/user_profile.jpg";
-
-    var userNavName = document.createElement("div");
-    userNavName.className = "nav_username";
-    userNavName.textContent = "Ruben";
-
-    userNavA.appendChild(userNavImg);
-    userNavA.appendChild(userNavName);
-
-    userNav.appendChild(userNavA);
-
-    ul.appendChild(userNav);
+    ul.id = "navigation_list";
 
     nav.appendChild(ul);
 
@@ -85,6 +153,8 @@ function buildNavigation() {
     navigation.appendChild(nav);
 
     body.appendChild(navigation);
+
+    displayUserNavigation(null);
 }
 
 /* Returns whether or not the given parameter is an integer */
@@ -97,6 +167,16 @@ function isInt(num) {
 /* Returns whether or not the given string is in a mm:ss time format */
 function isTime(str) {
     return (/^(?:[0-5][0-9]):[0-5][0-9]$/).test(str);
+}
+
+/**
+ * Returns true if a given date is older than "gap" number of years.
+ */
+function isYearsOlder(date, gap) {
+    var today = new Date();
+    var timeDiff = Math.abs(date.getTime() - today.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    return diffDays > (365 * gap);
 }
 
 /* Builds a simple text input */
