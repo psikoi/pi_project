@@ -45,6 +45,7 @@ function getPlayersFilter(endpoint){
 
 /*********************************************************************** */
 
+<<<<<<< HEAD
 /**
  * Builds the add player form.
  */
@@ -280,6 +281,8 @@ function removePlayer() {
     }
 }
 
+=======
+>>>>>>> 313c90c56296b1fdb6f115e884e2516c6929c946
 /**
  * Updates the filters with the value of the 
  * filter selector and input. Then calls for a table update.
