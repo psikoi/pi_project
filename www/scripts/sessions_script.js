@@ -1,5 +1,51 @@
 var selectedSessionId;
 
+// Holds the information of the sessions currently being shown 
+var currentSessions = [];
+
+/******************************************************************** */
+
+function getSessions(filter){
+    currentSessions = []
+
+    var endpoint = "/session";
+    switch(filter.timespan){
+        case "This month": endpoint += "/month"; break;
+        case "This week": endpoint += "/week"; break;
+        case "Today": endpoint += "/today"; break;
+    }
+
+    getSessionsFilter(endpoint);
+    
+    var aux = [];
+/*
+    if(filter.search){
+        currentSessions.forEach(function(current){
+            if(current.username === filter.search){
+                aux = [current];
+                return;
+            }
+        });
+
+        currentPlayers = aux;
+    }*/
+}
+
+function getSessionsFilter(endpoint){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", endpoint, false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).sessions.forEach(function(r){
+                currentSessions.push(r);
+            });
+        }
+    }
+    xhr.send();
+}
+
+/*********************************************************************** */
+
 /**
  * Updates the filters with the value of the 
  * filter selector and input. Then calls for a table update.
@@ -34,28 +80,15 @@ function buildSessionsTable(filters) {
         //TODO enviar pedido com os filters tipo:
         // timespan: "All time"
         // search: "tiago"
-        console.log(JSON.stringify(filters));
+        //console.log(JSON.stringify(filters));
+
+        getSessions(filters);
     }
 
-    //TODO TROCAR POR DATA REAL
-    var data = [
-        {
-            id: 0,
-            date: "27/03/2018 16:32",
-            username: "tiagofsantos",
-            leve: 1,
-            character: "Scout",
-            time: "02:50"
-        },
-        {
-            id: 0,
-            date: "27/03/2018 18:09",
-            username: "Ruben",
-            leve: 3,
-            character: "Sargent",
-            time: "03:18"
-        }
-    ];
+    // TODO ir buscar o username a partir do user id, ir buscar o tempo a partir das estatisticas
+    // array global com os players e com as statistics e statistictype, e quando se for a construir a tabela itera-se esses arrays
+    // quando isso tiver feito pode-se usar o filtro do nome, em que o que ta em comentario no getSessions tem de ir primeiro ao array de players buscar o id do player,
+    // e so depois e que vai ao currentSessions comparar o id que foi buscar
 
     var table = document.createElement("table");
     table.id = "sessions_table";
@@ -72,7 +105,7 @@ function buildSessionsTable(filters) {
     thead.appendChild(headRow);
 
     var tbody = document.createElement("tbody");
-    data.forEach(function (row) {
+    currentSessions.forEach(function (row) {
         var tableRow = document.createElement("tr");
         Object.keys(row).forEach(function (field) {
             var td = document.createElement("td");
