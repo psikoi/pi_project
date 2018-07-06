@@ -139,6 +139,11 @@ function addPlayer() {
         return;
     }
 
+    if (!isYearsOlder(new Date(birthDate), 12)) {
+        alert("You must be 12 years old or older to register.");
+        return;
+    }
+
     //enviar pedido aqui
 
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
