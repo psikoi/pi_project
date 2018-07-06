@@ -1,5 +1,50 @@
 var selectedPlayerId;
 
+// Holds the information of the players currently being shown 
+var currentPlayers = [];
+
+/******************************************************************** */
+
+function getPlayers(filter){
+    currentPlayers = []
+
+    var endpoint = "/player";
+    switch(filter.timespan){
+        case "This month": endpoint += "/month"; break;
+        case "This week": endpoint += "/week"; break;
+        case "Today": endpoint += "/today"; break;
+    }
+    getPlayersFilter(endpoint);
+    
+    var aux = [];
+
+    if(filter.search){
+        currentPlayers.forEach(function(current){
+            if(current.username === filter.search){
+                aux = [current];
+                return;
+            }
+        });
+
+        currentPlayers = aux;
+    }
+}
+
+function getPlayersFilter(endpoint){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", endpoint, false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).players.forEach(function(r){
+                currentPlayers.push(r);
+            });
+        }
+    }
+    xhr.send();
+}
+
+/*********************************************************************** */
+
 /**
  * Builds the add player form.
  */
@@ -271,35 +316,15 @@ function updatePlayersTable(filters) {
 function buildPlayersTable(filters) {
 
     if (filters != null) {
-        //TODO enviar pedido com os filters tipo:
-        // timespan: "All time"
-        // search: "tiago"
-        console.log(JSON.stringify(filters));
+        getPlayers(filters);
     }
-
-    //TODO TROCAR POR DATA REAL
-    var data = [
-        {
-            id: 0,
-            rank: 567,
-            username: "tiagofsantos",
-            age: 19,
-            country: "PT",
-            status: "Banned"
-        },
-        {
-            id: 1,
-            rank: 8310,
-            username: "baziiK",
-            age: 20,
-            country: "PT",
-            status: "N/A"
-        }
-    ];
-
+    
     var table = document.createElement("table");
     table.id = "players_table";
     table.cellSpacing = "0";
+
+    // TODO Acertar a data recebida pelo request (no array currentPlayers) com as colunas da tabela. 
+    // TODO Calcular idade através da data de nascimento e exibi-la, ir buscar o nome do pais sabendo o seu id. (variavel global countries, fazer request no inico da app a todos os countries e iterar o array)
 
     var columns = ["Id", "Rank", "Username", "Age", "Country", "Status"];
     var thead = document.createElement("thead");
@@ -312,7 +337,8 @@ function buildPlayersTable(filters) {
     thead.appendChild(headRow);
 
     var tbody = document.createElement("tbody");
-    data.forEach(function (row) {
+
+    currentPlayers.forEach(function (row) {
         var tableRow = document.createElement("tr");
         Object.keys(row).forEach(function (field) {
             var td = document.createElement("td");
