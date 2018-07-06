@@ -10,6 +10,7 @@ app.use(express.static("www"));
 
 // GET
 app.get("/player", requestHandlers.getPlayers);
+app.get("/player/username/:username", requestHandlers.getPlayerName);
 app.get("/player/today", requestHandlers.getPlayersToday);
 app.get("/player/week", requestHandlers.getPlayersWeek);
 app.get("/player/month", requestHandlers.getPlayersMonth);
