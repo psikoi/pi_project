@@ -26,21 +26,26 @@ app.get("/countries", requestHandlers.getCountries);
 app.get("/level", requestHandlers.getLevels);
 app.get("/character", requestHandlers.getCharacters);
 app.get("/statisticType", requestHandlers.getStatisticType);
+app.get("/configuration", requestHandlers.getConfigurations);
+app.get("/configurationType", requestHandlers.getConfigurationTypes);
 
 // POST
 app.post("/player", requestHandlers.addUpdatePlayer);
 app.post("/session", requestHandlers.addUpdateSession);
 app.post("/statistic", requestHandlers.addUpdateStatistic);
+app.post("/configuration", requestHandlers.addUpdateConfiguration);
 
 // PUT
 app.put("/player", requestHandlers.addUpdatePlayer);
 app.put("/session", requestHandlers.addUpdateSession);
 app.put("/statistic", requestHandlers.addUpdateStatistic);
+app.put("/configuration", requestHandlers.addUpdateConfiguration);
 
 // DELETE
 app.delete("/player", requestHandlers.deletePlayer);
 app.delete("/session", requestHandlers.deleteSession);
 app.delete("/statistic", requestHandlers.deleteStatistic);
+app.delete("/configuration", requestHandlers.deleteConfiguration);
 
 app.listen(8081, function () {
     console.log("Server running at http://localhost:8081");
