@@ -6,6 +6,8 @@ var currentStatistics = [];
 // Hold information about which users played which sessions. Key = session id, Value = username
 var sessionPlayers = {};
 
+var statisticTypes = {};
+
 /******************************************************************** */
 
 function getStatistics(filter){
@@ -77,10 +79,191 @@ function getSessionByPlayer(){
         }
     }
     xhr.send();
+}
 
+function getStatisticTypes(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/statisticType", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).statisticTypes.forEach(function(r){
+                statisticTypes[r.id] = r.name;
+            });
+        }
+    }
+    xhr.send();
+}
+
+function sendAddStatisticRequest(sessionId, type, value){
+    var success = true;
+
+    var statisticTypeId = getStatisticTypeByFormattedName(type);
+    var dateString = getCurrDateString();
+
+    if(type == "Time"){
+        value = getSecondsByTimeString(value);
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/statistic", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"value": value, "registrationDate": dateString, "statisticTypeId": statisticTypeId, "gameSessionId": sessionId}));
+    return success;
+}
+
+function sendEditStatisticRequest(sessionId, type, value){
+    var success = true;
+
+    var statistic = getCurrentStatistic();
+
+    if(type == "Time"){
+        value = getSecondsByTimeString(value);
+    }
+
+    var registrationDate = statistic.registration_date.split("T")[0];
+    var statisticTypeId = getStatisticTypeByFormattedName(type);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", "/statistic", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"id": selectedStatisticId, "value": value, "registrationDate": registrationDate, "statisticTypeId": statisticTypeId, "gameSessionId": sessionId}));
+    
+    return success;
+}
+
+function sendDeleteStatisticRequest(){
+    var success = true;
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "/statistic", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+    
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"id": selectedStatisticId}));
+
+    return success;
 }
 
 /*********************************************************************** */
+function getCurrentStatistic(){
+    var statistic;
+    currentStatistics.forEach(function(current){
+        if(current.id == selectedStatisticId){
+            statistic = current;
+        }
+    });
+    return statistic;
+}
+
+function getSecondsByTimeString(time){
+    var minutes = parseInt(time.split(":")[0]);
+    var seconds = parseInt(time.split(":")[1]);
+
+    minutes = minutes * 60;
+    return parseInt(seconds + minutes);
+}
+
+function getCurrDateString(){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; 
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd = '0'+dd
+    } 
+
+    if(mm<10) {
+        mm = '0'+mm
+    } 
+
+    return yyyy + '-' + mm + '-' + dd;
+}
+
+function getStatisticTypeNames(){
+	var aux = [];
+    for (var key in statisticTypes) {
+        if (statisticTypes.hasOwnProperty(key)) {
+            aux.push(statisticTypes[key]);
+        }
+    }
+    var final = [];
+
+    aux.forEach(function(current){
+        finalString = formatString(current)
+        
+        final.push(finalString);
+
+    });
+    return final;
+}
+
+function formatString(string){
+    var strings = string.split("_");
+    var finalString = "";
+    var index = 1;
+
+    strings.forEach(function(curr){
+        finalString += curr.charAt(0).toUpperCase() + curr.slice(1);
+        if(strings[index] != undefined){
+            finalString += " ";
+        }
+        index++;
+    });
+
+    return finalString;
+}
+
+function getStatisticTypeByFormattedName(name){
+    name = name.toLowerCase();
+    name = name.split(' ').join('_');
+    
+    var id;
+    for (var key in statisticTypes) {
+        if (statisticTypes.hasOwnProperty(key)) {
+            if(statisticTypes[key] == name){
+                id = key;
+            }
+        }
+    }
+    return id;
+}
+
+function sessionExists(sessionId){
+    if(sessionId in sessionPlayers){
+        return true;
+    }
+    return false;
+}
+
+function secondsToString(time){
+    var minutes = Math.floor(time / 60);
+    var seconds = time - minutes * 60;
+
+    var minutesString = (minutes < 10) ? "0" + minutes : "" + minutes;
+    var secondsString = (seconds < 10) ? "0" + seconds : "" + seconds;
+
+    return minutesString + ":" + secondsString;
+}
 
 /**
  * Builds the add statistic form.
@@ -89,7 +272,7 @@ function buildAddStatistic() {
     var pane = buildBaseForm("Add a new game statistic", "javascript: addStatistic()");
     var form = pane.children[0];
 
-    var types = ["Time", "Items Picked"]; //TODO TROCAR PELA LISTA REAL DE STATISTIC TYPES
+    var types = getStatisticTypeNames(); 
 
     form.appendChild(buildBasicInput("statistic_sessionId", "Game Session Id"));
     form.appendChild(buildSelector("statistic_type", types));
@@ -101,28 +284,28 @@ function buildAddStatistic() {
  * Builds the edit statistic form.
  */
 function buildEditStatistic() {
+    var statistic = getCurrentStatistic();
 
-    //fazer request de get statistic usando o id que tá na variavel selectedStatisticId
-    //TODO TROCAR POR STATISTIC REAL
-    var statistic = {
-        id: 2,
-        gameSessionId: 1,
-        type: "Items Picked",
-        value: "03:18"
-    };
+    var statisticType = statisticTypes[statistic.statistic_type_id];
+    statisticType = formatString(statisticType);
+
+    var statisticValue = statistic.value;
+
+    if(statisticType == "Time")
+         statisticValue = secondsToString(statistic.value);
 
     var pane = buildBaseForm("Edit a game statistic", "javascript: editStatistic()");
     var form = pane.children[0];
 
-    var types = ["Time", "Items Picked"]; //TODO TROCAR PELA LISTA REAL DE STATISTIC TYPES
+    var types = getStatisticTypeNames(); 
 
     var sessionId = buildBasicInput("statistic_sessionId", "Game Session Id");
     var type = buildSelector("statistic_type", types);
     var value = buildBasicInput("statistic_value", "Value");
 
-    sessionId.value = statistic.gameSessionId;
-    type.value = statistic.type;
-    value.value = statistic.value;
+    sessionId.value = statistic.game_session_id;
+    type.value = statisticType;
+    value.value = statisticValue;
 
     form.appendChild(sessionId);
     form.appendChild(type);
@@ -156,7 +339,7 @@ function addStatistic() {
         return;
     }
 
-    if (!sessionExists) { //TROCAR POR VERIFICAÇÃO REAL
+    if (!sessionExists(sessionId)) { 
         alert("That session does not exist.");
         return;
     }
@@ -166,7 +349,7 @@ function addStatistic() {
         return;
     }
 
-    //enviar pedido aqui
+    requestOk = sendAddStatisticRequest(sessionId, type, value);
 
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
         alert("Statistic added");
@@ -193,7 +376,7 @@ function editStatistic() {
         return;
     }
 
-    if (!sessionExists) { //TROCAR POR VERIFICAÇÃO REAL
+    if (!sessionExists(sessionId)) { 
         alert("That session does not exist.");
         return;
     }
@@ -203,9 +386,9 @@ function editStatistic() {
         return;
     }
 
-    //enviar pedido aqui
+    requestOk = sendEditStatisticRequest(sessionId, type, value);
 
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Statistic edited");
         closeForm();
         updateStatisticsTable();
@@ -219,9 +402,9 @@ function editStatistic() {
  */
 function removeStatistic() {
 
-    //enviar pedido aqui
+    requestOk = sendDeleteStatisticRequest();
 
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Statistic removed");
         updateSessionsTable();
     } else {
@@ -392,6 +575,7 @@ function buildStatistics() {
     prepareStatisticsSelectionEvents();
 
     getSessionByPlayer();
+    getStatisticTypes();
 }
 
 /**
@@ -411,7 +595,7 @@ function prepareStatisticsSelectionEvents() {
             toggleStatisticsActions(true);
         }
 
-        selectedStatisticsId = row.find('td:first').html();
+        selectedStatisticId = row.find('td:first').html();
     });
 }
 

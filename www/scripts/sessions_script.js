@@ -4,15 +4,15 @@ var selectedSessionId;
 var currentSessions = [];
 
 // Holds information of the username related to a certain player id. Key = id, Value = username
-var playerNames = {}
+var playerNames = {};
 
-var levelNames = {}
+var levelNames = {};
 
-var characterNames = {}
+var characterNames = {};
 
-var statistics = []
+var statistics = [];
 
-var statisticTypes = {}
+var statisticTypes = {};
 /******************************************************************** */
 
 function getSessions(filter){
