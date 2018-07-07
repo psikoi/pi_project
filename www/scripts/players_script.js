@@ -8,22 +8,22 @@ var countries = {}
 
 /******************************************************************** */
 
-function getPlayers(filter){
+function getPlayers(filter) {
     currentPlayers = []
 
     var endpoint = "/player";
-    switch(filter.timespan){
+    switch (filter.timespan) {
         case "This month": endpoint += "/month"; break;
         case "This week": endpoint += "/week"; break;
         case "Today": endpoint += "/today"; break;
     }
     getPlayersFilter(endpoint);
-    
+
     var aux = [];
 
-    if(filter.search){
-        currentPlayers.forEach(function(current){
-            if(current.username === filter.search){
+    if (filter.search) {
+        currentPlayers.forEach(function (current) {
+            if (current.username === filter.search) {
                 aux = [current];
                 return;
             }
@@ -33,12 +33,12 @@ function getPlayers(filter){
     }
 }
 
-function getPlayersFilter(endpoint){
+function getPlayersFilter(endpoint) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).players.forEach(function(r){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).players.forEach(function (r) {
                 currentPlayers.push(r);
             });
         }
@@ -46,14 +46,14 @@ function getPlayersFilter(endpoint){
     xhr.send();
 }
 
-function getLastPlayerRank(){
+function getLastPlayerRank() {
     var ranks = [];
 
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/player", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).players.forEach(function(r){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).players.forEach(function (r) {
                 ranks.push(r.rank);
             });
         }
@@ -62,28 +62,28 @@ function getLastPlayerRank(){
 
     var minimum = ranks[1];
 
-    ranks.forEach(function(current){
-        if(minimum < current)
+    ranks.forEach(function (current) {
+        if (minimum < current)
             minimum = current;
     });
 
     return minimum;
 }
 
-function getCountries(){
+function getCountries() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/countries", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).countries.forEach(function(r){
-                countries[r.name] = r.id; 
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).countries.forEach(function (r) {
+                countries[r.name] = r.id;
             });
         }
     }
     xhr.send();
 }
 
-function sendAddPlayerRequest(username, password, birthDate, country){
+function sendAddPlayerRequest(username, password, birthDate, country) {
     var countryId = countries[country];
     var rank = getLastPlayerRank() + 1;
 
@@ -91,30 +91,32 @@ function sendAddPlayerRequest(username, password, birthDate, country){
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/player", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            if ("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
                 success = false;
         }
     }
 
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"rank": rank, "username": username, "password": password, "birthDate": birthDate,
-                            "status": "Active", "countryId": countryId, "registrationDate": getCurrentDateString(),
-                            "userTypeId": 2}));
+    xhr.send(JSON.stringify({
+        "rank": rank, "username": username, "password": password, "birthDate": birthDate,
+        "status": "Active", "countryId": countryId, "registrationDate": getCurrentDateString(),
+        "userTypeId": 2
+    }));
 
     return success;
 }
 
-function sendEditPlayerRequest(username, password, birthDate, country){
+function sendEditPlayerRequest(username, password, birthDate, country) {
     var countryId = countries[country];
 
     var success = true;
 
     var player;
 
-    currentPlayers.forEach(function(current){
-        if(current.id == selectedPlayerId){
+    currentPlayers.forEach(function (current) {
+        if (current.id == selectedPlayerId) {
             player = current;
             return;
         }
@@ -124,28 +126,30 @@ function sendEditPlayerRequest(username, password, birthDate, country){
 
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", "/player", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            if ("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
                 success = false;
         }
     }
-    
+
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"id": selectedPlayerId, "rank": player.rank, "username": username, "password": password, "birthDate": birthDate,
-                            "status": player.status, "countryId": countryId, "registrationDate":registrationDate,
-                            "userTypeId": player.user_type_id}));
+    xhr.send(JSON.stringify({
+        "id": selectedPlayerId, "rank": player.rank, "username": username, "password": password, "birthDate": birthDate,
+        "status": player.status, "countryId": countryId, "registrationDate": registrationDate,
+        "userTypeId": player.user_type_id
+    }));
 
     return success;
 }
 
-function sendBanPlayerRequest(){
+function sendBanPlayerRequest() {
     var success = true;
 
     var player;
 
-    currentPlayers.forEach(function(current){
-        if(current.id == selectedPlayerId){
+    currentPlayers.forEach(function (current) {
+        if (current.id == selectedPlayerId) {
             player = current;
             return;
         }
@@ -156,50 +160,52 @@ function sendBanPlayerRequest(){
 
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", "/player", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            if ("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
                 success = false;
         }
     }
-    
+
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"id": selectedPlayerId, "rank": player.rank, "username": player.username, "password": player.password, "birthDate": birthDate,
-                            "status": "Banned", "countryId": player.country_id, "registrationDate": registrationDate,
-                            "userTypeId": player.user_type_id}));
+    xhr.send(JSON.stringify({
+        "id": selectedPlayerId, "rank": player.rank, "username": player.username, "password": player.password, "birthDate": birthDate,
+        "status": "Banned", "countryId": player.country_id, "registrationDate": registrationDate,
+        "userTypeId": player.user_type_id
+    }));
 
     return success;
 }
 
-function deletePlayer(){
+function deletePlayer() {
     var success = true;
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open("DELETE", "/player", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            if ("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
                 success = false;
         }
     }
-    
+
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"id": selectedPlayerId}));
+    xhr.send(JSON.stringify({ "id": selectedPlayerId }));
 
     return success;
 }
 
 /*********************************************************************** */
 
-function nameExists(username){
+function nameExists(username) {
     var confirmation = false;
 
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/player", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).players.forEach(function(r){
-                if(r.username.toUpperCase() === username.toUpperCase()){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).players.forEach(function (r) {
+                if (r.username.toUpperCase() === username.toUpperCase()) {
                     confirmation = true;
                     return;
                 }
@@ -210,19 +216,19 @@ function nameExists(username){
     return confirmation;
 }
 
-function getCurrentDateString(){
+function getCurrentDateString() {
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth()+1; 
+    var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
 
-    if(dd<10) {
-        dd = '0'+dd
-    } 
+    if (dd < 10) {
+        dd = '0' + dd
+    }
 
-    if(mm<10) {
-        mm = '0'+mm
-    } 
+    if (mm < 10) {
+        mm = '0' + mm
+    }
 
     return yyyy + '-' + mm + '-' + dd;
 }
@@ -252,7 +258,7 @@ function buildAddPlayer() {
     countryLabel.textContent = "Country";
     form.appendChild(countryLabel);
 
-    
+
     form.appendChild(buildSelector("player_country", Object.keys(countries)));
     form.appendChild(buildBasicSubmit("Add"));
 }
@@ -263,8 +269,8 @@ function buildAddPlayer() {
 function buildEditPlayer() {
     var player;
 
-    currentPlayers.forEach(function(current){
-        if(current.id == selectedPlayerId){
+    currentPlayers.forEach(function (current) {
+        if (current.id == selectedPlayerId) {
             player = current;
         }
     });
@@ -343,7 +349,7 @@ function addPlayer() {
         return;
     }
 
-    if (nameExists(username)) { 
+    if (nameExists(username)) {
         alert("That username already exist.");
         return;
     }
@@ -367,16 +373,128 @@ function addPlayer() {
         alert("You must be 12 years old or older to register.");
         return;
     }
-    
+
     var requestOk = sendAddPlayerRequest(username, password, birthDate, country);
 
-    if (requestOk) { 
+    if (requestOk) {
         alert("Player added");
         closeForm();
         updatePlayersTable();
     } else {
         alert("Player failed to add")
     }
+}
+
+function recalculateRankings() {
+
+    var loadSessions = function (callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/session", false);
+        xhr.onreadystatechange = function () {
+            if (this.status === 200 && this.readyState === 4) {
+                JSON.parse(this.responseText).sessions.forEach(function (r) {
+                    sessions.push(r);
+                });
+                callback();
+            }
+        }
+        xhr.send();
+    }
+
+    var loadStatistics = function (callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/statistic", false);
+        xhr.onreadystatechange = function () {
+            if (this.status === 200 && this.readyState === 4) {
+                JSON.parse(this.responseText).statistics.forEach(function (r) {
+                    statistics.push(r);
+                });
+            }
+            callback();
+        }
+        xhr.send();
+    }
+
+    var convertToScore = function (levelId, statisticType, value) {
+
+        switch (statisticType) {
+            case 1:
+                return Math.pow((1 / value) * 1000, levelId);
+            case 2:
+                return Math.pow(value, levelId);
+            case 3:
+                return Math.pow((1 / value) * 10, levelId);
+        }
+
+    }
+
+    var addScore = function (playerId, score) {
+        if (scoreBoard[playerId] == null)
+            scoreBoard[playerId] = score;
+        else
+            scoreBoard[playerId] += score;
+    }
+
+    var sort = function () {
+        var sortable = [];
+        for (var obj in scoreBoard) {
+            sortable.push([obj, scoreBoard[obj]]);
+        }
+
+        sortable.sort(function (a, b) {
+            return b[1] - a[1];
+        });
+
+
+        scoreBoard = [];
+        for (var a in sortable) {
+            scoreBoard.push([parseInt(sortable[a][0]), sortable[a][1]]);
+        }
+    }
+
+    var updatePlayer = function (id, rank) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", "/player/rank", false);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify({ "rank": rank, "id": id }));
+    }
+
+    var calculate = function () {
+
+        sessions.forEach(function (s) {
+
+            var id = s["id"];
+            var playerId = s["player_id"];
+            var levelId = s["level_id"];
+
+            statistics.forEach(function (t) {
+
+                var type = t['statistic_type_id'];
+                var value = t['value'];
+
+                if (t['game_session_id'] === id) {
+                    addScore(playerId, convertToScore(levelId, type, value));
+                }
+
+            });
+        });
+
+        sort();
+
+        for (var s in scoreBoard) {
+            updatePlayer(scoreBoard[s][0], (parseInt(s) + 1));
+        }
+    }
+
+    var scoreBoard = {};
+    var sessions = [];
+    var statistics = [];
+
+    loadSessions(function () {
+        loadStatistics(function () {
+            calculate();
+        });
+    });
 }
 
 /**
@@ -399,7 +517,7 @@ function editPlayer() {
         return;
     }
 
-    if (nameExists(username)) { 
+    if (nameExists(username)) {
         alert("That username already exist.");
         return;
     }
@@ -421,7 +539,7 @@ function editPlayer() {
 
     var requestOk = sendEditPlayerRequest(username, password, birthDate, country);
 
-    if (requestOk) { 
+    if (requestOk) {
         alert("Player edited");
         closeForm();
         updatePlayersTable();
@@ -449,7 +567,7 @@ function banPlayer() {
  * Makes a server request to remove a player.
  */
 function removePlayer() {
-    
+
     requestOk = deletePlayer();
 
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
@@ -498,7 +616,7 @@ function buildPlayersTable(filters) {
     if (filters != null) {
         getPlayers(filters);
     }
-    
+
     var table = document.createElement("table");
     table.id = "players_table";
     table.cellSpacing = "0";

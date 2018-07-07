@@ -193,6 +193,23 @@ function getSessions(request, response) {
 module.exports.getSessions = getSessions;
 
 /**
+ * Gets a specific session from the database
+ */
+function getSession(request, response) {
+    var connection = mysql.createConnection(options);
+    var sql = mysql.format("SELECT id, start_date, player_id, level_id, character_id FROM gameSession WHERE id = ?", [request.params.id]);
+
+    connection.query(sql, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "sessions": rows });
+        }
+    });
+}
+module.exports.getSession = getSession;
+
+/**
  * Gets a list of sessions registered today.
  */
 function getSessionsToday(request, response) {
@@ -491,6 +508,27 @@ function addUpdatePlayer(request, response) {
     });
 }
 module.exports.addUpdatePlayer = addUpdatePlayer;
+
+/**
+ * Updates a player's ranking in the database.
+ */
+function updatePlayerRank(request, response) {
+    var connection = mysql.createConnection(options);
+
+    var id = request.body.id;
+    var rank = request.body.rank;
+
+    var sql = mysql.format("UPDATE player SET rank = ?  WHERE id = ?", [rank, id]);
+
+    connection.query(sql, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.send(rows);
+        }
+    });
+}
+module.exports.updatePlayerRank = updatePlayerRank;
 
 /**
  * Adds or updates a level in the database, based on the request method ("POST" or "PUT").
