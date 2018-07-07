@@ -433,11 +433,13 @@ INSERT INTO `gameSession` (`id`, `start_date`, `player_id`, `level_id`, `charact
 (21, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 2, 3, 3),
 (22, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 1, 2),
 (23, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 2, 2),
-(24, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 3, 2);
+(24, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 3, 2),
+(25, STR_TO_DATE('2018-06-29', '%Y-%m-%d'), 2, 2, 2);
 
 INSERT INTO `statisticType` (`id`, `name`, `description`) VALUES
 (1, 'time', 'Time it took for the player to finish the level.'),
-(2, 'items_picked', 'How many items the player picked up.');
+(2, 'items_picked', 'How many items the player picked up.'),
+(3, 'stuns', 'How many times the player has been stunned.');
 
 INSERT INTO `statistic` (`id`, `value`, `registration_date`, `statistic_type_id`,`game_session_id`) VALUES
 (1, 170, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 1, 1),
@@ -487,7 +489,11 @@ INSERT INTO `statistic` (`id`, `value`, `registration_date`, `statistic_type_id`
 (45, 176, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 23),
 (46, 2, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 23),
 (47, 148, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 24),
-(48, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 24);
+(48, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 24),
+(49, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 3, 24),
+(50, 120, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 25),
+(51, 2, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 25),
+(52, 1, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 3, 25);
 
 INSERT INTO `configurationType` (`id`, `type`) VALUES 
 (1, 'sound'),

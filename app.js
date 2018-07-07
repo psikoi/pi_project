@@ -15,6 +15,7 @@ app.get("/player/today", requestHandlers.getPlayersToday);
 app.get("/player/week", requestHandlers.getPlayersWeek);
 app.get("/player/month", requestHandlers.getPlayersMonth);
 app.get("/session", requestHandlers.getSessions);
+app.get("/session/:id", requestHandlers.getSession);
 app.get("/session/today", requestHandlers.getSessionsToday);
 app.get("/session/week", requestHandlers.getSessionsWeek);
 app.get("/session/month", requestHandlers.getSessionsMonth);
@@ -37,6 +38,7 @@ app.post("/configuration", requestHandlers.addUpdateConfiguration);
 
 // PUT
 app.put("/player", requestHandlers.addUpdatePlayer);
+app.put("/player/rank", requestHandlers.updatePlayerRank);
 app.put("/session", requestHandlers.addUpdateSession);
 app.put("/statistic", requestHandlers.addUpdateStatistic);
 app.put("/configuration", requestHandlers.addUpdateConfiguration);
