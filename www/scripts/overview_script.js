@@ -272,9 +272,9 @@ function buildOverview() {
     var statisticsGrowth = calculatePercentage(statistics, allStatistics);
 
     var todayData = {
-        "Player Growth": "+" + players + "(+" + playerGrowth + "%)",
-        "Session Growth": "+" + sessions + "(+" + sessionGroth + "%)",
-        "Items Picked Growth": "+" + statistics + "(+" + statisticsGrowth + "%)"
+        "Player Growth": "+" + players + " (+" + playerGrowth + "%)",
+        "Session Growth": "+" + sessions + " (+" + sessionGroth + "%)",
+        "Items Picked Growth": "+" + statistics + " (+" + statisticsGrowth + "%)"
     }
 
     players = getNumberWeekPlayers();
@@ -286,9 +286,9 @@ function buildOverview() {
     statisticsGrowth = calculatePercentage(statistics, allStatistics);
 
     var weekData = {
-        "Player Growth": "+" + players + "(+" + playerGrowth + "%)",
-        "Session Growth": "+" + sessions + "(+" + sessionGroth + "%)",
-        "Items Picked Growth": "+" + statistics + "(+" + statisticsGrowth + "%)"
+        "Player Growth": "+" + players + " (+" + playerGrowth + "%)",
+        "Session Growth": "+" + sessions + " (+" + sessionGroth + "%)",
+        "Items Picked Growth": "+" + statistics + " (+" + statisticsGrowth + "%)"
     }
 
     players = getNumberMonthPlayers();
@@ -300,9 +300,9 @@ function buildOverview() {
     statisticsGrowth = calculatePercentage(statistics, allStatistics);
 
     var monthData = {
-        "Player Growth": "+" + players + "(+" + playerGrowth + "%)",
-        "Session Growth": "+" + sessions + "(+" + sessionGroth + "%)",
-        "Items Picked Growth": "+" + statistics + "(+" + statisticsGrowth + "%)"
+        "Player Growth": "+" + players + " (+" + playerGrowth + "%)",
+        "Session Growth": "+" + sessions + " (+" + sessionGroth + "%)",
+        "Items Picked Growth": "+" + statistics + " (+" + statisticsGrowth + "%)"
     }
 
     var allTimeData = {
