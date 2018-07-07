@@ -12,9 +12,9 @@ function getCountries(request, response) {
     var query = "SELECT id, name, short_name FROM country";
     connection.query(query, function (error, rows) {
         if (error) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
-            response.json({ "Message": "OK", "Countries": rows });
+            response.json({ "message": "ok", "countries": rows });
         }
     });
 }
@@ -28,9 +28,9 @@ function getUserType(request, response) {
     var query = "SELECT id, user_type FROM userType";
     connection.query(query, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
-            response.json({ "Message": "OK", "UserType": rows });
+            response.json({ "message": "ok", "userType": rows });
         }
     });
 }
@@ -44,9 +44,9 @@ function getUsers(request, response) {
     var query = "SELECT id, username, password, birth_date, country_id, profile_pic_url, user_type_id FROM user";
     connection.query(query, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
-            response.json({ "Message": "OK", "Users": rows });
+            response.json({ "message": "ok", "users": rows });
         }
     });
 }
@@ -57,16 +57,92 @@ module.exports.getUsers = getUsers;
  */
 function getPlayers(request, response) {
     var connection = mysql.createConnection(options);
-    var query = "SELECT id, username, password, birth_date, country_id, registration_date, user_type_id FROM player";
+    var query = "SELECT id, rank, username, password, birth_date, country_id, status, registration_date, user_type_id FROM player ";
     connection.query(query, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
-            response.json({ "Message": "OK", "Players": rows });
+            response.json({ "message": "ok", "players": rows });
         }
     });
 }
 module.exports.getPlayers = getPlayers;
+
+/**
+ * Gets the player with the required username from the database
+ */
+function getPlayerName(request, response){
+    var connection = mysql.createConnection(options);
+    
+    var username = request.params.username;
+
+    var sql = mysql.format("SELECT id, rank, username, password, birth_date, country_id, status, registration_date, user_type_id FROM player " + 
+                           "WHERE username = ?;", [username]);
+
+    connection.query(sql, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "players": rows });
+        }
+    });
+}
+module.exports.getPlayerName = getPlayerName;
+
+/**
+ * Gets a list of players registered today.
+ */
+function getPlayersToday(request, response){
+    var connection = mysql.createConnection(options);
+    var query = "SELECT id, rank, username, password, birth_date, country_id, status, registration_date, user_type_id FROM player " +
+                "WHERE registration_date = CURDATE()";
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "players": rows });
+        }
+    });
+}
+module.exports.getPlayersToday = getPlayersToday;
+
+/**
+ * Gets a list of players registered last week.
+ */
+function getPlayersWeek(request, response){
+    var connection = mysql.createConnection(options);
+
+    var query = "SELECT id, rank, username, password, birth_date, country_id, status, registration_date, user_type_id FROM player " +
+                "WHERE registration_date BETWEEN date_sub(CURDATE(),INTERVAL 1 WEEK) and CURDATE();";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "players": rows });
+        }
+    });
+}
+module.exports.getPlayersWeek = getPlayersWeek;
+
+/**
+ * Gets a list of players registered last month.
+ */
+function getPlayersMonth(request, response){
+    var connection = mysql.createConnection(options);
+
+    var query = "SELECT id, rank, username, password, birth_date, country_id, status, registration_date, user_type_id FROM player " +
+                "WHERE registration_date BETWEEN date_sub(CURDATE(),INTERVAL 1 MONTH) and CURDATE();";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "players": rows });
+        }
+    });
+}
+module.exports.getPlayersMonth = getPlayersMonth;
 
 /**
  * Gets a list of levels from the database.
@@ -76,9 +152,9 @@ function getLevels(request, response) {
     var query = "SELECT id, name FROM level";
     connection.query(query, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
-            response.json({ "Message": "OK", "Levels": rows });
+            response.json({ "message": "ok", "levels": rows });
         }
     });
 }
@@ -89,12 +165,12 @@ module.exports.getLevels = getLevels;
  */
 function getCharacters(request, response) {
     var connection = mysql.createConnection(options);
-    var query = "SELECT id, name, endurance, strength, speed FROM character";
+    var query = "SELECT id, name, endurance, strength, speed FROM `character`";
     connection.query(query, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
-            response.json({ "Message": "OK", "Characters": rows });
+            response.json({ "message": "ok", "characters": rows });
         }
     });
 }
@@ -108,13 +184,68 @@ function getSessions(request, response) {
     var query = "SELECT id, start_date, player_id, level_id, character_id FROM gameSession";
     connection.query(query, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
-            response.json({ "Message": "OK", "Sessions": rows });
+            response.json({ "message": "ok", "sessions": rows });
         }
     });
 }
 module.exports.getSessions = getSessions;
+
+/**
+ * Gets a list of sessions registered today.
+ */
+function getSessionsToday(request, response){
+    var connection = mysql.createConnection(options);
+    var query = "SELECT id, start_date, player_id, level_id, character_id FROM gameSession " +
+                "WHERE start_date = CURDATE()";
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "sessions": rows });
+        }
+    });
+}
+module.exports.getSessionsToday = getSessionsToday;
+
+/**
+ * Gets a list of sessions registered last week.
+ */
+function getSessionsWeek(request, response){
+    var connection = mysql.createConnection(options);
+
+    var query = "SELECT id, start_date, player_id, level_id, character_id FROM gameSession " +
+                "WHERE start_date BETWEEN date_sub(CURDATE(),INTERVAL 1 WEEK) and CURDATE();";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "sessions": rows });
+        }
+    });
+}
+module.exports.getSessionsWeek = getSessionsWeek;
+
+/**
+ * Gets a list of sessions registered last month.
+ */
+function getSessionsMonth(request, response){
+    var connection = mysql.createConnection(options);
+
+    var query = "SELECT id, start_date, player_id, level_id, character_id FROM gameSession " +
+                "WHERE start_date BETWEEN date_sub(CURDATE(),INTERVAL 1 MONTH) and CURDATE();";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "sessions": rows });
+        }
+    });
+}
+module.exports.getSessionsMonth = getSessionsMonth;
 
 /**
  * Gets a list of statistic types from the database.
@@ -124,9 +255,9 @@ function getStatisticType(request, response) {
     var query = "SELECT id, name, description FROM statisticType";
     connection.query(query, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
-            response.json({ "Message": "OK", "StatisticTypes": rows });
+            response.json({ "message": "ok", "statisticTypes": rows });
         }
     });
 }
@@ -140,13 +271,68 @@ function getStatistics(request, response) {
     var query = "SELECT id, value, registration_date, statistic_type_id, game_session_id FROM statistic";
     connection.query(query, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
-            response.json({ "Message": "OK", "Statistics": rows });
+            response.json({ "message": "ok", "statistics": rows });
         }
     });
 }
 module.exports.getStatistics = getStatistics;
+
+/**
+ * Gets a list of statistics registered today.
+ */
+function getStatisticsToday(request, response){
+    var connection = mysql.createConnection(options);
+    var query = "SELECT id, value, registration_date, statistic_type_id, game_session_id FROM statistic " +
+                "WHERE registration_date = CURDATE()";
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "statistics": rows });
+        }
+    });
+}
+module.exports.getStatisticsToday = getStatisticsToday;
+
+/**
+ * Gets a list of statistics registered last week.
+ */
+function getStatisticsWeek(request, response){
+    var connection = mysql.createConnection(options);
+
+    var query = "SELECT id, value, registration_date, statistic_type_id, game_session_id FROM statistic " +
+                "WHERE registration_date BETWEEN date_sub(CURDATE(),INTERVAL 1 WEEK) and CURDATE();";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "statistics": rows });
+        }
+    });
+}
+module.exports.getStatisticsWeek = getStatisticsWeek;
+
+/**
+ * Gets a list of statistics registered last month.
+ */
+function getStatisticsMonth(request, response){
+    var connection = mysql.createConnection(options);
+
+    var query = "SELECT id, value, registration_date, statistic_type_id, game_session_id FROM statistic " +
+                "WHERE registration_date BETWEEN date_sub(CURDATE(),INTERVAL 1 MONTH) and CURDATE();";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "statistics": rows });
+        }
+    });
+}
+module.exports.getStatisticsMonth = getStatisticsMonth;
 
 
 /* Endpoint - POST / PUT */
@@ -172,7 +358,7 @@ function addUpdateCountry(request, response) {
 
     connection.query(sql, function(err, rows){
         if(err)
-            response.json({"Message": "Error"});
+            response.json({"message": "error"});
         else
             response.send(rows);
     })
@@ -199,7 +385,7 @@ function addUpdateUserType(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -225,14 +411,14 @@ function addUpdateUser(rerequestq, response) {
 
     if (request.method === "POST")
         sql = mysql.format("INSERT INTO user (username, password, birth_date, country_id, profile_pic_url, user_type_id) " + 
-                           "VALUES (?,?,?,?,?,?);", [username, password, birthDate, countryId, profilePicUrl, userTypeId]);
+                           "VALUES (?,?,STR_TO_DATE(?, '%Y-%m-%d'),?,?,?);", [username, password, birthDate, countryId, profilePicUrl, userTypeId]);
     else
-        sql = mysql.format("UPDATE user SET username = ?, password = ?, birth_date = ?, country_id = ?, profile_pic_url = ?, user_type_id = ? WHERE id = ?", 
+        sql = mysql.format("UPDATE user SET username = ?, password = ?, birth_date = STR_TO_DATE(?, '%Y-%m-%d'), country_id = ?, profile_pic_url = ?, user_type_id = ? WHERE id = ?", 
                             [username, password, birthDate, countryId, profilePicUrl, userTypeId, id]);
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -247,9 +433,11 @@ function addUpdatePlayer(request, response) {
     var connection = mysql.createConnection(options);
 
     var id = request.body.id;
+    var rank = request.body.rank;
     var username = request.body.username;
     var password = request.body.password;
     var birthDate = request.body.birthDate;
+    var status = request.body.status;
     var countryId = request.body.countryId;
     var registrationDate = request.body.registrationDate;
     var userTypeId = request.body.userTypeId;
@@ -257,15 +445,15 @@ function addUpdatePlayer(request, response) {
     var sql;
 
     if (request.method === "POST")
-        sql = mysql.format("INSERT INTO player (username, password, birth_date, country_id, registration_date, user_type_id) " +  
-                           "VALUES (?,?,?,?,?,?);", [username, password, birthDate, countryId, registrationDate, userTypeId]);
+        sql = mysql.format("INSERT INTO player (rank, username, password, birth_date, country_id, status, registration_date, user_type_id) " +  
+                           "VALUES (?,?,?,STR_TO_DATE(?, '%Y-%m-%d'),?,?,STR_TO_DATE(?, '%Y-%m-%d'),?);", [rank, username, password, birthDate, countryId, status,registrationDate, userTypeId]);
     else
-        sql = mysql.format("UPDATE player SET username = ?, password = ?, birth_date = ?, country_id = ?, registration_date = ?, user_type_id = ? WHERE id = ?", 
-                            [username, password, birthDate, countryId, registrationDate, userTypeId, id]);
+        sql = mysql.format("UPDATE player SET rank = ?, username = ?, password = ?, birth_date = STR_TO_DATE(?, '%Y-%m-%d'), country_id = ?, status = ?, registration_date = STR_TO_DATE(?, '%Y-%m-%d'), user_type_id = ? WHERE id = ?", 
+                            [rank, username, password, birthDate, countryId, status, registrationDate, userTypeId, id]);
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -291,7 +479,7 @@ function addUpdateLevel(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -322,7 +510,7 @@ function addUpdateCharacter(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -346,14 +534,14 @@ function addUpdateSession(request, response) {
 
     if (request.method === "POST")
         sql = mysql.format("INSERT INTO gameSession (start_date, player_id, level_id, character_id)" + 
-                           "VALUES (?,?,?,?);", [startDate, playerId, levelId, characterId]);
+                           "VALUES (STR_TO_DATE(?, '%Y-%m-%d'),?,?,?);", [startDate, playerId, levelId, characterId]);
     else
-        sql = mysql.format("UPDATE gameSession SET start_date = ?, player_id = ?, level_id = ?, character_id = ? WHERE id = ?",  
+        sql = mysql.format("UPDATE gameSession SET start_date = STR_TO_DATE(?, '%Y-%m-%d'), player_id = ?, level_id = ?, character_id = ? WHERE id = ?",  
                            [startDate, playerId, levelId, characterId, id]);
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -382,7 +570,7 @@ function addUpdateStatisticType(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -406,14 +594,14 @@ function addUpdateStatistic(request, response) {
 
     if (request.method === "POST")
         sql = mysql.format("INSERT INTO statistic (value, registration_date, statistic_type_id, game_session_id)" +  
-                           "VALUES (?,?,?,?);", [value, registrationDate, statisticTypeId, gameSessionId]);
+                           "VALUES (?,STR_TO_DATE(?, '%Y-%m-%d'),?,?);", [value, registrationDate, statisticTypeId, gameSessionId]);
     else
-        sql = mysql.format("UPDATE statistic SET value = ?, registration_date = ?, statistic_type_id = ?, game_session_id = ? WHERE id = ?", 
+        sql = mysql.format("UPDATE statistic SET value = ?, registration_date = STR_TO_DATE(?, '%Y-%m-%d'), statistic_type_id = ?, game_session_id = ? WHERE id = ?", 
                          [value, registrationDate, statisticTypeId, gameSessionId, id]);
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -438,7 +626,7 @@ function deleteCountry(request, response) {
 
     connection.query(sql, function(err, rows){
         if(err)
-            response.json({"Message": "Error"});
+            response.json({"message": "error"});
         else
             response.send(rows);
     })
@@ -459,7 +647,7 @@ function deleteUserType(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -481,7 +669,7 @@ function deleteUser(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -503,7 +691,7 @@ function deletePlayer(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -525,7 +713,7 @@ function deleteLevel(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -547,7 +735,7 @@ function deleteCharacter(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -569,7 +757,7 @@ function deleteSession(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -591,7 +779,7 @@ function deleteStatisticType(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }
@@ -612,7 +800,7 @@ function deleteStatistic(request, response) {
 
     connection.query(sql, function (err, rows) {
         if (err) {
-            response.json({ "Message": "Error" });
+            response.json({ "message": "error" });
         } else {
             response.send(rows);
         }

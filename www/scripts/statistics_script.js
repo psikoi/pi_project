@@ -1,5 +1,87 @@
 var selectedStatisticId;
 
+// Holds the information of the statistics currently being shown 
+var currentStatistics = [];
+
+// Hold information about which users played which sessions. Key = session id, Value = username
+var sessionPlayers = {};
+
+/******************************************************************** */
+
+function getStatistics(filter){
+    currentStatistics = []
+
+    var endpoint = "/statistic";
+    switch(filter.timespan){
+        case "This month": endpoint += "/month"; break;
+        case "This week": endpoint += "/week"; break;
+        case "Today": endpoint += "/today"; break;
+    }
+    getStatisticsFilter(endpoint);
+    
+    var aux = [];
+
+    if(filter.search){
+        currentStatistics.forEach(function(current){
+            if(sessionPlayers[current.game_session_id] === filter.search){
+                aux.push(current);
+                return;
+            }
+        });
+
+        currentStatistics = aux;
+    }
+}
+
+function getStatisticsFilter(endpoint){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", endpoint, false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).statistics.forEach(function(r){
+                currentStatistics.push(r);
+            });
+        }
+    }
+    xhr.send();
+}
+
+function getSessionByPlayer(){
+    var sessions = [];
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/session", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).sessions.forEach(function(r){
+                sessions.push(r);
+            });
+        }
+    }
+    xhr.send();
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/player", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).players.forEach(function(r){
+                
+                sessions.forEach(function(currSession){
+                    if(currSession.player_id === r.id){
+                        sessionPlayers[currSession.id] = r.username;
+                    }
+                });
+
+            });
+        }
+    }
+    xhr.send();
+
+}
+
+/*********************************************************************** */
+
 /**
  * Builds the add statistic form.
  */
@@ -183,27 +265,10 @@ function updateStatisticsTable(filters) {
 function buildStatisticsTable(filters) {
 
     if (filters != null) {
-        //TODO enviar pedido com os filters tipo:
-        // timespan: "All time"
-        // search: "tiago"
-        console.log(JSON.stringify(filters));
+        getStatistics(filters);
     }
 
-    //TODO TROCAR POR DATA REAL
-    var data = [
-        {
-            id: 0,
-            gameSessionId: 5,
-            type: "Time",
-            value: "02:50"
-        },
-        {
-            id: 2,
-            gameSessionId: 1,
-            type: "Time",
-            value: "03:18"
-        },
-    ];
+    //TODO arranjar a tabela
 
     var table = document.createElement("table");
     table.id = "statistics_table";
@@ -220,7 +285,7 @@ function buildStatisticsTable(filters) {
     thead.appendChild(headRow);
 
     var tbody = document.createElement("tbody");
-    data.forEach(function (row) {
+    currentStatistics.forEach(function (row) {
         var tableRow = document.createElement("tr");
         Object.keys(row).forEach(function (field) {
             var td = document.createElement("td");
@@ -325,6 +390,8 @@ function buildStatistics() {
 
     toggleStatisticsActions(false);
     prepareStatisticsSelectionEvents();
+
+    getSessionByPlayer();
 }
 
 /**

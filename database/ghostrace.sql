@@ -38,10 +38,12 @@ CREATE TABLE `user` (
 
 CREATE TABLE `player` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rank` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `birth_date` date NOT NULL,
   `country_id` int(11) NOT NULL,
+  `status` varchar(255) NOT NULL,
   `registration_date` date NOT NULL,
   `user_type_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
@@ -87,6 +89,12 @@ CREATE TABLE `statistic` (
   PRIMARY KEY (`id`)
 );
 
+ALTER TABLE `user`
+	ADD CONSTRAINT `user_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`);
+
+ALTER TABLE `user`
+	ADD CONSTRAINT `user_userType` FOREIGN KEY (`user_type_id`) REFERENCES `userType` (`id`);
+
 ALTER TABLE `player`
 	ADD CONSTRAINT `player_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`);
     
@@ -94,7 +102,7 @@ ALTER TABLE `player`
 	ADD CONSTRAINT `player_userType` FOREIGN KEY (`user_type_id`) REFERENCES `userType` (`id`);
 
 ALTER TABLE `gameSession`
-	ADD CONSTRAINT `gameSession_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`);
+	ADD CONSTRAINT `gameSession_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE;
 
 ALTER TABLE `gameSession`
 	ADD CONSTRAINT `gameSession_level` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`);
@@ -103,7 +111,7 @@ ALTER TABLE `gameSession`
 	ADD CONSTRAINT `gameSession_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`);
     
 ALTER TABLE `statistic`
-	ADD CONSTRAINT `statistic_statisticType` FOREIGN KEY (`statistic_type_id`) REFERENCES `statisticType` (`id`);
+	ADD CONSTRAINT `statistic_statisticType` FOREIGN KEY (`statistic_type_id`) REFERENCES `statisticType` (`id`) ON DELETE CASCADE;
     
 ALTER TABLE `statistic`
 	ADD CONSTRAINT `statistic_gameSession` FOREIGN KEY (`game_session_id`) REFERENCES `gameSession` (`id`);
@@ -363,11 +371,11 @@ INSERT INTO `userType` (`id`, `user_type`) VALUES
 (2, 'Normal');
 
 INSERT INTO `user` (`id`, `username`, `password`, `birth_date`, `country_id`, `profile_pic_url`, `user_type_id`) VALUES
-(1, 'admin', '321', STR_TO_DATE('03-03-1998', '%d-%m-%Y'), 183, 'profilepic1', 1);
+(1, 'admin', '321', STR_TO_DATE('1998-03-03', '%Y-%m-%d'), 183, 'profilepic1', 1);
 
-INSERT INTO `player` (`id`, `username`, `password`, `birth_date`, `country_id`, `registration_date`, `user_type_id`) VALUES
-(1, 'tiagosantos', '123', STR_TO_DATE('01-01-1998', '%d-%m-%Y'), 183, STR_TO_DATE('01-01-2018', '%d-%m-%Y'), 2),
-(2, 'rubenamendoeira', '456', STR_TO_DATE('02-02-1998', '%d-%m-%Y'), 67, STR_TO_DATE('02-02-2018', '%d-%m-%Y'), 1);
+INSERT INTO `player` (`id`, `rank`, `username`, `password`, `birth_date`, `country_id`, `status`, `registration_date`, `user_type_id`) VALUES
+(1, 1, 'tiagosantos', '123', STR_TO_DATE('1998-01-01', '%Y-%m-%d'),  183, 'Active', STR_TO_DATE('2018-01-01', '%Y-%m-%d'), 2),
+(2, 2, 'rubenamendoeira', '456', STR_TO_DATE('1998-02-02', '%Y-%m-%d'), 67, 'Banned', STR_TO_DATE('2018-02-02', '%Y-%m-%d'), 1);
 
 INSERT INTO `level` (`id`, `name`) VALUES
 (1, 'level 1'),
@@ -380,81 +388,81 @@ INSERT INTO `character` (`id`, `name`, `endurance`, `strength`, `speed`) VALUES
 (3, 'sargent', 9, 3, 3);
 
 INSERT INTO `gameSession` (`id`, `start_date`, `player_id`, `level_id`, `character_id`) VALUES
-(1, STR_TO_DATE('25-06-2018', '%d-%m-%Y'), 1, 1, 1),
-(2, STR_TO_DATE('25-06-2018', '%d-%m-%Y'), 1, 1, 2),
-(3, STR_TO_DATE('25-06-2018', '%d-%m-%Y'), 1, 1, 3),
-(4, STR_TO_DATE('26-06-2018', '%d-%m-%Y'), 1, 2, 1),
-(5, STR_TO_DATE('26-06-2018', '%d-%m-%Y'), 1, 2, 2),
-(6, STR_TO_DATE('26-06-2018', '%d-%m-%Y'), 1, 2, 3),
-(7, STR_TO_DATE('27-06-2018', '%d-%m-%Y'), 1, 3, 1),
-(8, STR_TO_DATE('27-06-2018', '%d-%m-%Y'), 1, 3, 2),
-(9, STR_TO_DATE('27-06-2018', '%d-%m-%Y'), 1, 3, 3),
-(10, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 1, 1, 1),
-(11, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 1, 2, 1),
-(12, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 1, 3, 1),
-(13, STR_TO_DATE('20-06-2018', '%d-%m-%Y'), 2, 1, 1),
-(14, STR_TO_DATE('20-06-2018', '%d-%m-%Y'), 2, 1, 2),
-(15, STR_TO_DATE('20-06-2018', '%d-%m-%Y'), 2, 1, 3),
-(16, STR_TO_DATE('21-06-2018', '%d-%m-%Y'), 2, 2, 1),
-(17, STR_TO_DATE('21-06-2018', '%d-%m-%Y'), 2, 2, 2),
-(18, STR_TO_DATE('21-06-2018', '%d-%m-%Y'), 2, 2, 3),
-(19, STR_TO_DATE('22-06-2018', '%d-%m-%Y'), 2, 3, 1),
-(20, STR_TO_DATE('22-06-2018', '%d-%m-%Y'), 2, 3, 2),
-(21, STR_TO_DATE('22-06-2018', '%d-%m-%Y'), 2, 3, 3),
-(22, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 2, 1, 2),
-(23, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 2, 2, 2),
-(24, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 2, 3, 2);
+(1, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 1, 1, 1),
+(2, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 1, 1, 2),
+(3, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 1, 1, 3),
+(4, STR_TO_DATE('2018-06-26', '%Y-%m-%d'), 1, 2, 1),
+(5, STR_TO_DATE('2018-06-26', '%Y-%m-%d'), 1, 2, 2),
+(6, STR_TO_DATE('2018-06-26', '%Y-%m-%d'), 1, 2, 3),
+(7, STR_TO_DATE('2018-06-27', '%Y-%m-%d'), 1, 3, 1),
+(8, STR_TO_DATE('2018-06-27', '%Y-%m-%d'), 1, 3, 2),
+(9, STR_TO_DATE('2018-06-27', '%Y-%m-%d'), 1, 3, 3),
+(10, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 1, 1),
+(11, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 2, 1),
+(12, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 3, 1),
+(13, STR_TO_DATE('2018-06-20', '%Y-%m-%d'), 2, 1, 1),
+(14, STR_TO_DATE('2018-06-20', '%Y-%m-%d'), 2, 1, 2),
+(15, STR_TO_DATE('2018-06-20', '%Y-%m-%d'), 2, 1, 3),
+(16, STR_TO_DATE('2018-06-21', '%Y-%m-%d'), 2, 2, 1),
+(17, STR_TO_DATE('2018-06-21', '%Y-%m-%d'), 2, 2, 2),
+(18, STR_TO_DATE('2018-06-21', '%Y-%m-%d'), 2, 2, 3),
+(19, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 2, 3, 1),
+(20, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 2, 3, 2),
+(21, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 2, 3, 3),
+(22, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 1, 2),
+(23, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 2, 2),
+(24, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 3, 2);
 
 INSERT INTO `statisticType` (`id`, `name`, `description`) VALUES
 (1, 'time', 'Time it took for the player to finish the level.'),
-(2, 'deaths', 'How many times the player died.');
+(2, 'items_picked', 'How many items the player picked up.');
 
 INSERT INTO `statistic` (`id`, `value`, `registration_date`, `statistic_type_id`,`game_session_id`) VALUES
-(1, 170, STR_TO_DATE('25-06-2018', '%d-%m-%Y'), 1, 1),
-(2, 1, STR_TO_DATE('25-06-2018', '%d-%m-%Y'), 2, 1),
-(3, 153, STR_TO_DATE('25-06-2018', '%d-%m-%Y'), 1, 2),
-(4, 1, STR_TO_DATE('25-06-2018', '%d-%m-%Y'), 2, 2),
-(5, 162, STR_TO_DATE('25-06-2018', '%d-%m-%Y'), 1, 3),
-(6, 1, STR_TO_DATE('25-06-2018', '%d-%m-%Y'), 2, 3),
-(7, 142, STR_TO_DATE('26-06-2018', '%d-%m-%Y'), 1, 4),
-(8, 2, STR_TO_DATE('26-06-2018', '%d-%m-%Y'), 2, 4),
-(9, 173, STR_TO_DATE('26-06-2018', '%d-%m-%Y'), 1, 5),
-(10, 2, STR_TO_DATE('26-06-2018', '%d-%m-%Y'), 2, 5),
-(11, 168, STR_TO_DATE('26-06-2018', '%d-%m-%Y'), 1, 6),
-(12, 2, STR_TO_DATE('26-06-2018', '%d-%m-%Y'), 2, 6),
-(13, 178, STR_TO_DATE('27-06-2018', '%d-%m-%Y'), 1, 7),
-(14, 3, STR_TO_DATE('27-06-2018', '%d-%m-%Y'), 2, 7),
-(15, 152, STR_TO_DATE('27-06-2018', '%d-%m-%Y'), 1, 8),
-(16, 3, STR_TO_DATE('27-06-2018', '%d-%m-%Y'), 2, 8),
-(17, 179, STR_TO_DATE('27-06-2018', '%d-%m-%Y'), 1, 9),
-(18, 3, STR_TO_DATE('27-06-2018', '%d-%m-%Y'), 2, 9),
-(19, 155, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 1, 10),
-(20, 1, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 2, 10),
-(21, 140, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 1, 11),
-(22, 2, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 2, 11),
-(23, 156, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 1, 12),
-(24, 3, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 2, 12),
-(25, 140, STR_TO_DATE('20-06-2018', '%d-%m-%Y'), 1, 13),
-(26, 1, STR_TO_DATE('20-06-2018', '%d-%m-%Y'), 2, 13),
-(27, 148, STR_TO_DATE('20-06-2018', '%d-%m-%Y'), 1, 14),
-(28, 1, STR_TO_DATE('20-06-2018', '%d-%m-%Y'), 2, 14),
-(29, 166, STR_TO_DATE('20-06-2018', '%d-%m-%Y'), 1, 15),
-(30, 1, STR_TO_DATE('20-06-2018', '%d-%m-%Y'), 2, 15),
-(31, 141, STR_TO_DATE('21-06-2018', '%d-%m-%Y'), 1, 16),
-(32, 2, STR_TO_DATE('21-06-2018', '%d-%m-%Y'), 2, 16),
-(33, 158, STR_TO_DATE('21-06-2018', '%d-%m-%Y'), 1, 17),
-(34, 2, STR_TO_DATE('21-06-2018', '%d-%m-%Y'), 2, 17),
-(35, 178, STR_TO_DATE('21-06-2018', '%d-%m-%Y'), 1, 18),
-(36, 2, STR_TO_DATE('21-06-2018', '%d-%m-%Y'), 2, 18),
-(37, 142, STR_TO_DATE('22-06-2018', '%d-%m-%Y'), 1, 19),
-(38, 3, STR_TO_DATE('22-06-2018', '%d-%m-%Y'), 2, 19),
-(39, 165, STR_TO_DATE('22-06-2018', '%d-%m-%Y'), 1, 20),
-(40, 3, STR_TO_DATE('22-06-2018', '%d-%m-%Y'), 2, 20),
-(41, 163, STR_TO_DATE('22-06-2018', '%d-%m-%Y'), 1, 21),
-(42, 3, STR_TO_DATE('22-06-2018', '%d-%m-%Y'), 2, 21),
-(43, 162, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 1, 22),
-(44, 1, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 2, 22),
-(45, 176, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 1, 23),
-(46, 2, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 2, 23),
-(47, 148, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 1, 24),
-(48, 3, STR_TO_DATE('28-06-2018', '%d-%m-%Y'), 2, 24);
+(1, 170, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 1, 1),
+(2, 1, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 2, 1),
+(3, 153, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 1, 2),
+(4, 1, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 2, 2),
+(5, 162, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 1, 3),
+(6, 1, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 2, 3),
+(7, 142, STR_TO_DATE('2018-06-26', '%Y-%m-%d'), 1, 4),
+(8, 2, STR_TO_DATE('2018-06-26', '%Y-%m-%d'), 2, 4),
+(9, 173, STR_TO_DATE('2018-06-26', '%Y-%m-%d'), 1, 5),
+(10, 2, STR_TO_DATE('2018-06-26', '%Y-%m-%d'), 2, 5),
+(11, 168, STR_TO_DATE('2018-06-26', '%Y-%m-%d'), 1, 6),
+(12, 2, STR_TO_DATE('2018-06-26', '%Y-%m-%d'), 2, 6),
+(13, 178, STR_TO_DATE('2018-06-27', '%Y-%m-%d'), 1, 7),
+(14, 3, STR_TO_DATE('2018-06-27', '%Y-%m-%d'), 2, 7),
+(15, 152, STR_TO_DATE('2018-06-27', '%Y-%m-%d'), 1, 8),
+(16, 3, STR_TO_DATE('2018-06-27', '%Y-%m-%d'), 2, 8),
+(17, 179, STR_TO_DATE('2018-06-27', '%Y-%m-%d'), 1, 9),
+(18, 3, STR_TO_DATE('2018-06-27', '%Y-%m-%d'), 2, 9),
+(19, 155, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 10),
+(20, 1, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 10),
+(21, 140, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 11),
+(22, 2, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 11),
+(23, 156, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 12),
+(24, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 12),
+(25, 140, STR_TO_DATE('2018-06-20', '%Y-%m-%d'), 1, 13),
+(26, 1, STR_TO_DATE('2018-06-20', '%Y-%m-%d'), 2, 13),
+(27, 148, STR_TO_DATE('2018-06-20', '%Y-%m-%d'), 1, 14),
+(28, 1, STR_TO_DATE('2018-06-20', '%Y-%m-%d'), 2, 14),
+(29, 166, STR_TO_DATE('2018-06-20', '%Y-%m-%d'), 1, 15),
+(30, 1, STR_TO_DATE('2018-06-20', '%Y-%m-%d'), 2, 15),
+(31, 141, STR_TO_DATE('2018-06-21', '%Y-%m-%d'), 1, 16),
+(32, 2, STR_TO_DATE('2018-06-21', '%Y-%m-%d'), 2, 16),
+(33, 158, STR_TO_DATE('2018-06-21', '%Y-%m-%d'), 1, 17),
+(34, 2, STR_TO_DATE('2018-06-21', '%Y-%m-%d'), 2, 17),
+(35, 178, STR_TO_DATE('2018-06-21', '%Y-%m-%d'), 1, 18),
+(36, 2, STR_TO_DATE('2018-06-21', '%Y-%m-%d'), 2, 18),
+(37, 142, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 1, 19),
+(38, 3, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 2, 19),
+(39, 165, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 1, 20),
+(40, 3, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 2, 20),
+(41, 163, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 1, 21),
+(42, 3, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 2, 21),
+(43, 162, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 22),
+(44, 1, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 22),
+(45, 176, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 23),
+(46, 2, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 23),
+(47, 148, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 24),
+(48, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 24);
