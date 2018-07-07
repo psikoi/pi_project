@@ -1,4 +1,89 @@
+var users = [];
+var userTypes = {};
+
+function getUserAccounts(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/user", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).users.forEach(function(current){
+                users.push(current);
+            });
+        }
+    }
+    xhr.send();
+}
+
+function getUserTypes(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/userType", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).userType.forEach(function(current){
+                userTypes[current.id] = current.user_type;
+            });
+        }
+    }
+    xhr.send();
+}
+
+function sendRegisterRequest(username, password){
+    var success = true;
+    var adminId = getAdministratorTypeId();
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/user", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        };
+    }
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"username": username, "password": password, "profilePicUrl": "", "userTypeId": adminId}));
+
+    return success;
+}
+
+function getAdministratorTypeId(){
+    var id;
+    for (var key in userTypes) {
+        if (userTypes.hasOwnProperty(key)) {
+            if(userTypes[key] == "Administrator"){
+                id = key;
+            }
+        }
+    }
+    return id;
+}
+
+function usernameAlreadyExists(username){
+    var res = false;
+    users.forEach(function(current){
+        if(current.username.toUpperCase() == username.toUpperCase()){
+            res = true;
+        }
+    });
+    return res;
+}
+
+function getUserByName(username){
+    var user;
+
+    users.forEach(function(current){
+        if(current.username == username){
+            user = current;
+        }
+    });
+
+    return user;
+}
+
+
 function buildRegister() {
+    getUserAccounts();
+    getUserTypes();
+
     var pane = buildBaseForm("Register a new admin account", "javascript: register()");
     var form = pane.children[0];
 
@@ -29,17 +114,20 @@ function register() {
         return;
     }
 
-    //TODO TROCAR POR USER REAL
-    var user = {
-        username: "Ruben A.",
-        profilePic: "https://scontent.flis6-1.fna.fbcdn.net/v/t1.0-1/p160x160/14203139_1171191686287756_1371049704152551327_n.jpg?_nc_cat=0&oh=c08d35b96e20fc9ae5263d03519297b9&oe=5BE3C970"
+    if(usernameAlreadyExists(username)){
+        alert("username already exists");
+        return;
     }
 
-    //TODO fazer request aqui
-    if (true) {
+    var requestOk = sendRegisterRequest(username, password);
+    
+    if (requestOk) {
+        getUserAccounts();
+        var user = getUserByName(username);
+        updateLoggedInUser(user);
         switchPage("overview");
         displayUserNavigation(user);
     } else {
-        alert("Failed to register " + mensagemErro);
+        alert("Failed to register ");
     }
 }

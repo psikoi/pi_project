@@ -5,13 +5,11 @@ function readLogInCookies() {
     var cookie = document.cookie;
 
     userId = cookie.split("=")[1]
-    console.log(userId)
 
     if(userId != undefined){
         getUserAccounts();
-
         users.forEach(function(current){
-            if(current.id = userId){
+            if(current.id == userId){
                 currentUser = current;
             }
         });
@@ -87,6 +85,11 @@ function sendLogoutRequest(user){
     return success;
 }
 
+function updateLoggedInUser(user){
+    document.cookie = "loggedInUser = " + user.id;
+    currentUser = user;
+}
+
 function userNameExists(username){
     var res = false;
     
@@ -142,6 +145,7 @@ function logout() {
     if (confirm("Are you sure you wish to logout?")) {
         var requestOk = sendLogoutRequest(currentUser);
         if (requestOk) {
+            currentUser = undefined;
             removeLogInCookies();
             switchPage("landing");
             displayUserNavigation(null);
@@ -177,12 +181,10 @@ function login() {
     }
 
     var user = getUser(username);
-
     var requestOk = sendLoginRequest(user);
-
+    
     if (requestOk) {
-        document.cookie = "loggedInUser = " + user.id;
-        currentUser = user;
+        updateLoggedInUser(user);
         switchPage("overview");
         displayUserNavigation(user);
     } else {

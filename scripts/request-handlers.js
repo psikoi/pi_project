@@ -410,7 +410,7 @@ module.exports.addUpdateUserType = addUpdateUserType;
 /**
  * Adds or updates a user in the database, based on the request method ("POST" or "PUT").
  */
-function addUpdateUser(rerequestq, response) {
+function addUpdateUser(request, response) {
     var connection = mysql.createConnection(options);
 
     var id = request.body.id;
@@ -423,7 +423,7 @@ function addUpdateUser(rerequestq, response) {
 
     if (request.method === "POST")
         sql = mysql.format("INSERT INTO user (username, password, profile_pic_url, user_type_id) " + 
-                           "VALUES (?,?,STR_TO_DATE(?, '%Y-%m-%d'),?,?,?);", [username, password, profilePicUrl, userTypeId]);
+                           "VALUES (?,?,?,?);", [username, password, profilePicUrl, userTypeId]);
     else
         sql = mysql.format("UPDATE user SET username = ?, password = ?, profile_pic_url = ?, user_type_id = ? WHERE id = ?", 
                             [username, password, profilePicUrl, userTypeId, id]);
