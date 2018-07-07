@@ -10,6 +10,8 @@ DROP TABLE IF EXISTS `player`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `country`;
 DROP TABLE IF EXISTS `userType`;
+DROP TABLE IF EXISTS `configuration`;
+DROP TABLE IF EXISTS `configurationType`;
 
 
 CREATE TABLE `country` (
@@ -89,6 +91,20 @@ CREATE TABLE `statistic` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `configurationType`(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `configuration`(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `value` varchar(255) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `player_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
 ALTER TABLE `user`
 	ADD CONSTRAINT `user_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`);
 
@@ -115,6 +131,12 @@ ALTER TABLE `statistic`
     
 ALTER TABLE `statistic`
 	ADD CONSTRAINT `statistic_gameSession` FOREIGN KEY (`game_session_id`) REFERENCES `gameSession` (`id`);
+
+ALTER TABLE `configuration`
+	ADD CONSTRAINT `configuration_configurationType` FOREIGN KEY (`type_id`) REFERENCES `configurationType` (`id`);
+
+ALTER TABLE `configuration`
+	ADD CONSTRAINT `configuration_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`);
     
 
 INSERT INTO `country` (`id`, `name`, `short_name`) VALUES
@@ -466,3 +488,19 @@ INSERT INTO `statistic` (`id`, `value`, `registration_date`, `statistic_type_id`
 (46, 2, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 23),
 (47, 148, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 24),
 (48, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 24);
+
+INSERT INTO `configurationType` (`id`, `type`) VALUES 
+(1, 'sound'),
+(2, 'sound_volume'),
+(3, 'sound_effects'),
+(4, 'sound_effects_volume');
+
+INSERT INTO `configuration` (`id`, `value`, `type_id`, `player_id`) VALUES
+(1, 'on', 1, 1),
+(2, '78', 2, 1),
+(3, 'on', 3, 1),
+(4, '53', 4, 1),
+(5, 'off', 1, 2),
+(6, '0', 2, 2),
+(7, 'on', 3, 2),
+(8, '24', 4, 2);
