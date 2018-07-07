@@ -165,7 +165,7 @@ module.exports.getLevels = getLevels;
  */
 function getCharacters(request, response) {
     var connection = mysql.createConnection(options);
-    var query = "SELECT id, name, endurance, strength, speed FROM character";
+    var query = "SELECT id, name, endurance, strength, speed FROM `character`";
     connection.query(query, function (err, rows) {
         if (err) {
             response.json({ "message": "error" });
@@ -279,6 +279,61 @@ function getStatistics(request, response) {
 }
 module.exports.getStatistics = getStatistics;
 
+/**
+ * Gets a list of statistics registered today.
+ */
+function getStatisticsToday(request, response){
+    var connection = mysql.createConnection(options);
+    var query = "SELECT id, value, registration_date, statistic_type_id, game_session_id FROM statistic " +
+                "WHERE registration_date = CURDATE()";
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "statistics": rows });
+        }
+    });
+}
+module.exports.getStatisticsToday = getStatisticsToday;
+
+/**
+ * Gets a list of statistics registered last week.
+ */
+function getStatisticsWeek(request, response){
+    var connection = mysql.createConnection(options);
+
+    var query = "SELECT id, value, registration_date, statistic_type_id, game_session_id FROM statistic " +
+                "WHERE registration_date BETWEEN date_sub(CURDATE(),INTERVAL 1 WEEK) and CURDATE();";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "statistics": rows });
+        }
+    });
+}
+module.exports.getStatisticsWeek = getStatisticsWeek;
+
+/**
+ * Gets a list of statistics registered last month.
+ */
+function getStatisticsMonth(request, response){
+    var connection = mysql.createConnection(options);
+
+    var query = "SELECT id, value, registration_date, statistic_type_id, game_session_id FROM statistic " +
+                "WHERE registration_date BETWEEN date_sub(CURDATE(),INTERVAL 1 MONTH) and CURDATE();";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "statistics": rows });
+        }
+    });
+}
+module.exports.getStatisticsMonth = getStatisticsMonth;
+
 
 /* Endpoint - POST / PUT */
 
@@ -356,9 +411,9 @@ function addUpdateUser(rerequestq, response) {
 
     if (request.method === "POST")
         sql = mysql.format("INSERT INTO user (username, password, birth_date, country_id, profile_pic_url, user_type_id) " + 
-                           "VALUES (?,?,STR_TO_DATE(?, '%d-%m-%Y'),?,?,?);", [username, password, birthDate, countryId, profilePicUrl, userTypeId]);
+                           "VALUES (?,?,STR_TO_DATE(?, '%Y-%m-%d'),?,?,?);", [username, password, birthDate, countryId, profilePicUrl, userTypeId]);
     else
-        sql = mysql.format("UPDATE user SET username = ?, password = ?, birth_date = STR_TO_DATE(?, '%d-%m-%Y'), country_id = ?, profile_pic_url = ?, user_type_id = ? WHERE id = ?", 
+        sql = mysql.format("UPDATE user SET username = ?, password = ?, birth_date = STR_TO_DATE(?, '%Y-%m-%d'), country_id = ?, profile_pic_url = ?, user_type_id = ? WHERE id = ?", 
                             [username, password, birthDate, countryId, profilePicUrl, userTypeId, id]);
 
     connection.query(sql, function (err, rows) {
@@ -391,10 +446,10 @@ function addUpdatePlayer(request, response) {
 
     if (request.method === "POST")
         sql = mysql.format("INSERT INTO player (rank, username, password, birth_date, country_id, status, registration_date, user_type_id) " +  
-                           "VALUES (?,?,?,STR_TO_DATE(?, '%d-%m-%Y'),?,?,STR_TO_DATE(?, '%d-%m-%Y'),?);", [rank, username, password, birthDate, status, countryId, registrationDate, userTypeId]);
+                           "VALUES (?,?,?,STR_TO_DATE(?, '%Y-%m-%d'),?,?,STR_TO_DATE(?, '%Y-%m-%d'),?);", [rank, username, password, birthDate, countryId, status,registrationDate, userTypeId]);
     else
-        sql = mysql.format("UPDATE player SET rank = ?, username = ?, password = ?, birth_date = STR_TO_DATE(?, '%d-%m-%Y'), country_id = ?, status = ?, registration_date = STR_TO_DATE(?, '%d-%m-%Y'), user_type_id = ? WHERE id = ?", 
-                            [rank, username, password, birthDate, status, countryId, registrationDate, userTypeId, id]);
+        sql = mysql.format("UPDATE player SET rank = ?, username = ?, password = ?, birth_date = STR_TO_DATE(?, '%Y-%m-%d'), country_id = ?, status = ?, registration_date = STR_TO_DATE(?, '%Y-%m-%d'), user_type_id = ? WHERE id = ?", 
+                            [rank, username, password, birthDate, countryId, status, registrationDate, userTypeId, id]);
 
     connection.query(sql, function (err, rows) {
         if (err) {
@@ -479,9 +534,9 @@ function addUpdateSession(request, response) {
 
     if (request.method === "POST")
         sql = mysql.format("INSERT INTO gameSession (start_date, player_id, level_id, character_id)" + 
-                           "VALUES (STR_TO_DATE(?, '%d-%m-%Y'),?,?,?);", [startDate, playerId, levelId, characterId]);
+                           "VALUES (STR_TO_DATE(?, '%Y-%m-%d'),?,?,?);", [startDate, playerId, levelId, characterId]);
     else
-        sql = mysql.format("UPDATE gameSession SET start_date = STR_TO_DATE(?, '%d-%m-%Y'), player_id = ?, level_id = ?, character_id = ? WHERE id = ?",  
+        sql = mysql.format("UPDATE gameSession SET start_date = STR_TO_DATE(?, '%Y-%m-%d'), player_id = ?, level_id = ?, character_id = ? WHERE id = ?",  
                            [startDate, playerId, levelId, characterId, id]);
 
     connection.query(sql, function (err, rows) {
@@ -539,9 +594,9 @@ function addUpdateStatistic(request, response) {
 
     if (request.method === "POST")
         sql = mysql.format("INSERT INTO statistic (value, registration_date, statistic_type_id, game_session_id)" +  
-                           "VALUES (?,STR_TO_DATE(?, '%d-%m-%Y'),?,?);", [value, registrationDate, statisticTypeId, gameSessionId]);
+                           "VALUES (?,STR_TO_DATE(?, '%Y-%m-%d'),?,?);", [value, registrationDate, statisticTypeId, gameSessionId]);
     else
-        sql = mysql.format("UPDATE statistic SET value = ?, registration_date = STR_TO_DATE(?, '%d-%m-%Y'), statistic_type_id = ?, game_session_id = ? WHERE id = ?", 
+        sql = mysql.format("UPDATE statistic SET value = ?, registration_date = STR_TO_DATE(?, '%Y-%m-%d'), statistic_type_id = ?, game_session_id = ? WHERE id = ?", 
                          [value, registrationDate, statisticTypeId, gameSessionId, id]);
 
     connection.query(sql, function (err, rows) {

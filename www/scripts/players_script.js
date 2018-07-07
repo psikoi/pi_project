@@ -3,6 +3,9 @@ var selectedPlayerId;
 // Holds the information of the players currently being shown 
 var currentPlayers = [];
 
+// Holds the information of the names of the countries available in the database. Key: name, Value: id
+var countries = {}
+
 /******************************************************************** */
 
 function getPlayers(filter){
@@ -43,7 +46,186 @@ function getPlayersFilter(endpoint){
     xhr.send();
 }
 
+function getLastPlayerRank(){
+    var ranks = [];
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/player", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).players.forEach(function(r){
+                ranks.push(r.rank);
+            });
+        }
+    }
+    xhr.send();
+
+    var minimum = ranks[1];
+
+    ranks.forEach(function(current){
+        if(minimum < current)
+            minimum = current;
+    });
+
+    return minimum;
+}
+
+function getCountries(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/countries", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).countries.forEach(function(r){
+                countries[r.name] = r.id; 
+            });
+        }
+    }
+    xhr.send();
+}
+
+function sendAddPlayerRequest(username, password, birthDate, country){
+    var countryId = countries[country];
+    var rank = getLastPlayerRank() + 1;
+
+    var success = true;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/player", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"rank": rank, "username": username, "password": password, "birthDate": birthDate,
+                            "status": "Active", "countryId": countryId, "registrationDate": getCurrentDateString(),
+                            "userTypeId": 2}));
+
+    return success;
+}
+
+function sendEditPlayerRequest(username, password, birthDate, country){
+    var countryId = countries[country];
+
+    var success = true;
+
+    var player;
+
+    currentPlayers.forEach(function(current){
+        if(current.id == selectedPlayerId){
+            player = current;
+            return;
+        }
+    });
+
+    registrationDate = player.registration_date.split("T")[0];
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", "/player", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+    
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"id": selectedPlayerId, "rank": player.rank, "username": username, "password": password, "birthDate": birthDate,
+                            "status": player.status, "countryId": countryId, "registrationDate":registrationDate,
+                            "userTypeId": player.user_type_id}));
+
+    return success;
+}
+
+function sendBanPlayerRequest(){
+    var success = true;
+
+    var player;
+
+    currentPlayers.forEach(function(current){
+        if(current.id == selectedPlayerId){
+            player = current;
+            return;
+        }
+    });
+
+    registrationDate = player.registration_date.split("T")[0];
+    birthDate = player.birth_date.split("T")[0];
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", "/player", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+    
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"id": selectedPlayerId, "rank": player.rank, "username": player.username, "password": player.password, "birthDate": birthDate,
+                            "status": "Banned", "countryId": player.country_id, "registrationDate": registrationDate,
+                            "userTypeId": player.user_type_id}));
+
+    return success;
+}
+
+function deletePlayer(){
+    var success = true;
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "/player", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+    
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"id": selectedPlayerId}));
+
+    return success;
+}
+
 /*********************************************************************** */
+
+function nameExists(username){
+    var confirmation = false;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/player", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).players.forEach(function(r){
+                if(r.username.toUpperCase() === username.toUpperCase()){
+                    confirmation = true;
+                    return;
+                }
+            });
+        }
+    }
+    xhr.send();
+    return confirmation;
+}
+
+function getCurrentDateString(){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; 
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd = '0'+dd
+    } 
+
+    if(mm<10) {
+        mm = '0'+mm
+    } 
+
+    return yyyy + '-' + mm + '-' + dd;
+}
 
 /**
  * Builds the add player form.
@@ -68,8 +250,8 @@ function buildAddPlayer() {
     countryLabel.textContent = "Country";
     form.appendChild(countryLabel);
 
-    //TODO TROCAR POR ARRAY DE PAISES NA BD
-    form.appendChild(buildSelector("player_country", ["Portugal", "France"]));
+    
+    form.appendChild(buildSelector("player_country", Object.keys(countries)));
     form.appendChild(buildBasicSubmit("Add"));
 }
 
@@ -77,17 +259,13 @@ function buildAddPlayer() {
  * Builds the edit player form.
  */
 function buildEditPlayer() {
+    var player;
 
-    //fazer request de get player usando o id que tá na variavel selectedPlayerId
-    //TODO TROCAR POR PLAYER REAL
-    var player = {
-        id: 1,
-        rank: 8310,
-        username: "baziiK",
-        birthdate: "1996-06-30", //ano, mês, dia
-        country: "France",
-        status: "N/A"
-    }
+    currentPlayers.forEach(function(current){
+        if(current.id == selectedPlayerId){
+            player = current;
+        }
+    });
 
     var pane = buildBaseForm("Edit a player account", "javascript: editPlayer()");
     var form = pane.children[0];
@@ -117,8 +295,7 @@ function buildEditPlayer() {
     countryLabel.textContent = "Country";
     form.appendChild(countryLabel);
 
-    //TODO TROCAR POR ARRAY DE PAISES NA BD
-    var country = buildSelector("player_country", ["Portugal", "France"]);
+    var country = buildSelector("player_country", Object.keys(countries));
     country.value = player.country;
 
     form.appendChild(country);
@@ -164,7 +341,7 @@ function addPlayer() {
         return;
     }
 
-    if (nameExists) { //TROCAR POR VERIFICAÇÃO REAL
+    if (nameExists(username)) { 
         alert("That username already exist.");
         return;
     }
@@ -188,10 +365,10 @@ function addPlayer() {
         alert("You must be 12 years old or older to register.");
         return;
     }
+    
+    var requestOk = sendAddPlayerRequest(username, password, birthDate, country);
 
-    //enviar pedido aqui
-
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Player added");
         closeForm();
         updatePlayersTable();
@@ -220,7 +397,7 @@ function editPlayer() {
         return;
     }
 
-    if (nameExists) { //TROCAR POR VERIFICAÇÃO REAL
+    if (nameExists(username)) { 
         alert("That username already exist.");
         return;
     }
@@ -240,9 +417,9 @@ function editPlayer() {
         return;
     }
 
-    //enviar pedido aqui
+    var requestOk = sendEditPlayerRequest(username, password, birthDate, country);
 
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Player edited");
         closeForm();
         updatePlayersTable();
@@ -256,7 +433,7 @@ function editPlayer() {
  */
 function banPlayer() {
 
-    //enviar pedido aqui
+    requestOk = sendBanPlayerRequest();
 
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
         alert("Player banned");
@@ -270,7 +447,8 @@ function banPlayer() {
  * Makes a server request to remove a player.
  */
 function removePlayer() {
-    //enviar pedido aqui
+    
+    requestOk = deletePlayer();
 
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
         alert("Player removed");
@@ -447,6 +625,8 @@ function buildPlayers() {
 
     togglePlayerActions(false);
     preparePlayerSelectionEvents();
+
+    getCountries();
 }
 
 /**

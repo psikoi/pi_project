@@ -3,6 +3,16 @@ var selectedSessionId;
 // Holds the information of the sessions currently being shown 
 var currentSessions = [];
 
+// Holds information of the username related to a certain player id. Key = id, Value = username
+var playerNames = {}
+
+var levelNames = {}
+
+var characterNames = {}
+
+var statistics = []
+
+var statisticTypes = {}
 /******************************************************************** */
 
 function getSessions(filter){
@@ -18,17 +28,16 @@ function getSessions(filter){
     getSessionsFilter(endpoint);
     
     var aux = [];
-/*
+
     if(filter.search){
         currentSessions.forEach(function(current){
-            if(current.username === filter.search){
-                aux = [current];
+            if(playerNames[current.player_id] === filter.search){
+                aux.push(current);
                 return;
             }
         });
-
-        currentPlayers = aux;
-    }*/
+        currentSessions = aux;
+    }
 }
 
 function getSessionsFilter(endpoint){
@@ -44,7 +53,271 @@ function getSessionsFilter(endpoint){
     xhr.send();
 }
 
+function getLastSessionId(){
+    var id;
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/session", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+
+            var max = JSON.parse(this.responseText).sessions[0].id;
+            JSON.parse(this.responseText).sessions.forEach(function(r){
+                if(r.id > max){
+                    max = r.id;
+                }
+            });
+
+            id = max;
+        }
+    }
+    xhr.send();
+    return id;
+}
+
+function getPlayerNames(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/player", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).players.forEach(function(r){
+                playerNames[r.id] = r.username;
+            });
+        }
+    }
+    xhr.send();
+}
+
+function getLevelNames(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/level", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).levels.forEach(function(r){
+                levelNames[r.id] = r.name;
+            });
+        }
+    }
+    xhr.send();
+}
+
+function getCharacterNames(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/character", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).characters.forEach(function(r){
+                characterNames[r.id] = r.name;
+            });
+        }
+    }
+    xhr.send();
+}
+
+function getSessionStatistics(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/statistic", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).statistics.forEach(function(r){
+                statistics.push(r);
+            });
+        }
+    }
+    xhr.send();
+}
+
+function getSessionStatisticsTypes(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/statisticType", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            JSON.parse(this.responseText).statisticTypes.forEach(function(r){
+                statisticTypes[r.id] = r.name;
+            });
+        }
+    }
+    xhr.send();
+}
+
+function sendAddSessionRequest(username, level, character, time){
+    var playerId = getPlayerIdByName(username);
+    var characterId = getCharacterIdByName(character);
+    
+    //Converts given time (mm:ss) to seconds
+    var minutes = parseInt(time.split(":")[0]);
+    var seconds = parseInt(time.split(":")[1]);
+
+    minutes = minutes * 60;
+    seconds = seconds + minutes;
+    
+    var dateString = getStartDateByTime(seconds);
+
+    var success = true;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/session", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"startDate": dateString, "playerId": playerId, "levelId": level, "characterId": characterId}));
+
+    if(!success){
+        return false;
+    }
+    //Send request to add statistic about time.
+    var statisticTypeId = getStatisticTypeIdByName("time");
+    var gameSessionId = getLastSessionId();
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/statistic", false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"value": seconds, "registrationDate": dateString, "statisticTypeId": statisticTypeId, "gameSessionId": gameSessionId}));
+
+    return true;
+
+}
 /*********************************************************************** */
+
+function getStatisticTypeIdByName(type){
+    var id;
+    for (var key in statisticTypes) {
+        if (statisticTypes.hasOwnProperty(key)) {
+            if(statisticTypes[key] == type){
+                id = key;
+            }
+        }
+    }
+    return id;
+}
+
+function getPlayerIdByName(username){
+    var id;
+    for (var key in playerNames) {
+        if (playerNames.hasOwnProperty(key)) {
+            if(playerNames[key] == username){
+                id = key;
+            }
+        }
+    }
+    return id;
+}
+
+function getCharacterIdByName(character){
+    var id;
+
+    for (var key in characterNames) {
+        if (characterNames.hasOwnProperty(key)) {
+            if(characterNames[key] == character){
+                id = key;
+            }
+        }
+    }
+    return id;
+}
+
+function getStartDateByTime(seconds){
+    var startDate = new Date(Date.now() - seconds);
+
+    var month = startDate.getMonth() +1;
+    var day = startDate.getDate();
+
+    if(day<10) {
+        day = '0'+day
+    } 
+
+    if(month<10) {
+        month = '0'+month
+    } 
+    return startDate.getFullYear() + "-" + month + "-" + day;
+}
+
+function getSessionUsername(session){
+    var userId = session.player_id;
+
+    return playerNames[userId];
+}
+
+function getSessionLevelName(session){
+    var levelId = session.level_id;
+
+    return levelNames[levelId];
+}
+
+function getSessionCharacterName(session){
+    var characterId = session.character_id;
+
+    return characterNames[characterId];
+}
+
+function getSessionTime(session){
+    var sessionId = session.id;
+    var typeId;
+
+    for( var key in statisticTypes ) {
+        if( statisticTypes.hasOwnProperty( key ) ) {
+             if( statisticTypes[ key ] == "time" )
+                 typeId = key;
+        }
+    }
+
+    var timeInSeconds;
+
+    statistics.forEach(function(current){
+        if(current.game_session_id == sessionId){
+            if(current.statistic_type_id == typeId){
+                timeInSeconds = current.value;
+            }
+        }
+    });
+
+    var minutes = Math.floor(timeInSeconds / 60);
+    var seconds = timeInSeconds - minutes * 60;
+
+    var minutesString = (minutes < 10) ? "0" + minutes : "" + minutes;
+    var secondsString = (seconds < 10) ? "0" + seconds : "" + seconds;
+
+    return minutesString + ":" + secondsString;
+}
+
+function usernameExists(username){
+    var res = false;
+
+    for (var key in playerNames) {
+        if (playerNames.hasOwnProperty(key)) {
+            if(playerNames[key] == username){
+                res = true;
+            }
+        }
+    }
+
+    return res;
+}
+
+function levelExists(level){
+    if(level in levelNames)
+        return true;
+    
+    return false;
+}
+
+function characterExists(character){
+    var res = false;
+
+    for (var key in characterNames) {
+        if (characterNames.hasOwnProperty(key)) {
+            if(characterNames[key] == character){
+                res = true;
+            }
+        }
+    }
+
+    return res;
+}
 
 /**
  * Builds the add session form.
@@ -65,16 +338,12 @@ function buildAddSession() {
  */
 function buildEditSession() {
 
-    //fazer request de get session usando o id que tá na variavel selectedSessionId
-    //TODO TROCAR POR SESSION REAL
-    var session = {
-        id: 0,
-        date: "27/03/2018 18:09",
-        username: "Ruben",
-        level: 3,
-        character: "Sargent",
-        time: "03:18"
-    }
+    var session;
+    currentSessions.forEach(function(current){
+        if(current.id == selectedSessionId){
+            session = current;
+        }
+    });
 
     var pane = buildBaseForm("Edit a game session", "javascript: editSession()");
     var form = pane.children[0];
@@ -84,10 +353,10 @@ function buildEditSession() {
     var character = buildBasicInput("session_character", "Character");
     var time = buildBasicInput("session_time", "Time (mm:ss)");
 
-    username.value = session.username;
-    level.value = session.level;
-    character.value = session.character;
-    time.value = session.time;
+    username.value = getSessionUsername(session);
+    level.value = getSessionLevelName(session);
+    character.value = getSessionCharacterName(session);
+    time.value = getSessionTime(session);
 
     form.appendChild(username);
     form.appendChild(level);
@@ -122,7 +391,7 @@ function addSession() {
         return;
     }
 
-    if (!nameExists) { //TROCAR POR VERIFICAÇÃO REAL
+    if (!usernameExists(username)) { 
         alert("That username does not exist.");
         return;
     }
@@ -132,7 +401,7 @@ function addSession() {
         return;
     }
 
-    if (!levelExists) {
+    if (!levelExists(level)) {
         alert("That level does not exist");
         return;
     }
@@ -142,7 +411,7 @@ function addSession() {
         return;
     }
 
-    if (!characterExists) { //TROCAR POR VERIFICAÇÃO REAL
+    if (!characterExists(character)) {
         alert("That character does not exist.");
         return;
     }
@@ -152,9 +421,9 @@ function addSession() {
         return;
     }
 
-    //enviar pedido aqui
+    requestOk = sendAddSessionRequest(username, level, character, time);
 
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Session added");
         closeForm();
         updateSessionsTable();
@@ -201,7 +470,7 @@ function editSession() {
         return;
     }
 
-    if (!characterExists) { //TROCAR POR VERIFICAÇÃO REAL
+    if (!characterExists(character)) { //TROCAR POR VERIFICAÇÃO REAL
         alert("That character does not exist.");
         return;
     }
@@ -274,18 +543,11 @@ function updateSessionsTable(filters) {
 function buildSessionsTable(filters) {
 
     if (filters != null) {
-        //TODO enviar pedido com os filters tipo:
-        // timespan: "All time"
-        // search: "tiago"
-        //console.log(JSON.stringify(filters));
-
         getSessions(filters);
     }
 
-    // TODO ir buscar o username a partir do user id, ir buscar o tempo a partir das estatisticas
-    // array global com os players e com as statistics e statistictype, e quando se for a construir a tabela itera-se esses arrays
-    // quando isso tiver feito pode-se usar o filtro do nome, em que o que ta em comentario no getSessions tem de ir primeiro ao array de players buscar o id do player,
-    // e so depois e que vai ao currentSessions comparar o id que foi buscar
+    // TODO ir buscar o tempo a partir das estatisticas
+    // array global comas statistics e statistictype, e quando se for a construir a tabela itera-se esses arrays
 
     var table = document.createElement("table");
     table.id = "sessions_table";
@@ -407,6 +669,12 @@ function buildSessions() {
 
     toggleSessionActions(false);
     prepareSessionSelectionEvents();
+
+    getPlayerNames();
+    getLevelNames();
+    getCharacterNames();
+    getSessionStatistics();
+    getSessionStatisticsTypes();
 }
 
 /**

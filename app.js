@@ -19,6 +19,13 @@ app.get("/session/today", requestHandlers.getSessionsToday);
 app.get("/session/week", requestHandlers.getSessionsWeek);
 app.get("/session/month", requestHandlers.getSessionsMonth);
 app.get("/statistic", requestHandlers.getStatistics);
+app.get("/statistic/today", requestHandlers.getStatisticsToday);
+app.get("/statistic/week", requestHandlers.getStatisticsWeek);
+app.get("/statistic/month", requestHandlers.getStatisticsMonth);
+app.get("/countries", requestHandlers.getCountries);
+app.get("/level", requestHandlers.getLevels);
+app.get("/character", requestHandlers.getCharacters);
+app.get("/statisticType", requestHandlers.getStatisticType);
 
 // POST
 app.post("/player", requestHandlers.addUpdatePlayer);
