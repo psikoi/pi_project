@@ -227,6 +227,8 @@ function getCurrentDateString(){
     return yyyy + '-' + mm + '-' + dd;
 }
 
+/*********************************************************************** */
+
 /**
  * Builds the add player form.
  */
