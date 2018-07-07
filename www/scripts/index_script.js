@@ -1,6 +1,7 @@
 $(document).ready(function () {
     buildNavigation();
     switchPage("statistics");
+    readLogInCookies();
 });
 
 function switchPage(page) {

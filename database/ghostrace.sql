@@ -3,6 +3,7 @@ USE `ghostrace`;
 
 DROP TABLE IF EXISTS `configuration`;
 DROP TABLE IF EXISTS `configurationType`;
+DROP TABLE IF EXISTS `activeSessions`;
 DROP TABLE IF EXISTS `statistic`;
 DROP TABLE IF EXISTS `statisticType`;
 DROP TABLE IF EXISTS `gameSession`;
@@ -31,8 +32,6 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `birth_date` date NOT NULL,
-  `country_id` int(11) NOT NULL,
   `profile_pic_url` varchar(255) NOT NULL,
   `user_type_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
@@ -105,8 +104,11 @@ CREATE TABLE `configuration`(
   PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `user`
-	ADD CONSTRAINT `user_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`);
+CREATE TABLE `activeSessions`(
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+    `user_id` int(11) NOT NULL,
+    PRIMARY KEY (`id`)
+);
 
 ALTER TABLE `user`
 	ADD CONSTRAINT `user_userType` FOREIGN KEY (`user_type_id`) REFERENCES `userType` (`id`);
@@ -137,6 +139,9 @@ ALTER TABLE `configuration`
 
 ALTER TABLE `configuration`
 	ADD CONSTRAINT `configuration_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE;
+
+ALTER TABLE `activeSessions`
+	ADD CONSTRAINT `activeSessions_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
     
 
 INSERT INTO `country` (`id`, `name`, `short_name`) VALUES
@@ -392,8 +397,8 @@ INSERT INTO `userType` (`id`, `user_type`) VALUES
 (1, 'Administrator'),
 (2, 'Normal');
 
-INSERT INTO `user` (`id`, `username`, `password`, `birth_date`, `country_id`, `profile_pic_url`, `user_type_id`) VALUES
-(1, 'admin', '321', STR_TO_DATE('1998-03-03', '%Y-%m-%d'), 183, 'profilepic1', 1);
+INSERT INTO `user` (`id`, `username`, `password`, `profile_pic_url`, `user_type_id`) VALUES
+(1, 'admin', '321', 'profilepic1', 1);
 
 INSERT INTO `player` (`id`, `rank`, `username`, `password`, `birth_date`, `country_id`, `status`, `registration_date`, `user_type_id`) VALUES
 (1, 1, 'tiagosantos', '123', STR_TO_DATE('1998-01-01', '%Y-%m-%d'),  183, 'Active', STR_TO_DATE('2018-01-01', '%Y-%m-%d'), 2),

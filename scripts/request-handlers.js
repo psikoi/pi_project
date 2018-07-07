@@ -41,7 +41,7 @@ module.exports.getUserType = getUserType;
  */
 function getUsers(request, response) {
     var connection = mysql.createConnection(options);
-    var query = "SELECT id, username, password, birth_date, country_id, profile_pic_url, user_type_id FROM user";
+    var query = "SELECT id, username, password, profile_pic_url, user_type_id FROM user";
     connection.query(query, function (err, rows) {
         if (err) {
             response.json({ "message": "error" });
@@ -334,6 +334,20 @@ function getStatisticsMonth(request, response){
 }
 module.exports.getStatisticsMonth = getStatisticsMonth;
 
+function getActiveSessions(request, response){
+    var connection = mysql.createConnection(options);
+
+    var query = "SELECT id, user_id FROM activeSessions"; 
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.json({ "message": "ok", "activeSessions": rows });
+        }
+    });
+}
+module.exports.getActiveSessions = getActiveSessions;
 
 /* Endpoint - POST / PUT */
 
@@ -402,19 +416,17 @@ function addUpdateUser(rerequestq, response) {
     var id = request.body.id;
     var username = request.body.username;
     var password = request.body.password;
-    var birthDate = request.body.birthDate;
-    var countryId = request.body.countryId;
     var profilePicUrl = request.body.profilePicUrl;
     var userTypeId = request.body.userTypeId;
 
     var sql;
 
     if (request.method === "POST")
-        sql = mysql.format("INSERT INTO user (username, password, birth_date, country_id, profile_pic_url, user_type_id) " + 
-                           "VALUES (?,?,STR_TO_DATE(?, '%Y-%m-%d'),?,?,?);", [username, password, birthDate, countryId, profilePicUrl, userTypeId]);
+        sql = mysql.format("INSERT INTO user (username, password, profile_pic_url, user_type_id) " + 
+                           "VALUES (?,?,STR_TO_DATE(?, '%Y-%m-%d'),?,?,?);", [username, password, profilePicUrl, userTypeId]);
     else
-        sql = mysql.format("UPDATE user SET username = ?, password = ?, birth_date = STR_TO_DATE(?, '%Y-%m-%d'), country_id = ?, profile_pic_url = ?, user_type_id = ? WHERE id = ?", 
-                            [username, password, birthDate, countryId, profilePicUrl, userTypeId, id]);
+        sql = mysql.format("UPDATE user SET username = ?, password = ?, profile_pic_url = ?, user_type_id = ? WHERE id = ?", 
+                            [username, password, profilePicUrl, userTypeId, id]);
 
     connection.query(sql, function (err, rows) {
         if (err) {
@@ -608,6 +620,25 @@ function addUpdateStatistic(request, response) {
     });
 }
 module.exports.addUpdateStatistic = addUpdateStatistic;
+
+function addActiveSession(request, response) {
+    var connection = mysql.createConnection(options);
+
+    var userId = request.body.userId;
+
+    var sql;
+   
+    sql = mysql.format("INSERT INTO activeSessions (user_id) VALUES (?);", [userId]);
+
+    connection.query(sql, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.send(rows);
+        }
+    });
+}
+module.exports.addActiveSession = addActiveSession;
 
 
 /* Endpoint - DELETE */
@@ -807,3 +838,21 @@ function deleteStatistic(request, response) {
     });
 }
 module.exports.deleteStatistic = deleteStatistic;
+
+function deleteActiveSession(request, response) {
+    var connection = mysql.createConnection(options);
+
+    var id = request.body.id;
+    var sql;
+
+    sql = mysql.format("DELETE FROM activeSessions WHERE id = ?", [id]);
+
+    connection.query(sql, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.send(rows);
+        }
+    });
+}
+module.exports.deleteActiveSession = deleteActiveSession;
