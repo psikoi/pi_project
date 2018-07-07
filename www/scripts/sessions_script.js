@@ -179,9 +179,86 @@ function sendAddSessionRequest(username, level, character, time){
     xhr.send(JSON.stringify({"value": seconds, "registrationDate": dateString, "statisticTypeId": statisticTypeId, "gameSessionId": gameSessionId}));
 
     return true;
+}
 
+function sendEditSessionRequest(username, level, character, time){
+    var currentSession;
+
+    currentSessions.forEach(function(current){
+        if(current.id == selectedSessionId){
+            currentSession = current;
+        }
+    });
+
+    var playerId = getPlayerIdByName(username);
+    var characterId = getCharacterIdByName(character);
+    
+    //Converts given time (mm:ss) to seconds
+    var minutes = parseInt(time.split(":")[0]);
+    var seconds = parseInt(time.split(":")[1]);
+
+    minutes = minutes * 60;
+    seconds = seconds + minutes;
+
+    var startDate = currentSession.start_date.split("T")[0];
+
+    var success = true;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", "/session", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"id": selectedSessionId, "startDate": startDate, "playerId": playerId, "levelId": level, "characterId": characterId}));
+
+    if(!success){
+        return false;
+    }
+    //Send request to edit statistic.
+    var statisticTypeId = getStatisticTypeIdByName("time");
+    var statistic = getStatisticByTypeSession(statisticTypeId, selectedSessionId);
+    
+    var registrationDate = statistic.registration_date.split("T")[0];
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", "/statistic", false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"id": statistic.id, "value": seconds, "registrationDate": registrationDate, "statisticTypeId": statisticTypeId, "gameSessionId": selectedSessionId}));
+
+    return true;
+}
+
+function sendDeleteSessionRequest(){
+    var success = true;
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "/session", false);
+    xhr.onreadystatechange = function(){
+        if(this.status === 200 && this.readyState === 4){
+            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+                success = false;
+        }
+    }
+    
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({"id": selectedSessionId}));
+
+    return success;
 }
 /*********************************************************************** */
+function getStatisticByTypeSession(typeId, sessionId){
+    var statistic;
+    statistics.forEach(function(current){
+        if(current.game_session_id == sessionId  && current.statistic_type_id == typeId){
+            statistic = current;
+        }
+    });
+    return statistic;
+}
 
 function getStatisticTypeIdByName(type){
     var id;
@@ -450,7 +527,7 @@ function editSession() {
         return;
     }
 
-    if (!nameExists) { //TROCAR POR VERIFICAÇÃO REAL
+    if (!usernameExists(username)) { //TROCAR POR VERIFICAÇÃO REAL
         alert("That username does not exist.");
         return;
     }
@@ -460,7 +537,7 @@ function editSession() {
         return;
     }
 
-    if (!levelExists) {
+    if (!levelExists(level)) {
         alert("That level does not exist");
         return;
     }
@@ -470,7 +547,7 @@ function editSession() {
         return;
     }
 
-    if (!characterExists(character)) { //TROCAR POR VERIFICAÇÃO REAL
+    if (!characterExists(character)) { 
         alert("That character does not exist.");
         return;
     }
@@ -480,7 +557,7 @@ function editSession() {
         return;
     }
 
-    //enviar pedido aqui
+    requestOk = sendEditSessionRequest(username, level, character, time);
 
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
         alert("Session edited");
@@ -497,7 +574,7 @@ function editSession() {
  */
 function removeSession() {
 
-    //enviar pedido aqui
+    requestOk = sendDeleteSessionRequest();
 
     if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
         alert("Session removed");

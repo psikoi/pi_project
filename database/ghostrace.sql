@@ -1,6 +1,8 @@
 CREATE DATABASE IF NOT EXISTS `ghostrace`;
 USE `ghostrace`;
 
+DROP TABLE IF EXISTS `configuration`;
+DROP TABLE IF EXISTS `configurationType`;
 DROP TABLE IF EXISTS `statistic`;
 DROP TABLE IF EXISTS `statisticType`;
 DROP TABLE IF EXISTS `gameSession`;
@@ -10,8 +12,6 @@ DROP TABLE IF EXISTS `player`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `country`;
 DROP TABLE IF EXISTS `userType`;
-DROP TABLE IF EXISTS `configuration`;
-DROP TABLE IF EXISTS `configurationType`;
 
 
 CREATE TABLE `country` (
@@ -130,13 +130,13 @@ ALTER TABLE `statistic`
 	ADD CONSTRAINT `statistic_statisticType` FOREIGN KEY (`statistic_type_id`) REFERENCES `statisticType` (`id`) ON DELETE CASCADE;
     
 ALTER TABLE `statistic`
-	ADD CONSTRAINT `statistic_gameSession` FOREIGN KEY (`game_session_id`) REFERENCES `gameSession` (`id`);
+	ADD CONSTRAINT `statistic_gameSession` FOREIGN KEY (`game_session_id`) REFERENCES `gameSession` (`id`) ON DELETE CASCADE;
 
 ALTER TABLE `configuration`
-	ADD CONSTRAINT `configuration_configurationType` FOREIGN KEY (`type_id`) REFERENCES `configurationType` (`id`);
+	ADD CONSTRAINT `configuration_configurationType` FOREIGN KEY (`type_id`) REFERENCES `configurationType` (`id`) ON DELETE CASCADE;
 
 ALTER TABLE `configuration`
-	ADD CONSTRAINT `configuration_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`);
+	ADD CONSTRAINT `configuration_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE;
     
 
 INSERT INTO `country` (`id`, `name`, `short_name`) VALUES
