@@ -13,6 +13,8 @@ DROP TABLE IF EXISTS `player`;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `country`;
 DROP TABLE IF EXISTS `userType`;
+DROP TABLE IF EXISTS `configuration`;
+DROP TABLE IF EXISTS `configurationType`;
 
 
 CREATE TABLE `country` (
@@ -111,6 +113,9 @@ CREATE TABLE `activeSessions`(
 );
 
 ALTER TABLE `user`
+	ADD CONSTRAINT `user_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`);
+
+ALTER TABLE `user`
 	ADD CONSTRAINT `user_userType` FOREIGN KEY (`user_type_id`) REFERENCES `userType` (`id`);
 
 ALTER TABLE `player`
@@ -141,8 +146,7 @@ ALTER TABLE `configuration`
 	ADD CONSTRAINT `configuration_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE;
 
 ALTER TABLE `activeSessions`
-	ADD CONSTRAINT `activeSessions_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
-    
+	ADD CONSTRAINT `activeSessions_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE; 
 
 INSERT INTO `country` (`id`, `name`, `short_name`) VALUES
 (1, 'Andorra', 'AD'),
@@ -438,11 +442,13 @@ INSERT INTO `gameSession` (`id`, `start_date`, `player_id`, `level_id`, `charact
 (21, STR_TO_DATE('2018-06-22', '%Y-%m-%d'), 2, 3, 3),
 (22, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 1, 2),
 (23, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 2, 2),
-(24, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 3, 2);
+(24, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 3, 2),
+(25, STR_TO_DATE('2018-06-29', '%Y-%m-%d'), 2, 2, 2);
 
 INSERT INTO `statisticType` (`id`, `name`, `description`) VALUES
 (1, 'time', 'Time it took for the player to finish the level.'),
-(2, 'items_picked', 'How many items the player picked up.');
+(2, 'items_picked', 'How many items the player picked up.'),
+(3, 'stuns', 'How many times the player has been stunned.');
 
 INSERT INTO `statistic` (`id`, `value`, `registration_date`, `statistic_type_id`,`game_session_id`) VALUES
 (1, 170, STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 1, 1),
@@ -493,6 +499,11 @@ INSERT INTO `statistic` (`id`, `value`, `registration_date`, `statistic_type_id`
 (46, 2, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 23),
 (47, 148, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 24),
 (48, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 24);
+(49, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 24),
+(50, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 3, 24),
+(51, 120, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 25),
+(52, 2, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 25),
+(53, 1, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 3, 25);
 
 INSERT INTO `configurationType` (`id`, `type`) VALUES 
 (1, 'sound'),

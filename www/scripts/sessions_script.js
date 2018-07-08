@@ -627,13 +627,13 @@ function addSession() {
 
     if (requestOk) { 
         alert("Session added");
+        recalculateRankings();
         closeForm();
         updateSessionsTable();
     } else {
         alert("Session failed to add")
     }
 }
-
 
 /**
  * Edits a game session.
