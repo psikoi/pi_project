@@ -614,6 +614,23 @@ function updateSessionsTable(filters) {
     prepareSessionSelectionEvents();
 }
 
+function buildTableData(){
+    var data = [];
+    
+    currentSessions.forEach(function(current){
+        var auxData = {};
+        auxData["Id"] = current.id;
+        auxData["Date"] = current.start_date.split("T")[0];
+        auxData["Username"] = getSessionUsername(current);
+        auxData["Level"] = current.level_id + " (" + getSessionLevelName(current) + ")";
+        auxData["Character"] = getSessionCharacterName(current);
+        auxData["Time"] = getSessionTime(current);
+        data.push(auxData);
+    });
+    return data;
+}
+
+
 /**
  * Fetches and builds a data table with given filters.
  */
@@ -630,6 +647,8 @@ function buildSessionsTable(filters) {
     table.id = "sessions_table";
     table.cellSpacing = "0";
 
+    data = buildTableData();
+
     var columns = ["Id", "Date", "Username", "Level", "Character", "Time"];
     var thead = document.createElement("thead");
     var headRow = document.createElement("tr");
@@ -641,7 +660,7 @@ function buildSessionsTable(filters) {
     thead.appendChild(headRow);
 
     var tbody = document.createElement("tbody");
-    currentSessions.forEach(function (row) {
+    data.forEach(function (row) {
         var tableRow = document.createElement("tr");
         Object.keys(row).forEach(function (field) {
             var td = document.createElement("td");

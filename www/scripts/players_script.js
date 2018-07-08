@@ -538,9 +538,6 @@ function buildPlayersTable(filters) {
     table.id = "players_table";
     table.cellSpacing = "0";
 
-    // TODO Acertar a data recebida pelo request (no array currentPlayers) com as colunas da tabela. 
-    // TODO Calcular idade através da data de nascimento e exibi-la, ir buscar o nome do pais sabendo o seu id. (variavel global countries, fazer request no inico da app a todos os countries e iterar o array)
-
     var tableData = buildTableData();
 
     var columns = ["Id", "Rank", "Username", "Age", "Country", "Status"];
