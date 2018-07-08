@@ -86,7 +86,9 @@ function displayUserNavigation(user) {
         userNavA.href = "javascript:logout()";
 
         var userNavImg = document.createElement("img");
-        userNavImg.src = user["profile_pic_url"];
+
+        var profilePic = user["profile_pic_url"]
+        userNavImg.src = profilePic.length == 0 ? "https://i.gyazo.com/9493a5e92e1055dcc708fa0ca0d7f708.png" : profilePic;
 
         var userNavName = document.createElement("div");
         userNavName.className = "nav_username";

@@ -738,6 +738,7 @@ function updateSessionsTable(filters) {
     parent.appendChild(buildSessionsTable(filters));
 
     selectedSessionId = -1;
+    toggleSessionActions(false);
     prepareSessionSelectionEvents();
 }
 
