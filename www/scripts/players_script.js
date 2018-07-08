@@ -17,7 +17,7 @@ var countries = {}
 /**
  * Gets the players from the database based on a filter, and populates the currentPlayers array with the result.
  */
-function getPlayers(filter){
+function getPlayers(filter) {
     currentPlayers = []
 
     var endpoint = "/player";
@@ -46,7 +46,7 @@ function getPlayers(filter){
 /**
  * Gets the players from the database given a certain endpoint.
  */
-function getPlayersFilter(endpoint){
+function getPlayersFilter(endpoint) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false);
     xhr.onreadystatechange = function () {
@@ -62,7 +62,7 @@ function getPlayersFilter(endpoint){
 /**
  * Gets the number of the last rank in the player table.
  */
-function getLastPlayerRank(){
+function getLastPlayerRank() {
     var ranks = [];
 
     var xhr = new XMLHttpRequest();
@@ -89,7 +89,7 @@ function getLastPlayerRank(){
 /**
  * Gets the countries from the database and populates the countries object with their id and name.
  */
-function getCountries(){
+function getCountries() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/countries", false);
     xhr.onreadystatechange = function () {
@@ -109,7 +109,7 @@ function getCountries(){
  * @param {string} birthDate - Birth date of the player being added.
  * @param {string} country - Country of the player being added.
  */
-function sendAddPlayerRequest(username, password, birthDate, country){
+function sendAddPlayerRequest(username, password, birthDate, country) {
     var countryId = countries[country];
     var rank = getLastPlayerRank() + 1;
 
@@ -141,7 +141,7 @@ function sendAddPlayerRequest(username, password, birthDate, country){
  * @param {string} birthDate - Birth date of the player being edited.
  * @param {string} country - Country of the player being edited.
  */
-function sendEditPlayerRequest(username, password, birthDate, country){
+function sendEditPlayerRequest(username, password, birthDate, country) {
     var countryId = countries[country];
 
     var success = true;
@@ -173,7 +173,7 @@ function sendEditPlayerRequest(username, password, birthDate, country){
  * Sends a request to the database to ban a player.
  * To ban a player, the database will change the status field to "Banned".
  */
-function sendChangePlayerStatusRequest(){
+function sendChangePlayerStatusRequest() {
     var success = true;
 
     var xhr = new XMLHttpRequest();
@@ -186,7 +186,7 @@ function sendChangePlayerStatusRequest(){
     }
 
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"id": selectedPlayerId}));
+    xhr.send(JSON.stringify({ "id": selectedPlayerId }));
 
     return success;
 }
@@ -194,7 +194,7 @@ function sendChangePlayerStatusRequest(){
 /**
  * Sends a request to the database to delete a player, using the DELETE endpoint.
  */
-function deletePlayer(){
+function deletePlayer() {
     var success = true;
 
     var xhr = new XMLHttpRequest();
@@ -216,7 +216,7 @@ function deletePlayer(){
  * Checks if there is already a player with a certain username.
  * @param {string} username - Username being checked.
  */
-function nameExists(username){
+function nameExists(username) {
     var confirmation = false;
 
     var xhr = new XMLHttpRequest();
@@ -239,11 +239,11 @@ function nameExists(username){
  * Returns a player object with a certain id.
  * @param {int} id - Id of the player being searched.
  */
-function getPlayerById(id){
+function getPlayerById(id) {
     var player;
 
-    currentPlayers.forEach(function(current){
-        if(current.id == id){
+    currentPlayers.forEach(function (current) {
+        if (current.id == id) {
             player = current;
         }
     });
@@ -255,7 +255,7 @@ function getPlayerById(id){
  * Returns the current date in string format.
  * Example: 2018-07-02
  */
-function getCurrentDateString(){
+function getCurrentDateString() {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
@@ -331,7 +331,7 @@ function buildEditPlayer() {
     form.appendChild(birthdateLabel);
 
     var birthdate = buildDateInput("player_birthdate");
-    birthdate.value = player.birthdate;
+    birthdate.value = player['birth_date'].substring(0, 10);
 
     form.appendChild(birthdate);
 
@@ -341,7 +341,14 @@ function buildEditPlayer() {
     form.appendChild(countryLabel);
 
     var country = buildSelector("player_country", Object.keys(countries));
-    country.value = player.country;
+
+    var countryId = player['country_id'];
+
+    Object.keys(countries).forEach(function (c) {
+        if (countries[c] == countryId) {
+            country.value = c;
+        }
+    });
 
     form.appendChild(country);
 
@@ -556,7 +563,7 @@ function editPlayer() {
 
     var player = getPlayerById(selectedPlayerId);
 
-    if (nameExists(username) && username != player.username) { 
+    if (nameExists(username) && username != player.username) {
         alert("That username already exist.");
         return;
     }
@@ -594,7 +601,7 @@ function changePlayerStatus() {
 
     var requestOk = sendChangePlayerStatusRequest();
 
-    if (requestOk) { 
+    if (requestOk) {
         alert("Player status changed.");
         updatePlayersTable();
     } else {
@@ -608,7 +615,7 @@ function changePlayerStatus() {
 function removePlayer() {
     var requestOk = deletePlayer();
 
-    if (requestOk) { 
+    if (requestOk) {
         alert("Player removed");
         updatePlayersTable();
     } else {
@@ -654,10 +661,10 @@ function updatePlayersTable(filters) {
  * about the player's birth date and not age.
  * This method will process the necessary information and return it.
  */
-function buildPlayersTableData(){
+function buildPlayersTableData() {
     var data = [];
-    
-    currentPlayers.forEach(function(current){
+
+    currentPlayers.forEach(function (current) {
         var auxData = {};
         auxData["Id"] = current.id;
         auxData["Rank"] = current.rank;
@@ -674,11 +681,11 @@ function buildPlayersTableData(){
  * Returns a country's name, based on the id received.
  * @param {int} id - Id of the country being searched. 
  */
-function getCountryNameById(id){
+function getCountryNameById(id) {
     var name;
     for (var key in countries) {
         if (countries.hasOwnProperty(key)) {
-            if(countries[key] == id){
+            if (countries[key] == id) {
                 name = key;
             }
         }
@@ -693,11 +700,11 @@ function buildPlayersTable(filters) {
 
     if (filters == null) {
         filters = {
-            "timespan" : "All time"
+            "timespan": "All time"
         };
     }
 
-    
+
     getPlayers(filters);
 
     var table = document.createElement("table");
@@ -832,7 +839,7 @@ function buildPlayers() {
     togglePlayerActions(false);
     preparePlayerSelectionEvents();
 
-    
+
 }
 
 /**
