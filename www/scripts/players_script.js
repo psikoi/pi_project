@@ -497,7 +497,7 @@ function updatePlayersTable(filters) {
     preparePlayerSelectionEvents();
 }
 
-function buildTableData(){
+function buildPlayersTableData(){
     var data = [];
     
     currentPlayers.forEach(function(current){
@@ -538,7 +538,7 @@ function buildPlayersTable(filters) {
     table.id = "players_table";
     table.cellSpacing = "0";
 
-    var tableData = buildTableData();
+    var tableData = buildPlayersTableData();
 
     var columns = ["Id", "Rank", "Username", "Age", "Country", "Status"];
     var thead = document.createElement("thead");

@@ -614,7 +614,7 @@ function updateSessionsTable(filters) {
     prepareSessionSelectionEvents();
 }
 
-function buildTableData(){
+function buildSessionsTableData(){
     var data = [];
     
     currentSessions.forEach(function(current){
@@ -647,7 +647,7 @@ function buildSessionsTable(filters) {
     table.id = "sessions_table";
     table.cellSpacing = "0";
 
-    data = buildTableData();
+    data = buildSessionsTableData();
 
     var columns = ["Id", "Date", "Username", "Level", "Character", "Time"];
     var thead = document.createElement("thead");

@@ -442,6 +442,30 @@ function updateStatisticsTable(filters) {
     prepareStatisticsSelectionEvents();
 }
 
+function buildStatisticsTableData(){
+    var data = [];
+    
+    currentStatistics.forEach(function(current){
+        var auxData = {};
+        auxData["Id"] = current.id;
+        auxData["GameSessionId"] = current.game_session_id;
+        auxData["Type"] = formatString(statisticTypes[current.statistic_type_id]);
+
+        if(auxData["Type"] == "Time"){
+            var time = secondsToString(current.value);
+
+            var value = current.value + " seconds (" + time + " minutes)";
+
+            auxData["Value"] = value;
+        }else{
+            auxData["Value"] = current.value;
+        }
+
+        data.push(auxData);
+    });
+    return data;
+}
+
 /**
  * Fetches and builds a data table with given filters.
  */
@@ -450,8 +474,6 @@ function buildStatisticsTable(filters) {
     if (filters != null) {
         getStatistics(filters);
     }
-
-    //TODO arranjar a tabela
 
     var table = document.createElement("table");
     table.id = "statistics_table";
@@ -467,8 +489,10 @@ function buildStatisticsTable(filters) {
     })
     thead.appendChild(headRow);
 
+    var data = buildStatisticsTableData();
+
     var tbody = document.createElement("tbody");
-    currentStatistics.forEach(function (row) {
+    data.forEach(function (row) {
         var tableRow = document.createElement("tr");
         Object.keys(row).forEach(function (field) {
             var td = document.createElement("td");
