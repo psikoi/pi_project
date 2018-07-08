@@ -33,8 +33,8 @@ function getPlayers(filter){
 
     if (filter.search) {
         currentPlayers.forEach(function (current) {
-            if (current.username.includes(filter.search)) {
-                aux = [current];
+            if (current.username.toLowerCase().includes(filter.search.toLowerCase())) {
+                aux.push(current);
                 return;
             }
         });
