@@ -530,7 +530,7 @@ function buildStatisticsTableData(){
         if(auxData["Type"] == "Time"){
             var time = secondsToString(current.value);
 
-            var value = current.value + " seconds (" + time + " minutes)";
+            var value = time + " (" + current.value + " seconds)";
 
             auxData["Value"] = value;
         }else{
