@@ -47,6 +47,7 @@ app.put("/player/rank", requestHandlers.updatePlayerRank);
 app.put("/session", requestHandlers.addUpdateSession);
 app.put("/statistic", requestHandlers.addUpdateStatistic);
 app.put("/configuration", requestHandlers.addUpdateConfiguration);
+app.put("/player/ban", requestHandlers.banUnbanPlayer);
 
 // DELETE
 app.delete("/player", requestHandlers.deletePlayer);
