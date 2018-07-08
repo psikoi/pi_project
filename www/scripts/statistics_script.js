@@ -523,6 +523,7 @@ function buildStatisticsTableData(){
     currentStatistics.forEach(function(current){
         var auxData = {};
         auxData["Id"] = current.id;
+        auxData["Username"] = sessionPlayers[current.game_session_id];
         auxData["GameSessionId"] = current.game_session_id;
         auxData["Type"] = formatString(statisticTypes[current.statistic_type_id]);
 
@@ -558,7 +559,7 @@ function buildStatisticsTable(filters) {
     table.id = "statistics_table";
     table.cellSpacing = "0";
 
-    var columns = ["Id", "Game Session Id", "Type", "Value"];
+    var columns = ["Id", "Username", "Game Session Id", "Type", "Value"];
     var thead = document.createElement("thead");
     var headRow = document.createElement("tr");
     columns.forEach(function (c) {
@@ -670,6 +671,10 @@ function buildStatistics() {
 
     sectionContainer.appendChild(sectionTitle);
     sectionContainer.appendChild(tableFilter);
+
+    getSessionByPlayer();
+    getStatisticTypes();
+
     sectionContainer.appendChild(buildStatisticsTable());
 
     section.appendChild(sectionContainer);
@@ -678,8 +683,7 @@ function buildStatistics() {
     toggleStatisticsActions(false);
     prepareStatisticsSelectionEvents();
 
-    getSessionByPlayer();
-    getStatisticTypes();
+   
 }
 
 /**
