@@ -643,6 +643,7 @@ function updatePlayersTable(filters) {
     parent.appendChild(buildPlayersTable(filters));
 
     selectedPlayerId = -1;
+    togglePlayerActions(false);
     preparePlayerSelectionEvents();
 }
 

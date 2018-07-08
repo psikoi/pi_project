@@ -508,6 +508,7 @@ function updateStatisticsTable(filters) {
     parent.appendChild(buildStatisticsTable(filters));
 
     selectedStatisticId = -1;
+    toggleStatisticsActions(false);
     prepareStatisticsSelectionEvents();
 }
 
