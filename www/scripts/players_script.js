@@ -111,14 +111,7 @@ function sendEditPlayerRequest(username, password, birthDate, country){
 
     var success = true;
 
-    var player;
-
-    currentPlayers.forEach(function(current){
-        if(current.id == selectedPlayerId){
-            player = current;
-            return;
-        }
-    });
+    var player = getPlayerById(selectedPlayerId);
 
     registrationDate = player.registration_date.split("T")[0];
 
@@ -208,6 +201,18 @@ function nameExists(username){
     }
     xhr.send();
     return confirmation;
+}
+
+function getPlayerById(id){
+    var player;
+
+    currentPlayers.forEach(function(current){
+        if(current.id == id){
+            player = current;
+        }
+    });
+
+    return player;
 }
 
 function getCurrentDateString(){
@@ -399,7 +404,9 @@ function editPlayer() {
         return;
     }
 
-    if (nameExists(username)) { 
+    var player = getPlayerById(selectedPlayerId);
+
+    if (nameExists(username) && username != player.username) { 
         alert("That username already exist.");
         return;
     }
