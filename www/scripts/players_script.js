@@ -26,7 +26,7 @@ function getPlayers(filter){
         case "This week": endpoint += "/week"; break;
         case "Today": endpoint += "/today"; break;
     }
-    
+
     getPlayersFilter(endpoint);
 
     var aux = [];
@@ -796,6 +796,7 @@ function buildPlayers() {
     searchImg.src = "images/icons/search.png";
 
     var input = document.createElement("input");
+    input.placeholder = "Search player name";
     input.id = "players_search";
     input.type = "text";
     input.addEventListener("keyup", function (event) {

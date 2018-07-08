@@ -631,6 +631,7 @@ function buildStatistics() {
     searchImg.src = "images/icons/search.png";
 
     var input = document.createElement("input");
+    input.placeholder = "Search player name";
     input.id = "statistics_search";
     input.type = "text";
     input.addEventListener("keyup", function (event) {
