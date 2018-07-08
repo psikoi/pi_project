@@ -46,23 +46,23 @@ var statisticTypes = {};
 /**
  * Gets the sessions from the database based on a filter, and populates the currentSessions array with the result.
  */
-function getSessions(filter){
+function getSessions(filter) {
     currentSessions = []
 
     var endpoint = "/session";
-    switch(filter.timespan){
+    switch (filter.timespan) {
         case "This month": endpoint += "/month"; break;
         case "This week": endpoint += "/week"; break;
         case "Today": endpoint += "/today"; break;
     }
 
     getSessionsFilter(endpoint);
-    
+
     var aux = [];
 
-    if(filter.search){
-        currentSessions.forEach(function(current){
-            if(playerNames[current.player_id] === filter.search){
+    if (filter.search) {
+        currentSessions.forEach(function (current) {
+            if (playerNames[current.player_id].includes(filter.search)) {
                 aux.push(current);
                 return;
             }
@@ -74,12 +74,12 @@ function getSessions(filter){
 /**
  * Gets the sessions from the database given a certain endpoint.
  */
-function getSessionsFilter(endpoint){
+function getSessionsFilter(endpoint) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).sessions.forEach(function(r){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).sessions.forEach(function (r) {
                 currentSessions.push(r);
             });
         }
@@ -90,17 +90,17 @@ function getSessionsFilter(endpoint){
 /**
  * Gets the id of the last session introduced in the database.
  */
-function getLastSessionId(){
+function getLastSessionId() {
     var id;
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/session", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
 
             var max = JSON.parse(this.responseText).sessions[0].id;
-            JSON.parse(this.responseText).sessions.forEach(function(r){
-                if(r.id > max){
+            JSON.parse(this.responseText).sessions.forEach(function (r) {
+                if (r.id > max) {
                     max = r.id;
                 }
             });
@@ -115,12 +115,12 @@ function getLastSessionId(){
 /**
  * Gets the players from the database and populates the playerNames object with their id and name.
  */
-function getPlayerNames(){
+function getPlayerNames() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/player", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).players.forEach(function(r){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).players.forEach(function (r) {
                 playerNames[r.id] = r.username;
             });
         }
@@ -131,12 +131,12 @@ function getPlayerNames(){
 /**
  * Gets the levels from the database and populates the levelNames object with their id and name.
  */
-function getLevelNames(){
+function getLevelNames() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/level", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).levels.forEach(function(r){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).levels.forEach(function (r) {
                 levelNames[r.id] = r.name;
             });
         }
@@ -147,12 +147,12 @@ function getLevelNames(){
 /**
  * Gets the characters from the database and populates the characterNames object with their id and name.
  */
-function getCharacterNames(){
+function getCharacterNames() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/character", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).characters.forEach(function(r){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).characters.forEach(function (r) {
                 characterNames[r.id] = r.name;
             });
         }
@@ -163,12 +163,12 @@ function getCharacterNames(){
 /**
  * Gets the statistics from the database and populates the statistics array with them.
  */
-function getSessionStatistics(){
+function getSessionStatistics() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/statistic", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).statistics.forEach(function(r){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).statistics.forEach(function (r) {
                 statistics.push(r);
             });
         }
@@ -179,12 +179,12 @@ function getSessionStatistics(){
 /**
  * Gets the statistic types from the database and populates the statisticTypes object with their id and name.
  */
-function getSessionStatisticsTypes(){
+function getSessionStatisticsTypes() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/statisticType", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            JSON.parse(this.responseText).statisticTypes.forEach(function(r){
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            JSON.parse(this.responseText).statisticTypes.forEach(function (r) {
                 statisticTypes[r.id] = r.name;
             });
         }
@@ -200,33 +200,33 @@ function getSessionStatisticsTypes(){
  * @param {string} character - Character used in the session.
  * @param {string} time - Time it took for the session to end, in mm:ss format.
  */
-function sendAddSessionRequest(username, level, character, time){
+function sendAddSessionRequest(username, level, character, time) {
     var playerId = getPlayerIdByName(username);
     var characterId = getCharacterIdByName(character);
-    
+
     //Converts given time (mm:ss) to seconds
     var minutes = parseInt(time.split(":")[0]);
     var seconds = parseInt(time.split(":")[1]);
 
     minutes = minutes * 60;
     seconds = seconds + minutes;
-    
+
     var dateString = getStartDateByTime(seconds);
 
     var success = true;
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/session", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            if ("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
                 success = false;
         }
     }
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"startDate": dateString, "playerId": playerId, "levelId": level, "characterId": characterId}));
+    xhr.send(JSON.stringify({ "startDate": dateString, "playerId": playerId, "levelId": level, "characterId": characterId }));
 
-    if(!success){
+    if (!success) {
         return false;
     }
     //Send request to add statistic about time.
@@ -236,7 +236,7 @@ function sendAddSessionRequest(username, level, character, time){
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/statistic", false);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"value": seconds, "registrationDate": dateString, "statisticTypeId": statisticTypeId, "gameSessionId": gameSessionId}));
+    xhr.send(JSON.stringify({ "value": seconds, "registrationDate": dateString, "statisticTypeId": statisticTypeId, "gameSessionId": gameSessionId }));
 
     return true;
 }
@@ -249,18 +249,18 @@ function sendAddSessionRequest(username, level, character, time){
  * @param {string} character - Character used in the session.
  * @param {string} time - Time it took for the session to end, in mm:ss format.
  */
-function sendEditSessionRequest(username, level, character, time){
+function sendEditSessionRequest(username, level, character, time) {
     var currentSession;
 
-    currentSessions.forEach(function(current){
-        if(current.id == selectedSessionId){
+    currentSessions.forEach(function (current) {
+        if (current.id == selectedSessionId) {
             currentSession = current;
         }
     });
 
     var playerId = getPlayerIdByName(username);
     var characterId = getCharacterIdByName(character);
-    
+
     //Converts given time (mm:ss) to seconds
     var minutes = parseInt(time.split(":")[0]);
     var seconds = parseInt(time.split(":")[1]);
@@ -274,28 +274,28 @@ function sendEditSessionRequest(username, level, character, time){
 
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", "/session", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            if ("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
                 success = false;
         }
     }
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"id": selectedSessionId, "startDate": startDate, "playerId": playerId, "levelId": level, "characterId": characterId}));
+    xhr.send(JSON.stringify({ "id": selectedSessionId, "startDate": startDate, "playerId": playerId, "levelId": level, "characterId": characterId }));
 
-    if(!success){
+    if (!success) {
         return false;
     }
     //Send request to edit statistic.
     var statisticTypeId = getStatisticTypeIdByName("time");
     var statistic = getStatisticByTypeSession(statisticTypeId, selectedSessionId);
-    
+
     var registrationDate = statistic.registration_date.split("T")[0];
 
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", "/statistic", false);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"id": statistic.id, "value": seconds, "registrationDate": registrationDate, "statisticTypeId": statisticTypeId, "gameSessionId": selectedSessionId}));
+    xhr.send(JSON.stringify({ "id": statistic.id, "value": seconds, "registrationDate": registrationDate, "statisticTypeId": statisticTypeId, "gameSessionId": selectedSessionId }));
 
     return true;
 }
@@ -303,20 +303,20 @@ function sendEditSessionRequest(username, level, character, time){
 /**
  * Sends a request to the database to delete a session, using the DELETE endpoint.
  */
-function sendDeleteSessionRequest(){
+function sendDeleteSessionRequest() {
     var success = true;
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open("DELETE", "/session", false);
-    xhr.onreadystatechange = function(){
-        if(this.status === 200 && this.readyState === 4){
-            if("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
+    xhr.onreadystatechange = function () {
+        if (this.status === 200 && this.readyState === 4) {
+            if ("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
                 success = false;
         }
     }
-    
+
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({"id": selectedSessionId}));
+    xhr.send(JSON.stringify({ "id": selectedSessionId }));
 
     return success;
 }
@@ -326,10 +326,10 @@ function sendDeleteSessionRequest(){
  * @param {int} typeId - Id of the statistic type.
  * @param {int} sessionId - Id of the session.
  */
-function getStatisticByTypeSession(typeId, sessionId){
+function getStatisticByTypeSession(typeId, sessionId) {
     var statistic;
-    statistics.forEach(function(current){
-        if(current.game_session_id == sessionId  && current.statistic_type_id == typeId){
+    statistics.forEach(function (current) {
+        if (current.game_session_id == sessionId && current.statistic_type_id == typeId) {
             statistic = current;
         }
     });
@@ -340,11 +340,11 @@ function getStatisticByTypeSession(typeId, sessionId){
  * Gets the id of a statistic type, given its name.
  * @param {string} type - Name of the statistic type.
  */
-function getStatisticTypeIdByName(type){
+function getStatisticTypeIdByName(type) {
     var id;
     for (var key in statisticTypes) {
         if (statisticTypes.hasOwnProperty(key)) {
-            if(statisticTypes[key] == type){
+            if (statisticTypes[key] == type) {
                 id = key;
             }
         }
@@ -356,11 +356,11 @@ function getStatisticTypeIdByName(type){
  * Gets a players id, given its username.
  * @param {string} username - Username of the user.
  */
-function getPlayerIdByName(username){
+function getPlayerIdByName(username) {
     var id;
     for (var key in playerNames) {
         if (playerNames.hasOwnProperty(key)) {
-            if(playerNames[key] == username){
+            if (playerNames[key] == username) {
                 id = key;
             }
         }
@@ -372,12 +372,12 @@ function getPlayerIdByName(username){
  * Gets a characters id, given its name.
  * @param {string} character - Name of the character.
  */
-function getCharacterIdByName(character){
+function getCharacterIdByName(character) {
     var id;
 
     for (var key in characterNames) {
         if (characterNames.hasOwnProperty(key)) {
-            if(characterNames[key] == character){
+            if (characterNames[key] == character) {
                 id = key;
             }
         }
@@ -392,19 +392,19 @@ function getCharacterIdByName(character){
  * Format: YYYY-mm-dd 
  * @param {int} seconds - Seconds it took for the session to end. 
  */
-function getStartDateByTime(seconds){
+function getStartDateByTime(seconds) {
     var startDate = new Date(Date.now() - seconds);
 
-    var month = startDate.getMonth() +1;
+    var month = startDate.getMonth() + 1;
     var day = startDate.getDate();
 
-    if(day<10) {
-        day = '0'+day
-    } 
+    if (day < 10) {
+        day = '0' + day
+    }
 
-    if(month<10) {
-        month = '0'+month
-    } 
+    if (month < 10) {
+        month = '0' + month
+    }
     return startDate.getFullYear() + "-" + month + "-" + day;
 }
 
@@ -412,7 +412,7 @@ function getStartDateByTime(seconds){
  * Gets the username of the user who played the given session.
  * @param {object} session - Session played.
  */
-function getSessionUsername(session){
+function getSessionUsername(session) {
     var userId = session.player_id;
 
     return playerNames[userId];
@@ -422,7 +422,7 @@ function getSessionUsername(session){
  * Gets the level name of the level played in the given session.
  * @param {object} session - Session played.
  */
-function getSessionLevelName(session){
+function getSessionLevelName(session) {
     var levelId = session.level_id;
 
     return levelNames[levelId];
@@ -432,7 +432,7 @@ function getSessionLevelName(session){
  * Gets the character name of the character played in the given session.
  * @param {object} session - Session played.
  */
-function getSessionCharacterName(session){
+function getSessionCharacterName(session) {
     var characterId = session.character_id;
 
     return characterNames[characterId];
@@ -444,22 +444,22 @@ function getSessionCharacterName(session){
  * Format: mm:ss
  * @param {object} session - Session played.
  */
-function getSessionTime(session){
+function getSessionTime(session) {
     var sessionId = session.id;
     var typeId;
 
-    for( var key in statisticTypes ) {
-        if( statisticTypes.hasOwnProperty( key ) ) {
-             if( statisticTypes[ key ] == "time" )
-                 typeId = key;
+    for (var key in statisticTypes) {
+        if (statisticTypes.hasOwnProperty(key)) {
+            if (statisticTypes[key] == "time")
+                typeId = key;
         }
     }
 
     var timeInSeconds;
 
-    statistics.forEach(function(current){
-        if(current.game_session_id == sessionId){
-            if(current.statistic_type_id == typeId){
+    statistics.forEach(function (current) {
+        if (current.game_session_id == sessionId) {
+            if (current.statistic_type_id == typeId) {
                 timeInSeconds = current.value;
             }
         }
@@ -478,12 +478,12 @@ function getSessionTime(session){
  * Checks if there is a player with the given username.
  * @param {string} username - Username being checked.
  */
-function usernameExists(username){
+function usernameExists(username) {
     var res = false;
 
     for (var key in playerNames) {
         if (playerNames.hasOwnProperty(key)) {
-            if(playerNames[key] == username){
+            if (playerNames[key] == username) {
                 res = true;
             }
         }
@@ -496,10 +496,10 @@ function usernameExists(username){
  * Checks if a level exists, given its id.
  * @param {string} level - Id of the level.
  */
-function levelExists(level){
-    if(level in levelNames)
+function levelExists(level) {
+    if (level in levelNames)
         return true;
-    
+
     return false;
 }
 
@@ -507,12 +507,12 @@ function levelExists(level){
  * Checks if a character exists, given its name
  * @param {string} character - Name of the character.
  */
-function characterExists(character){
+function characterExists(character) {
     var res = false;
 
     for (var key in characterNames) {
         if (characterNames.hasOwnProperty(key)) {
-            if(characterNames[key] == character){
+            if (characterNames[key] == character) {
                 res = true;
             }
         }
@@ -541,8 +541,8 @@ function buildAddSession() {
 function buildEditSession() {
 
     var session;
-    currentSessions.forEach(function(current){
-        if(current.id == selectedSessionId){
+    currentSessions.forEach(function (current) {
+        if (current.id == selectedSessionId) {
             session = current;
         }
     });
@@ -593,7 +593,7 @@ function addSession() {
         return;
     }
 
-    if (!usernameExists(username)) { 
+    if (!usernameExists(username)) {
         alert("That username does not exist.");
         return;
     }
@@ -625,7 +625,7 @@ function addSession() {
 
     requestOk = sendAddSessionRequest(username, level, character, time);
 
-    if (requestOk) { 
+    if (requestOk) {
         alert("Session added");
         recalculateRankings();
         closeForm();
@@ -672,7 +672,7 @@ function editSession() {
         return;
     }
 
-    if (!characterExists(character)) { 
+    if (!characterExists(character)) {
         alert("That character does not exist.");
         return;
     }
@@ -745,10 +745,10 @@ function updateSessionsTable(filters) {
  * and information that isn't yet processed.
  * This method will process the necessary information and return it.
  */
-function buildSessionsTableData(){
+function buildSessionsTableData() {
     var data = [];
-    
-    currentSessions.forEach(function(current){
+
+    currentSessions.forEach(function (current) {
         var auxData = {};
         auxData["Id"] = current.id;
         auxData["Date"] = current.start_date.split("T")[0];
@@ -767,9 +767,13 @@ function buildSessionsTableData(){
  */
 function buildSessionsTable(filters) {
 
-    if (filters != null) {
-        getSessions(filters);
+    if (filters == null) {
+        filters = {
+            "timespan" : "All time"
+        };
     }
+
+    getSessions(filters);
 
     // TODO ir buscar o tempo a partir das estatisticas
     // array global comas statistics e statistictype, e quando se for a construir a tabela itera-se esses arrays
