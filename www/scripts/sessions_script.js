@@ -556,7 +556,7 @@ function buildEditSession() {
     var time = buildBasicInput("session_time", "Time (mm:ss)");
 
     username.value = getSessionUsername(session);
-    level.value = getSessionLevelName(session);
+    level.value = session.level_id;
     character.value = getSessionCharacterName(session);
     time.value = getSessionTime(session);
 
@@ -652,7 +652,7 @@ function editSession() {
         return;
     }
 
-    if (!usernameExists(username)) { //TROCAR POR VERIFICAÇÃO REAL
+    if (!usernameExists(username)) { 
         alert("That username does not exist.");
         return;
     }
@@ -731,6 +731,8 @@ function updateSessionsFilters() {
  * a new and updated table, using the filters given by parameter.
  */
 function updateSessionsTable(filters) {
+    getSessionStatistics();
+
     var parent = document.getElementById("sessions").children[0];
     parent.removeChild(document.getElementById("sessions_table"));
     parent.appendChild(buildSessionsTable(filters));
@@ -766,7 +768,6 @@ function buildSessionsTableData() {
  * Fetches and builds a data table with given filters.
  */
 function buildSessionsTable(filters) {
-
     if (filters == null) {
         filters = {
             "timespan" : "All time"
@@ -774,9 +775,6 @@ function buildSessionsTable(filters) {
     }
 
     getSessions(filters);
-
-    // TODO ir buscar o tempo a partir das estatisticas
-    // array global comas statistics e statistictype, e quando se for a construir a tabela itera-se esses arrays
 
     var table = document.createElement("table");
     table.id = "sessions_table";
@@ -900,7 +898,7 @@ function buildSessions() {
     getCharacterNames();
     getSessionStatistics();
     getSessionStatisticsTypes();
-    
+
     sectionContainer.appendChild(buildSessionsTable());
 
     section.appendChild(sectionContainer);
