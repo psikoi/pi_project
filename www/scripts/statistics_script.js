@@ -22,6 +22,8 @@ var sessionPlayers = {};
  */
 var statisticTypes = {};
 
+var currentFilter;
+
 /**
  * Gets the statistics from the database based on a filter, and populates the currentStatistics array with the result.
  */
@@ -420,7 +422,7 @@ function addStatistic() {
 
     requestOk = sendAddStatisticRequest(sessionId, type, value);
 
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Statistic added");
         closeForm();
         updateStatisticsTable();
@@ -503,6 +505,10 @@ function updateStatisticsFilters() {
  * a new and updated table, using the filters given by parameter.
  */
 function updateStatisticsTable(filters) {
+    if(filters == undefined){
+        filters = currentFilter;
+    }
+
     var parent = document.getElementById("statistics").children[0];
     parent.removeChild(document.getElementById("statistics_table"));
     parent.appendChild(buildStatisticsTable(filters));
@@ -553,6 +559,8 @@ function buildStatisticsTable(filters) {
             "timespan" : "All time"
         };
     }
+
+    currentFilter = filters;
 
     getStatistics(filters);
 

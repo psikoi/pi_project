@@ -207,6 +207,7 @@ module.exports.getSessions = getSessions;
  * Gets a specific session from the database
  */
 function getSession(request, response) {
+    
     var connection = mysql.createConnection(options);
     var sql = mysql.format("SELECT id, start_date, player_id, level_id, character_id FROM gameSession WHERE id = ?", [request.params.id]);
 
@@ -226,6 +227,7 @@ module.exports.getSession = getSession;
  */
 function getSessionsToday(request, response) {
     var connection = mysql.createConnection(options);
+
     var query = "SELECT id, start_date, player_id, level_id, character_id FROM gameSession " +
         "WHERE start_date = CURDATE()";
     connection.query(query, function (err, rows) {

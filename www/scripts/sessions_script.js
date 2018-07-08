@@ -34,6 +34,8 @@ var characterNames = {};
  */
 var statistics = [];
 
+var currentFilter;
+
 /**
  * 
  * Holds information of the statistic type name related to a certain statistic type id. 
@@ -50,6 +52,7 @@ function getSessions(filter) {
     currentSessions = []
 
     var endpoint = "/session";
+    
     switch (filter.timespan) {
         case "This month": endpoint += "/month"; break;
         case "This week": endpoint += "/week"; break;
@@ -731,6 +734,10 @@ function updateSessionsFilters() {
  * a new and updated table, using the filters given by parameter.
  */
 function updateSessionsTable(filters) {
+    if(filters == undefined){
+        filters = currentFilter;
+    }
+
     getSessionStatistics();
 
     var parent = document.getElementById("sessions").children[0];
@@ -769,11 +776,14 @@ function buildSessionsTableData() {
  * Fetches and builds a data table with given filters.
  */
 function buildSessionsTable(filters) {
+
     if (filters == null) {
         filters = {
             "timespan" : "All time"
         };
     }
+
+    currentFilter = filters;
 
     getSessions(filters);
 
