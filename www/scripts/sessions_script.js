@@ -894,6 +894,13 @@ function buildSessions() {
 
     sectionContainer.appendChild(sectionTitle);
     sectionContainer.appendChild(tableFilter);
+
+    getPlayerNames();
+    getLevelNames();
+    getCharacterNames();
+    getSessionStatistics();
+    getSessionStatisticsTypes();
+    
     sectionContainer.appendChild(buildSessionsTable());
 
     section.appendChild(sectionContainer);
@@ -902,11 +909,7 @@ function buildSessions() {
     toggleSessionActions(false);
     prepareSessionSelectionEvents();
 
-    getPlayerNames();
-    getLevelNames();
-    getCharacterNames();
-    getSessionStatistics();
-    getSessionStatisticsTypes();
+    
 }
 
 /**

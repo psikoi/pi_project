@@ -836,6 +836,9 @@ function buildPlayers() {
 
     sectionContainer.appendChild(sectionTitle);
     sectionContainer.appendChild(tableFilter);
+
+    getCountries();
+
     sectionContainer.appendChild(buildPlayersTable());
 
     section.appendChild(sectionContainer);
@@ -844,7 +847,7 @@ function buildPlayers() {
     togglePlayerActions(false);
     preparePlayerSelectionEvents();
 
-    getCountries();
+    
 }
 
 /**
