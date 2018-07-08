@@ -17,6 +17,7 @@ function getCountries(request, response) {
             response.json({ "message": "ok", "countries": rows });
         }
     });
+    connection.end();
 }
 module.exports.getCountries = getCountries;
 
@@ -33,6 +34,7 @@ function getUserType(request, response) {
             response.json({ "message": "ok", "userType": rows });
         }
     });
+    connection.end();
 }
 module.exports.getUserType = getUserType;
 
@@ -49,6 +51,7 @@ function getUsers(request, response) {
             response.json({ "message": "ok", "users": rows });
         }
     });
+    connection.end();
 }
 module.exports.getUsers = getUsers;
 
@@ -65,6 +68,7 @@ function getPlayers(request, response) {
             response.json({ "message": "ok", "players": rows });
         }
     });
+    connection.end();
 }
 module.exports.getPlayers = getPlayers;
 
@@ -86,6 +90,7 @@ function getPlayerName(request, response) {
             response.json({ "message": "ok", "players": rows });
         }
     });
+    connection.end();
 }
 module.exports.getPlayerName = getPlayerName;
 
@@ -103,6 +108,7 @@ function getPlayersToday(request, response) {
             response.json({ "message": "ok", "players": rows });
         }
     });
+    connection.end();
 }
 module.exports.getPlayersToday = getPlayersToday;
 
@@ -122,6 +128,7 @@ function getPlayersWeek(request, response) {
             response.json({ "message": "ok", "players": rows });
         }
     });
+    connection.end();
 }
 module.exports.getPlayersWeek = getPlayersWeek;
 
@@ -141,6 +148,7 @@ function getPlayersMonth(request, response) {
             response.json({ "message": "ok", "players": rows });
         }
     });
+    connection.end();
 }
 module.exports.getPlayersMonth = getPlayersMonth;
 
@@ -157,6 +165,7 @@ function getLevels(request, response) {
             response.json({ "message": "ok", "levels": rows });
         }
     });
+    connection.end();
 }
 module.exports.getLevels = getLevels;
 
@@ -173,6 +182,7 @@ function getCharacters(request, response) {
             response.json({ "message": "ok", "characters": rows });
         }
     });
+    connection.end();
 }
 module.exports.getCharacters = getCharacters;
 
@@ -189,6 +199,7 @@ function getSessions(request, response) {
             response.json({ "message": "ok", "sessions": rows });
         }
     });
+    connection.end();
 }
 module.exports.getSessions = getSessions;
 
@@ -206,6 +217,7 @@ function getSession(request, response) {
             response.json({ "message": "ok", "sessions": rows });
         }
     });
+    connection.end();
 }
 module.exports.getSession = getSession;
 
@@ -223,6 +235,7 @@ function getSessionsToday(request, response) {
             response.json({ "message": "ok", "sessions": rows });
         }
     });
+    connection.end();
 }
 module.exports.getSessionsToday = getSessionsToday;
 
@@ -242,6 +255,7 @@ function getSessionsWeek(request, response) {
             response.json({ "message": "ok", "sessions": rows });
         }
     });
+    connection.end();
 }
 module.exports.getSessionsWeek = getSessionsWeek;
 
@@ -261,6 +275,7 @@ function getSessionsMonth(request, response) {
             response.json({ "message": "ok", "sessions": rows });
         }
     });
+    connection.end();
 }
 module.exports.getSessionsMonth = getSessionsMonth;
 
@@ -277,6 +292,7 @@ function getStatisticType(request, response) {
             response.json({ "message": "ok", "statisticTypes": rows });
         }
     });
+    connection.end();
 }
 module.exports.getStatisticType = getStatisticType;
 
@@ -293,6 +309,7 @@ function getStatistics(request, response) {
             response.json({ "message": "ok", "statistics": rows });
         }
     });
+    connection.end();
 }
 module.exports.getStatistics = getStatistics;
 
@@ -310,6 +327,7 @@ function getStatisticsToday(request, response) {
             response.json({ "message": "ok", "statistics": rows });
         }
     });
+    connection.end();
 }
 module.exports.getStatisticsToday = getStatisticsToday;
 
@@ -329,6 +347,7 @@ function getStatisticsWeek(request, response) {
             response.json({ "message": "ok", "statistics": rows });
         }
     });
+    connection.end();
 }
 module.exports.getStatisticsWeek = getStatisticsWeek;
 
@@ -348,6 +367,7 @@ function getStatisticsMonth(request, response) {
             response.json({ "message": "ok", "statistics": rows });
         }
     });
+    connection.end();
 }
 module.exports.getStatisticsMonth = getStatisticsMonth;
 
@@ -364,6 +384,7 @@ function getConfigurations(request, response) {
             response.json({ "message": "ok", "configurations": rows });
         }
     });
+    connection.end();
 }
 module.exports.getConfigurations = getConfigurations;
 
@@ -380,6 +401,7 @@ function getConfigurationTypes(request, response) {
             response.json({ "message": "ok", "configurationTypes": rows });
         }
     });
+    connection.end();
 }
 module.exports.getConfigurationTypes = getConfigurationTypes;
 
@@ -394,6 +416,7 @@ function getActiveSessions(request, response){
             response.json({ "message": "ok", "activeSessions": rows });
         }
     });
+    connection.end();
 }
 module.exports.getActiveSessions = getActiveSessions;
 
@@ -424,6 +447,7 @@ function addUpdateCountry(request, response) {
         else
             response.send(rows);
     })
+    connection.end();
 }
 module.exports.addUpdateCountry = addUpdateCountry;
 
@@ -452,6 +476,7 @@ function addUpdateUserType(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addUpdateUserType = addUpdateUserType;
 
@@ -483,6 +508,7 @@ function addUpdateUser(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addUpdateUser = addUpdateUser;
 
@@ -518,6 +544,7 @@ function addUpdatePlayer(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addUpdatePlayer = addUpdatePlayer;
 
@@ -539,6 +566,7 @@ function updatePlayerRank(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.updatePlayerRank = updatePlayerRank;
 
@@ -565,6 +593,7 @@ function addUpdateLevel(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addUpdateLevel = addUpdateLevel;
 
@@ -596,6 +625,7 @@ function addUpdateCharacter(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addUpdateCharacter = addUpdateCharacter;
 
@@ -627,6 +657,7 @@ function addUpdateSession(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addUpdateSession = addUpdateSession;
 
@@ -656,6 +687,7 @@ function addUpdateStatisticType(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addUpdateStatisticType = addUpdateStatisticType;
 
@@ -687,6 +719,7 @@ function addUpdateStatistic(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addUpdateStatistic = addUpdateStatistic;
 
@@ -705,6 +738,7 @@ function addActiveSession(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addActiveSession = addActiveSession;
   
@@ -735,6 +769,7 @@ function addUpdateConfiguration(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.addUpdateConfiguration = addUpdateConfiguration;
 
@@ -758,6 +793,7 @@ function deleteCountry(request, response) {
         else
             response.send(rows);
     })
+    connection.end();
 }
 module.exports.deleteCountry = deleteCountry;
 
@@ -780,6 +816,7 @@ function deleteUserType(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deleteUserType = deleteUserType;
 
@@ -802,6 +839,7 @@ function deleteUser(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deleteUser = deleteUser;
 
@@ -824,6 +862,7 @@ function deletePlayer(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deletePlayer = deletePlayer;
 
@@ -846,6 +885,7 @@ function deleteLevel(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deleteLevel = deleteLevel;
 
@@ -868,6 +908,7 @@ function deleteCharacter(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deleteCharacter = deleteCharacter;
 
@@ -890,6 +931,7 @@ function deleteSession(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deleteSession = deleteSession;
 
@@ -912,6 +954,7 @@ function deleteStatisticType(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deleteStatisticType = deleteStatisticType;
 
@@ -933,6 +976,7 @@ function deleteStatistic(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deleteStatistic = deleteStatistic;
 
@@ -951,6 +995,7 @@ function deleteActiveSession(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deleteActiveSession = deleteActiveSession;
   
@@ -968,5 +1013,6 @@ function deleteConfiguration(request, response) {
             response.send(rows);
         }
     });
+    connection.end();
 }
 module.exports.deleteConfiguration = deleteConfiguration;

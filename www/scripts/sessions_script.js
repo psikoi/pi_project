@@ -753,7 +753,7 @@ function buildSessionsTableData() {
         auxData["Id"] = current.id;
         auxData["Date"] = current.start_date.split("T")[0];
         auxData["Username"] = getSessionUsername(current);
-        auxData["Level"] = current.level_id + " (" + getSessionLevelName(current) + ")";
+        auxData["Level"] = getSessionLevelName(current) + " (ID: " + current.level_id + ")";
         auxData["Character"] = getSessionCharacterName(current);
         auxData["Time"] = getSessionTime(current);
         data.push(auxData);
