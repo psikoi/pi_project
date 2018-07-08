@@ -14,6 +14,8 @@ app.get("/player/username/:username", requestHandlers.getPlayerName);
 app.get("/player/today", requestHandlers.getPlayersToday);
 app.get("/player/week", requestHandlers.getPlayersWeek);
 app.get("/player/month", requestHandlers.getPlayersMonth);
+app.get("/user", requestHandlers.getUsers);
+app.get("/userType", requestHandlers.getUserType);
 app.get("/session", requestHandlers.getSessions);
 app.get("/session/:id", requestHandlers.getSession);
 app.get("/session/today", requestHandlers.getSessionsToday);
@@ -27,6 +29,7 @@ app.get("/countries", requestHandlers.getCountries);
 app.get("/level", requestHandlers.getLevels);
 app.get("/character", requestHandlers.getCharacters);
 app.get("/statisticType", requestHandlers.getStatisticType);
+app.get("/activesession", requestHandlers.getActiveSessions);
 app.get("/configuration", requestHandlers.getConfigurations);
 app.get("/configurationType", requestHandlers.getConfigurationTypes);
 
@@ -34,6 +37,8 @@ app.get("/configurationType", requestHandlers.getConfigurationTypes);
 app.post("/player", requestHandlers.addUpdatePlayer);
 app.post("/session", requestHandlers.addUpdateSession);
 app.post("/statistic", requestHandlers.addUpdateStatistic);
+app.post("/activesession", requestHandlers.addActiveSession);
+app.post("/user", requestHandlers.addUpdateUser);
 app.post("/configuration", requestHandlers.addUpdateConfiguration);
 
 // PUT
@@ -47,6 +52,7 @@ app.put("/configuration", requestHandlers.addUpdateConfiguration);
 app.delete("/player", requestHandlers.deletePlayer);
 app.delete("/session", requestHandlers.deleteSession);
 app.delete("/statistic", requestHandlers.deleteStatistic);
+app.delete("/activesession", requestHandlers.deleteActiveSession);
 app.delete("/configuration", requestHandlers.deleteConfiguration);
 
 app.listen(8081, function () {

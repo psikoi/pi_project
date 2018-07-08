@@ -1,14 +1,23 @@
 var selectedPlayerId;
 
-// Holds the information of the players currently being shown 
+/**
+ * Holds the information of the players currently being shown 
+ */
 var currentPlayers = [];
 
-// Holds the information of the names of the countries available in the database. Key: name, Value: id
+/**
+ * Holds the information of the names of the countries available in the database. 
+ * Key: name, Value: id
+ * 
+ * example, after being populated:
+ * { 1 : "Portugal", 2 : "Spain" }
+ */
 var countries = {}
 
-/******************************************************************** */
-
-function getPlayers(filter) {
+/**
+ * Gets the players from the database based on a filter, and populates the currentPlayers array with the result.
+ */
+function getPlayers(filter){
     currentPlayers = []
 
     var endpoint = "/player";
@@ -33,7 +42,10 @@ function getPlayers(filter) {
     }
 }
 
-function getPlayersFilter(endpoint) {
+/**
+ * Gets the players from the database given a certain endpoint.
+ */
+function getPlayersFilter(endpoint){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false);
     xhr.onreadystatechange = function () {
@@ -46,7 +58,10 @@ function getPlayersFilter(endpoint) {
     xhr.send();
 }
 
-function getLastPlayerRank() {
+/**
+ * Gets the number of the last rank in the player table.
+ */
+function getLastPlayerRank(){
     var ranks = [];
 
     var xhr = new XMLHttpRequest();
@@ -70,7 +85,10 @@ function getLastPlayerRank() {
     return minimum;
 }
 
-function getCountries() {
+/**
+ * Gets the countries from the database and populates the countries object with their id and name.
+ */
+function getCountries(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/countries", false);
     xhr.onreadystatechange = function () {
@@ -83,7 +101,14 @@ function getCountries() {
     xhr.send();
 }
 
-function sendAddPlayerRequest(username, password, birthDate, country) {
+/**
+ * Sends a request to the database to add a player, using the POST endpoint.
+ * @param {string} username - Username of the player being added.
+ * @param {string} password - Password of the player being added.
+ * @param {string} birthDate - Birth date of the player being added.
+ * @param {string} country - Country of the player being added.
+ */
+function sendAddPlayerRequest(username, password, birthDate, country){
     var countryId = countries[country];
     var rank = getLastPlayerRank() + 1;
 
@@ -108,19 +133,19 @@ function sendAddPlayerRequest(username, password, birthDate, country) {
     return success;
 }
 
-function sendEditPlayerRequest(username, password, birthDate, country) {
+/**
+ * Sends a request to the database to edit a player, using the PUT endpoint.
+ * @param {string} username - Username of the player being edited.
+ * @param {string} password - Password of the player being edited.
+ * @param {string} birthDate - Birth date of the player being edited.
+ * @param {string} country - Country of the player being edited.
+ */
+function sendEditPlayerRequest(username, password, birthDate, country){
     var countryId = countries[country];
 
     var success = true;
 
-    var player;
-
-    currentPlayers.forEach(function (current) {
-        if (current.id == selectedPlayerId) {
-            player = current;
-            return;
-        }
-    });
+    var player = getPlayerById(selectedPlayerId);
 
     registrationDate = player.registration_date.split("T")[0];
 
@@ -143,7 +168,11 @@ function sendEditPlayerRequest(username, password, birthDate, country) {
     return success;
 }
 
-function sendBanPlayerRequest() {
+/**
+ * Sends a request to the database to ban a player.
+ * To ban a player, the database will change the status field to "Banned".
+ */
+function sendBanPlayerRequest(){
     var success = true;
 
     var player;
@@ -177,7 +206,10 @@ function sendBanPlayerRequest() {
     return success;
 }
 
-function deletePlayer() {
+/**
+ * Sends a request to the database to delete a player, using the DELETE endpoint.
+ */
+function deletePlayer(){
     var success = true;
 
     var xhr = new XMLHttpRequest();
@@ -195,9 +227,11 @@ function deletePlayer() {
     return success;
 }
 
-/*********************************************************************** */
-
-function nameExists(username) {
+/**
+ * Checks if there is already a player with a certain username.
+ * @param {string} username - Username being checked.
+ */
+function nameExists(username){
     var confirmation = false;
 
     var xhr = new XMLHttpRequest();
@@ -216,7 +250,27 @@ function nameExists(username) {
     return confirmation;
 }
 
-function getCurrentDateString() {
+/**
+ * Returns a player object with a certain id.
+ * @param {int} id - Id of the player being searched.
+ */
+function getPlayerById(id){
+    var player;
+
+    currentPlayers.forEach(function(current){
+        if(current.id == id){
+            player = current;
+        }
+    });
+
+    return player;
+}
+
+/**
+ * Returns the current date in string format.
+ * Example: 2018-07-02
+ */
+function getCurrentDateString(){
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
@@ -232,8 +286,6 @@ function getCurrentDateString() {
 
     return yyyy + '-' + mm + '-' + dd;
 }
-
-/*********************************************************************** */
 
 /**
  * Builds the add player form.
@@ -369,7 +421,7 @@ function addPlayer() {
         return;
     }
 
-    if (!isYearsOlder(new Date(birthDate), 12)) {
+    if (getAge(new Date(birthDate)) < 12) {
         alert("You must be 12 years old or older to register.");
         return;
     }
@@ -517,7 +569,9 @@ function editPlayer() {
         return;
     }
 
-    if (nameExists(username)) {
+    var player = getPlayerById(selectedPlayerId);
+
+    if (nameExists(username) && username != player.username) { 
         alert("That username already exist.");
         return;
     }
@@ -553,9 +607,9 @@ function editPlayer() {
  */
 function banPlayer() {
 
-    requestOk = sendBanPlayerRequest();
+    var requestOk = sendBanPlayerRequest();
 
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Player banned");
         updatePlayersTable();
     } else {
@@ -567,10 +621,9 @@ function banPlayer() {
  * Makes a server request to remove a player.
  */
 function removePlayer() {
+    var requestOk = deletePlayer();
 
-    requestOk = deletePlayer();
-
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Player removed");
         updatePlayersTable();
     } else {
@@ -609,6 +662,45 @@ function updatePlayersTable(filters) {
 }
 
 /**
+ * Builds an array containing the information necessary to display on the table.
+ * The currentPlayers array contains information that isn't necessary,
+ * and information that isn't yet processed, for example, it contains information
+ * about the player's birth date and not age.
+ * This method will process the necessary information and return it.
+ */
+function buildPlayersTableData(){
+    var data = [];
+    
+    currentPlayers.forEach(function(current){
+        var auxData = {};
+        auxData["Id"] = current.id;
+        auxData["Rank"] = current.rank;
+        auxData["Username"] = current.username;
+        auxData["Age"] = getAge(new Date(current.birth_date.split("T")[0]));
+        auxData["Country"] = getCountryNameById(current.country_id);
+        auxData["Status"] = current.status;
+        data.push(auxData);
+    });
+    return data;
+}
+
+/**
+ * Returns a country's name, based on the id received.
+ * @param {int} id - Id of the country being searched. 
+ */
+function getCountryNameById(id){
+    var name;
+    for (var key in countries) {
+        if (countries.hasOwnProperty(key)) {
+            if(countries[key] == id){
+                name = key;
+            }
+        }
+    }
+    return name;
+}
+
+/**
  * Fetches and builds a data table with given filters.
  */
 function buildPlayersTable(filters) {
@@ -621,8 +713,7 @@ function buildPlayersTable(filters) {
     table.id = "players_table";
     table.cellSpacing = "0";
 
-    // TODO Acertar a data recebida pelo request (no array currentPlayers) com as colunas da tabela. 
-    // TODO Calcular idade através da data de nascimento e exibi-la, ir buscar o nome do pais sabendo o seu id. (variavel global countries, fazer request no inico da app a todos os countries e iterar o array)
+    var tableData = buildPlayersTableData();
 
     var columns = ["Id", "Rank", "Username", "Age", "Country", "Status"];
     var thead = document.createElement("thead");
@@ -636,7 +727,7 @@ function buildPlayersTable(filters) {
 
     var tbody = document.createElement("tbody");
 
-    currentPlayers.forEach(function (row) {
+    tableData.forEach(function (row) {
         var tableRow = document.createElement("tr");
         Object.keys(row).forEach(function (field) {
             var td = document.createElement("td");

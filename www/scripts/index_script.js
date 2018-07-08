@@ -1,6 +1,7 @@
 $(document).ready(function () {
     buildNavigation();
-    switchPage("players");
+    switchPage("statistics");
+    readLogInCookies();
 });
 
 function switchPage(page) {
@@ -170,13 +171,16 @@ function isTime(str) {
 }
 
 /**
- * Returns true if a given date is older than "gap" number of years.
+ * Returns the age given a certain birthdate.
  */
-function isYearsOlder(date, gap) {
+function getAge(date) {
     var today = new Date();
-    var timeDiff = Math.abs(date.getTime() - today.getTime());
-    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    return diffDays > (365 * gap);
+    var age = today.getFullYear() - date.getFullYear();
+    var m = today.getMonth() - date.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < date.getDate())) {
+        age--;
+    }
+    return age;
 }
 
 /* Builds a simple text input */
