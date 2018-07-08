@@ -363,7 +363,7 @@ function addPlayer() {
         return;
     }
 
-    if (!isYearsOlder(new Date(birthDate), 12)) {
+    if (getAge(new Date(birthDate)) < 12) {
         alert("You must be 12 years old or older to register.");
         return;
     }
@@ -490,6 +490,34 @@ function updatePlayersTable(filters) {
     preparePlayerSelectionEvents();
 }
 
+function buildTableData(){
+    var data = [];
+    
+    currentPlayers.forEach(function(current){
+        var auxData = {};
+        auxData["Id"] = current.id;
+        auxData["Rank"] = current.rank;
+        auxData["Username"] = current.username;
+        auxData["Age"] = getAge(new Date(current.birth_date.split("T")[0]));
+        auxData["Country"] = getCountryNameById(current.country_id);
+        auxData["Status"] = current.status;
+        data.push(auxData);
+    });
+    return data;
+}
+
+function getCountryNameById(id){
+    var name;
+    for (var key in countries) {
+        if (countries.hasOwnProperty(key)) {
+            if(countries[key] == id){
+                name = key;
+            }
+        }
+    }
+    return name;
+}
+
 /**
  * Fetches and builds a data table with given filters.
  */
@@ -506,6 +534,8 @@ function buildPlayersTable(filters) {
     // TODO Acertar a data recebida pelo request (no array currentPlayers) com as colunas da tabela. 
     // TODO Calcular idade através da data de nascimento e exibi-la, ir buscar o nome do pais sabendo o seu id. (variavel global countries, fazer request no inico da app a todos os countries e iterar o array)
 
+    var tableData = buildTableData();
+
     var columns = ["Id", "Rank", "Username", "Age", "Country", "Status"];
     var thead = document.createElement("thead");
     var headRow = document.createElement("tr");
@@ -518,7 +548,7 @@ function buildPlayersTable(filters) {
 
     var tbody = document.createElement("tbody");
 
-    currentPlayers.forEach(function (row) {
+    tableData.forEach(function (row) {
         var tableRow = document.createElement("tr");
         Object.keys(row).forEach(function (field) {
             var td = document.createElement("td");
