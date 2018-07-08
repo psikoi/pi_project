@@ -548,6 +548,24 @@ function addUpdatePlayer(request, response) {
 }
 module.exports.addUpdatePlayer = addUpdatePlayer;
 
+function banUnbanPlayer(request, response) {
+    var connection = mysql.createConnection(options);
+
+    var id = request.body.id;
+
+    var sql;
+    sql = mysql.format("CALL sp_ban_unban(?);", [id]);
+
+    connection.query(sql, function (err, rows) {
+        if (err) {
+            response.json({ "message": "error" });
+        } else {
+            response.send(rows);
+        }
+    });
+}
+module.exports.banUnbanPlayer = banUnbanPlayer;
+
 /**
  * Updates a player's ranking in the database.
  */

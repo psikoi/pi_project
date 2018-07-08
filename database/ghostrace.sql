@@ -112,6 +112,22 @@ CREATE TABLE `activeSessions`(
     PRIMARY KEY (`id`)
 );
 
+DELIMITER //
+CREATE PROCEDURE sp_ban_unban(in playerid int)
+BEGIN
+
+SET @currstatus = (SELECT STATUS FROM player WHERE id = playerid);
+
+IF( STRCMP(@currstatus, 'Banned') ) THEN
+UPDATE player SET STATUS = 'Banned' WHERE id = playerid;
+
+ELSE
+UPDATE player SET STATUS = 'Active' WHERE id = playerid;
+END IF;
+
+END //
+DELIMITER ;
+
 ALTER TABLE `user`
 	ADD CONSTRAINT `user_userType` FOREIGN KEY (`user_type_id`) REFERENCES `userType` (`id`);
 

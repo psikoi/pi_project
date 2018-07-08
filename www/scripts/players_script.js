@@ -33,8 +33,8 @@ function getPlayers(filter){
 
     if (filter.search) {
         currentPlayers.forEach(function (current) {
-            if (current.username.includes(filter.search)) {
-                aux = [current];
+            if (current.username.toLowerCase().includes(filter.search.toLowerCase())) {
+                aux.push(current);
                 return;
             }
         });
@@ -173,23 +173,11 @@ function sendEditPlayerRequest(username, password, birthDate, country){
  * Sends a request to the database to ban a player.
  * To ban a player, the database will change the status field to "Banned".
  */
-function sendBanPlayerRequest(){
+function sendChangePlayerStatusRequest(){
     var success = true;
 
-    var player;
-
-    currentPlayers.forEach(function (current) {
-        if (current.id == selectedPlayerId) {
-            player = current;
-            return;
-        }
-    });
-
-    registrationDate = player.registration_date.split("T")[0];
-    birthDate = player.birth_date.split("T")[0];
-
     var xhr = new XMLHttpRequest();
-    xhr.open("PUT", "/player", false);
+    xhr.open("PUT", "/player/ban", false);
     xhr.onreadystatechange = function () {
         if (this.status === 200 && this.readyState === 4) {
             if ("message" in JSON.parse(this.responseText) && JSON.parse(this.responseText).message === "error")
@@ -198,11 +186,7 @@ function sendBanPlayerRequest(){
     }
 
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({
-        "id": selectedPlayerId, "rank": player.rank, "username": player.username, "password": player.password, "birthDate": birthDate,
-        "status": "Banned", "countryId": player.country_id, "registrationDate": registrationDate,
-        "userTypeId": player.user_type_id
-    }));
+    xhr.send(JSON.stringify({"id": selectedPlayerId}));
 
     return success;
 }
@@ -378,7 +362,7 @@ function buildRemovePlayer() {
  */
 function buildBanPlayer() {
     if (confirm("Are you sure? This player will be banned.")) {
-        banPlayer();
+        changePlayerStatus();
     }
 }
 
@@ -606,15 +590,15 @@ function editPlayer() {
 /**
  * Makes a server request to ban a player.
  */
-function banPlayer() {
+function changePlayerStatus() {
 
-    var requestOk = sendBanPlayerRequest();
+    var requestOk = sendChangePlayerStatusRequest();
 
     if (requestOk) { 
-        alert("Player banned");
+        alert("Player status changed.");
         updatePlayersTable();
     } else {
-        alert("Player failed to ban")
+        alert("Player failed to change status.")
     }
 }
 

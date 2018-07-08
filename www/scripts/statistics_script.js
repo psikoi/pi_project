@@ -475,7 +475,7 @@ function removeStatistic() {
 
     if (requestOk) { 
         alert("Statistic removed");
-        updateSessionsTable();
+        updateStatisticsTable();
     } else {
         alert("Statistic failed to remove")
     }
