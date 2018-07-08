@@ -381,6 +381,7 @@ function getConfigurationTypes(request, response) {
         }
     });
 }
+module.exports.getConfigurationTypes = getConfigurationTypes;
 
 function getActiveSessions(request, response){
     var connection = mysql.createConnection(options);

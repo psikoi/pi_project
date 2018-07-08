@@ -26,13 +26,14 @@ function getPlayers(filter){
         case "This week": endpoint += "/week"; break;
         case "Today": endpoint += "/today"; break;
     }
+
     getPlayersFilter(endpoint);
 
     var aux = [];
 
     if (filter.search) {
         currentPlayers.forEach(function (current) {
-            if (current.username === filter.search) {
+            if (current.username.includes(filter.search)) {
                 aux = [current];
                 return;
             }
@@ -705,9 +706,14 @@ function getCountryNameById(id){
  */
 function buildPlayersTable(filters) {
 
-    if (filters != null) {
-        getPlayers(filters);
+    if (filters == null) {
+        filters = {
+            "timespan" : "All time"
+        };
     }
+
+    
+    getPlayers(filters);
 
     var table = document.createElement("table");
     table.id = "players_table";
@@ -790,6 +796,7 @@ function buildPlayers() {
     searchImg.src = "images/icons/search.png";
 
     var input = document.createElement("input");
+    input.placeholder = "Search player name";
     input.id = "players_search";
     input.type = "text";
     input.addEventListener("keyup", function (event) {

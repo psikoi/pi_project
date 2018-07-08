@@ -1,6 +1,6 @@
 $(document).ready(function () {
     buildNavigation();
-    switchPage("statistics");
+    switchPage("landing");
     readLogInCookies();
 });
 
@@ -86,7 +86,7 @@ function displayUserNavigation(user) {
         userNavA.href = "javascript:logout()";
 
         var userNavImg = document.createElement("img");
-        userNavImg.src = user.profilePic;
+        userNavImg.src = user["profile_pic_url"];
 
         var userNavName = document.createElement("div");
         userNavName.className = "nav_username";

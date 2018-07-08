@@ -434,21 +434,6 @@ form button
     background: #6096cd;
 }
 
-form input::placeholder
-{
-    color: #bfbfbf;
-}
-
-:-ms-input-placeholder
-{
-    color: #bfbfbf;
-}
-
-::-ms-input-placeholder
-{
-    color: #bfbfbf;
-}
-
 form button:hover
 {
     opacity: .7;

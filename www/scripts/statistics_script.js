@@ -40,7 +40,7 @@ function getStatistics(filter){
 
     if(filter.search){
         currentStatistics.forEach(function(current){
-            if(sessionPlayers[current.game_session_id] === filter.search){
+            if(sessionPlayers[current.game_session_id].includes(filter.search)){
                 aux.push(current);
                 return;
             }
@@ -546,9 +546,13 @@ function buildStatisticsTableData(){
  */
 function buildStatisticsTable(filters) {
 
-    if (filters != null) {
-        getStatistics(filters);
+    if (filters == null) {
+        filters = {
+            "timespan" : "All time"
+        };
     }
+
+    getStatistics(filters);
 
     var table = document.createElement("table");
     table.id = "statistics_table";
@@ -627,6 +631,7 @@ function buildStatistics() {
     searchImg.src = "images/icons/search.png";
 
     var input = document.createElement("input");
+    input.placeholder = "Search player name";
     input.id = "statistics_search";
     input.type = "text";
     input.addEventListener("keyup", function (event) {

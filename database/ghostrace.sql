@@ -113,9 +113,6 @@ CREATE TABLE `activeSessions`(
 );
 
 ALTER TABLE `user`
-	ADD CONSTRAINT `user_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`);
-
-ALTER TABLE `user`
 	ADD CONSTRAINT `user_userType` FOREIGN KEY (`user_type_id`) REFERENCES `userType` (`id`);
 
 ALTER TABLE `player`
@@ -402,11 +399,12 @@ INSERT INTO `userType` (`id`, `user_type`) VALUES
 (2, 'Normal');
 
 INSERT INTO `user` (`id`, `username`, `password`, `profile_pic_url`, `user_type_id`) VALUES
-(1, 'admin', '321', 'profilepic1', 1);
+(1, 'admin', '321', 'https://i.gyazo.com/4f41201c50de27c3092735e0d07db70a.png', 1);
 
 INSERT INTO `player` (`id`, `rank`, `username`, `password`, `birth_date`, `country_id`, `status`, `registration_date`, `user_type_id`) VALUES
 (1, 1, 'tiagosantos', '123', STR_TO_DATE('1998-01-01', '%Y-%m-%d'),  183, 'Active', STR_TO_DATE('2018-01-01', '%Y-%m-%d'), 2),
-(2, 2, 'rubenamendoeira', '456', STR_TO_DATE('1998-02-02', '%Y-%m-%d'), 67, 'Banned', STR_TO_DATE('2018-02-02', '%Y-%m-%d'), 1);
+(2, 2, 'rubenamendoeira', '456', STR_TO_DATE('1998-02-02', '%Y-%m-%d'), 67, 'Banned', STR_TO_DATE('2018-02-02', '%Y-%m-%d'), 1),
+(3, 3, 'Nicholas Rose', 'rose54588', STR_TO_DATE('1970-06-08', '%Y-%m-%d'), 67, 'Active', STR_TO_DATE('2018-06-25', '%Y-%m-%d'), 1);
 
 INSERT INTO `level` (`id`, `name`) VALUES
 (1, 'level 1'),
@@ -498,7 +496,7 @@ INSERT INTO `statistic` (`id`, `value`, `registration_date`, `statistic_type_id`
 (45, 176, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 23),
 (46, 2, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 23),
 (47, 148, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 24),
-(48, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 24);
+(48, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 24),
 (49, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 2, 24),
 (50, 3, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 3, 24),
 (51, 120, STR_TO_DATE('2018-06-28', '%Y-%m-%d'), 1, 25),
