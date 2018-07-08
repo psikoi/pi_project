@@ -1,15 +1,30 @@
 var selectedStatisticId;
 
-// Holds the information of the statistics currently being shown 
+/**
+ * Holds the information of the statistics currently being shown 
+ */
 var currentStatistics = [];
 
-// Hold information about which users played which sessions. Key = session id, Value = username
+/** 
+ * Holds information about which players played which session.
+ * Key = session id, Value = username
+ * example, after being populated:
+ * { 1 : "Player1", 2 : "Player2" }
+ */
 var sessionPlayers = {};
 
+/**
+ * 
+ * Holds information of the statistic type name related to a certain statistic type id. 
+ * Key = id, Value = username
+ * example, after being populated:
+ * { 1 : "Type1", 2 : "Type2" }
+ */
 var statisticTypes = {};
 
-/******************************************************************** */
-
+/**
+ * Gets the statistics from the database based on a filter, and populates the currentStatistics array with the result.
+ */
 function getStatistics(filter){
     currentStatistics = []
 
@@ -35,6 +50,9 @@ function getStatistics(filter){
     }
 }
 
+/**
+ * Gets the statistics from the database given a certain endpoint.
+ */
 function getStatisticsFilter(endpoint){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false);
@@ -48,6 +66,9 @@ function getStatisticsFilter(endpoint){
     xhr.send();
 }
 
+/**
+ * Gets which players played which session and populates the sessionPlayers object.
+ */
 function getSessionByPlayer(){
     var sessions = [];
 
@@ -81,6 +102,9 @@ function getSessionByPlayer(){
     xhr.send();
 }
 
+/**
+ * Gets the statistic types and populates the statisticTypes object with its id and name.
+ */
 function getStatisticTypes(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/statisticType", false);
@@ -94,6 +118,12 @@ function getStatisticTypes(){
     xhr.send();
 }
 
+/**
+ * Sends a request to the database to add a statistic, using the POST endpoint.
+ * @param {int} sessionId - Id of the session the statistic belongs to.
+ * @param {string} type - Type of the statistic.
+ * @param {string} value - Value of the statistic
+ */
 function sendAddStatisticRequest(sessionId, type, value){
     var success = true;
 
@@ -118,6 +148,12 @@ function sendAddStatisticRequest(sessionId, type, value){
     return success;
 }
 
+/**
+ * Sends a request to the database to edit a statistic, using the PUT endpoint.
+ * @param {int} sessionId - Id of the session the statistic belongs to.
+ * @param {string} type - Type of the statistic.
+ * @param {string} value - Value of the statistic
+ */
 function sendEditStatisticRequest(sessionId, type, value){
     var success = true;
 
@@ -145,6 +181,9 @@ function sendEditStatisticRequest(sessionId, type, value){
     return success;
 }
 
+/**
+ * Sends a request to the database to delete a statistic, using the DELETE endpoint.
+ */
 function sendDeleteStatisticRequest(){
     var success = true;
     
@@ -163,7 +202,10 @@ function sendDeleteStatisticRequest(){
     return success;
 }
 
-/*********************************************************************** */
+/**
+ * Gets the statistic object that has the same id has the 
+ * statistic being selected.
+ */
 function getCurrentStatistic(){
     var statistic;
     currentStatistics.forEach(function(current){
@@ -174,6 +216,10 @@ function getCurrentStatistic(){
     return statistic;
 }
 
+/**
+ * Gets the seconds based on a formatted time string (mm:ss)
+ * @param {string} time - Time string.
+ */
 function getSecondsByTimeString(time){
     var minutes = parseInt(time.split(":")[0]);
     var seconds = parseInt(time.split(":")[1]);
@@ -182,6 +228,9 @@ function getSecondsByTimeString(time){
     return parseInt(seconds + minutes);
 }
 
+/**
+ * Gets the current date in a formatted string (YYYY-mm-dd)
+ */
 function getCurrDateString(){
     var today = new Date();
     var dd = today.getDate();
@@ -199,6 +248,9 @@ function getCurrDateString(){
     return yyyy + '-' + mm + '-' + dd;
 }
 
+/**
+ * Gets the formatted names of the statistic types
+ */
 function getStatisticTypeNames(){
 	var aux = [];
     for (var key in statisticTypes) {
@@ -217,6 +269,11 @@ function getStatisticTypeNames(){
     return final;
 }
 
+/**
+ * Formats a string, putting every starting letter in capital case and
+ * removing underscores ("_") and replacing them with a blank space.
+ * @param {string} string - String being formatted. 
+ */
 function formatString(string){
     var strings = string.split("_");
     var finalString = "";
@@ -233,6 +290,10 @@ function formatString(string){
     return finalString;
 }
 
+/**
+ * Gets the if of a statistic type, given its formatted name.
+ * @param {string} name - Formatted name of the statistic type.
+ */
 function getStatisticTypeByFormattedName(name){
     name = name.toLowerCase();
     name = name.split(' ').join('_');
@@ -248,6 +309,10 @@ function getStatisticTypeByFormattedName(name){
     return id;
 }
 
+/**
+ * Checks if a session exists in the database.
+ * @param {int} sessionId - Id of the session.
+ */
 function sessionExists(sessionId){
     if(sessionId in sessionPlayers){
         return true;
@@ -255,6 +320,10 @@ function sessionExists(sessionId){
     return false;
 }
 
+/**
+ * Turns a int containing seconds to a formatted time string (mm:ss)
+ * @param {string} time - Time being converted
+ */
 function secondsToString(time){
     var minutes = Math.floor(time / 60);
     var seconds = time - minutes * 60;
@@ -442,6 +511,12 @@ function updateStatisticsTable(filters) {
     prepareStatisticsSelectionEvents();
 }
 
+/**
+ * Builds an array containing the information necessary to display on the table.
+ * The statistics array contains information that isn't necessary,
+ * and information that isn't yet processed.
+ * This method will process the necessary information and return it.
+ */
 function buildStatisticsTableData(){
     var data = [];
     

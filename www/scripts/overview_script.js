@@ -1,5 +1,11 @@
+/**
+ * Id of the "items_picked" statistic type.
+ */
 itemsPickedTypeId = -1;
 
+/**
+ * Gets the statistic type id of the "items_picked" statistic.
+ */
 function getItemsPickedTypeId(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/statisticType", false);
@@ -15,6 +21,9 @@ function getItemsPickedTypeId(){
     xhr.send();
 }
 
+/**
+ * Gets the number of players registered today.
+ */
 function getNumberTodayPlayers(){
     var number;
 
@@ -30,6 +39,9 @@ function getNumberTodayPlayers(){
     return number;
 }
 
+/**
+ * Gets the number of players registered last week.
+ */
 function getNumberWeekPlayers(){
     var number;
 
@@ -45,6 +57,9 @@ function getNumberWeekPlayers(){
     return number;
 }
 
+/**
+ * Gets the number of players registered last month.
+ */
 function getNumberMonthPlayers(){
     var number;
 
@@ -60,6 +75,9 @@ function getNumberMonthPlayers(){
     return number;
 }
 
+/**
+ * Gets the number of players registered.
+ */
 function getNumberAlltimePlayers(){
     var number;
 
@@ -75,6 +93,9 @@ function getNumberAlltimePlayers(){
     return number;
 }
 
+/**
+ * Gets the number of sessions registered today.
+ */
 function getNumberTodaySessions(){
     var number;
 
@@ -90,6 +111,9 @@ function getNumberTodaySessions(){
     return number;
 }
 
+/**
+ * Gets the number of sessions registered last week.
+ */
 function getNumberWeekSessions(){
     var number;
 
@@ -105,6 +129,9 @@ function getNumberWeekSessions(){
     return number;
 }
 
+/**
+ * Gets the number of sessions registered last month.
+ */
 function getNumberMonthSessions(){
     var number;
 
@@ -120,6 +147,9 @@ function getNumberMonthSessions(){
     return number;
 }
 
+/**
+ * Gets the number of sessions registered.
+ */
 function getNumberAlltimeSessions(){
     var number;
 
@@ -135,6 +165,9 @@ function getNumberAlltimeSessions(){
     return number;
 }
 
+/**
+ * Gets the number of items picked today.
+ */
 function getNumberTodayItemsPicked(){
     if (itemsPickedTypeId == -1){
         getItemsPickedTypeId();
@@ -156,6 +189,9 @@ function getNumberTodayItemsPicked(){
     return number;
 }
 
+/**
+ * Gets the number of items picked last week.
+ */
 function getNumberWeekItemsPicked(){
     if (itemsPickedTypeId == -1){
         getItemsPickedTypeId();
@@ -179,6 +215,9 @@ function getNumberWeekItemsPicked(){
     return number;
 }
 
+/**
+ * Gets the number of items picked last month.
+ */
 function getNumberMonthItemsPicked(){
     if (itemsPickedTypeId == -1){
         getItemsPickedTypeId();
@@ -202,6 +241,9 @@ function getNumberMonthItemsPicked(){
     return number;
 }
 
+/**
+ * Gets the number of items picked.
+ */
 function getNumberAlltimeItemsPicked(){
     if (itemsPickedTypeId == -1){
         getItemsPickedTypeId();
@@ -225,6 +267,9 @@ function getNumberAlltimeItemsPicked(){
     return number;
 }
 
+/**
+ * Calculates percentages.
+ */
 function calculatePercentage(part, total){
     part = part * 100;
 

@@ -1,20 +1,51 @@
 var selectedSessionId;
 
-// Holds the information of the sessions currently being shown 
+/**
+ * Holds the information of the sessions currently being shown 
+ */
 var currentSessions = [];
 
-// Holds information of the username related to a certain player id. Key = id, Value = username
+/** 
+ * Holds information of the username related to a certain player id. 
+ * Key = id, Value = username
+ * example, after being populated:
+ * { 1 : "Player1", 2 : "Player2" }
+ */
 var playerNames = {};
 
+/** 
+ * Holds information of the level name related to a certain level id. 
+ * Key = id, Value = username
+ * example, after being populated:
+ * { 1 : "Level1", 2 : "Level2" }
+ */
 var levelNames = {};
 
+/** 
+ * Holds information of the character name related to a certain character id. 
+ * Key = id, Value = username
+ * example, after being populated:
+ * { 1 : "Character1", 2 : "Character2" }
+ */
 var characterNames = {};
 
+/**
+ * Holds information of the statistics in the database.
+ */
 var statistics = [];
 
+/**
+ * 
+ * Holds information of the statistic type name related to a certain statistic type id. 
+ * Key = id, Value = username
+ * example, after being populated:
+ * { 1 : "Type1", 2 : "Type2" }
+ */
 var statisticTypes = {};
-/******************************************************************** */
 
+/**
+ * Gets the sessions from the database based on a filter, and populates the currentSessions array with the result.
+ */
 function getSessions(filter){
     currentSessions = []
 
@@ -40,6 +71,9 @@ function getSessions(filter){
     }
 }
 
+/**
+ * Gets the sessions from the database given a certain endpoint.
+ */
 function getSessionsFilter(endpoint){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false);
@@ -53,6 +87,9 @@ function getSessionsFilter(endpoint){
     xhr.send();
 }
 
+/**
+ * Gets the id of the last session introduced in the database.
+ */
 function getLastSessionId(){
     var id;
     
@@ -75,6 +112,9 @@ function getLastSessionId(){
     return id;
 }
 
+/**
+ * Gets the players from the database and populates the playerNames object with their id and name.
+ */
 function getPlayerNames(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/player", false);
@@ -88,6 +128,9 @@ function getPlayerNames(){
     xhr.send();
 }
 
+/**
+ * Gets the levels from the database and populates the levelNames object with their id and name.
+ */
 function getLevelNames(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/level", false);
@@ -101,6 +144,9 @@ function getLevelNames(){
     xhr.send();
 }
 
+/**
+ * Gets the characters from the database and populates the characterNames object with their id and name.
+ */
 function getCharacterNames(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/character", false);
@@ -114,6 +160,9 @@ function getCharacterNames(){
     xhr.send();
 }
 
+/**
+ * Gets the statistics from the database and populates the statistics array with them.
+ */
 function getSessionStatistics(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/statistic", false);
@@ -127,6 +176,9 @@ function getSessionStatistics(){
     xhr.send();
 }
 
+/**
+ * Gets the statistic types from the database and populates the statisticTypes object with their id and name.
+ */
 function getSessionStatisticsTypes(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/statisticType", false);
@@ -140,6 +192,14 @@ function getSessionStatisticsTypes(){
     xhr.send();
 }
 
+/**
+ * Sends a request to the database to add a session, using the POST endpoint.
+ * This method also sends a request to add a statistic related to the session.
+ * @param {string} username - Username of the player the session belongs to.
+ * @param {int} level - Level in which the session was played.
+ * @param {string} character - Character used in the session.
+ * @param {string} time - Time it took for the session to end, in mm:ss format.
+ */
 function sendAddSessionRequest(username, level, character, time){
     var playerId = getPlayerIdByName(username);
     var characterId = getCharacterIdByName(character);
@@ -181,6 +241,14 @@ function sendAddSessionRequest(username, level, character, time){
     return true;
 }
 
+/**
+ * Sends a request to the database to edit a session, using the PUT endpoint.
+ * This method also sends a request to edit the statistic related to the session.
+ * @param {string} username - Username of the player the session belongs to.
+ * @param {int} level - Level in which the session was played.
+ * @param {string} character - Character used in the session.
+ * @param {string} time - Time it took for the session to end, in mm:ss format.
+ */
 function sendEditSessionRequest(username, level, character, time){
     var currentSession;
 
@@ -232,6 +300,9 @@ function sendEditSessionRequest(username, level, character, time){
     return true;
 }
 
+/**
+ * Sends a request to the database to delete a session, using the DELETE endpoint.
+ */
 function sendDeleteSessionRequest(){
     var success = true;
     
@@ -249,7 +320,12 @@ function sendDeleteSessionRequest(){
 
     return success;
 }
-/*********************************************************************** */
+
+/**
+ * Gets the statistic of a certain type, given the session's id.
+ * @param {int} typeId - Id of the statistic type.
+ * @param {int} sessionId - Id of the session.
+ */
 function getStatisticByTypeSession(typeId, sessionId){
     var statistic;
     statistics.forEach(function(current){
@@ -260,6 +336,10 @@ function getStatisticByTypeSession(typeId, sessionId){
     return statistic;
 }
 
+/**
+ * Gets the id of a statistic type, given its name.
+ * @param {string} type - Name of the statistic type.
+ */
 function getStatisticTypeIdByName(type){
     var id;
     for (var key in statisticTypes) {
@@ -272,6 +352,10 @@ function getStatisticTypeIdByName(type){
     return id;
 }
 
+/**
+ * Gets a players id, given its username.
+ * @param {string} username - Username of the user.
+ */
 function getPlayerIdByName(username){
     var id;
     for (var key in playerNames) {
@@ -284,6 +368,10 @@ function getPlayerIdByName(username){
     return id;
 }
 
+/**
+ * Gets a characters id, given its name.
+ * @param {string} character - Name of the character.
+ */
 function getCharacterIdByName(character){
     var id;
 
@@ -297,6 +385,13 @@ function getCharacterIdByName(character){
     return id;
 }
 
+/**
+ * Calculates the start date, given the amount of seconds it took for the session to end.
+ * This method subtracts the seconds to the current date and returns a formatted string
+ * containing the start date.
+ * Format: YYYY-mm-dd 
+ * @param {int} seconds - Seconds it took for the session to end. 
+ */
 function getStartDateByTime(seconds){
     var startDate = new Date(Date.now() - seconds);
 
@@ -313,24 +408,42 @@ function getStartDateByTime(seconds){
     return startDate.getFullYear() + "-" + month + "-" + day;
 }
 
+/**
+ * Gets the username of the user who played the given session.
+ * @param {object} session - Session played.
+ */
 function getSessionUsername(session){
     var userId = session.player_id;
 
     return playerNames[userId];
 }
 
+/**
+ * Gets the level name of the level played in the given session.
+ * @param {object} session - Session played.
+ */
 function getSessionLevelName(session){
     var levelId = session.level_id;
 
     return levelNames[levelId];
 }
 
+/**
+ * Gets the character name of the character played in the given session.
+ * @param {object} session - Session played.
+ */
 function getSessionCharacterName(session){
     var characterId = session.character_id;
 
     return characterNames[characterId];
 }
 
+/**
+ * Returns a formatted string containing minutes and seconds,
+ * based on the number of seconds it took for the session to end.
+ * Format: mm:ss
+ * @param {object} session - Session played.
+ */
 function getSessionTime(session){
     var sessionId = session.id;
     var typeId;
@@ -361,6 +474,10 @@ function getSessionTime(session){
     return minutesString + ":" + secondsString;
 }
 
+/**
+ * Checks if there is a player with the given username.
+ * @param {string} username - Username being checked.
+ */
 function usernameExists(username){
     var res = false;
 
@@ -375,6 +492,10 @@ function usernameExists(username){
     return res;
 }
 
+/**
+ * Checks if a level exists, given its id.
+ * @param {string} level - Id of the level.
+ */
 function levelExists(level){
     if(level in levelNames)
         return true;
@@ -382,6 +503,10 @@ function levelExists(level){
     return false;
 }
 
+/**
+ * Checks if a character exists, given its name
+ * @param {string} character - Name of the character.
+ */
 function characterExists(character){
     var res = false;
 
@@ -614,6 +739,12 @@ function updateSessionsTable(filters) {
     prepareSessionSelectionEvents();
 }
 
+/**
+ * Builds an array containing the information necessary to display on the table.
+ * The currentSessions array contains information that isn't necessary,
+ * and information that isn't yet processed.
+ * This method will process the necessary information and return it.
+ */
 function buildSessionsTableData(){
     var data = [];
     

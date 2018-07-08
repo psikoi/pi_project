@@ -1,6 +1,19 @@
+/**
+ * Holds information about the users in the database.
+ */
 var users = [];
+
+/**
+ * Holds information of the user type name related to a certain user type id. 
+ * Key = id, Value = username
+ * example, after being populated:
+ * { 1 : "Type1", 2 : "Type2" }
+ */
 var userTypes = {};
 
+/**
+ * Gets all user accounts.
+ */
 function getUserAccounts(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/user", false);
@@ -14,6 +27,9 @@ function getUserAccounts(){
     xhr.send();
 }
 
+/**
+ * Gets all user types, populating the userTypes object with their id and name.
+ */
 function getUserTypes(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/userType", false);
@@ -27,6 +43,11 @@ function getUserTypes(){
     xhr.send();
 }
 
+/**
+ * Sends a request to add a new user, using the POST endpoint.
+ * @param {string} username - Username of the user being added.
+ * @param {string} password - Password of the user being added.
+ */
 function sendRegisterRequest(username, password){
     var success = true;
     var adminId = getAdministratorTypeId();
@@ -45,6 +66,9 @@ function sendRegisterRequest(username, password){
     return success;
 }
 
+/**
+ * Gets the user type id corresponding to the "Administrator" user type.
+ */
 function getAdministratorTypeId(){
     var id;
     for (var key in userTypes) {
@@ -57,6 +81,10 @@ function getAdministratorTypeId(){
     return id;
 }
 
+/**
+ * Checks if the username already exists.
+ * @param {string} username - Username being checked.
+ */
 function usernameAlreadyExists(username){
     var res = false;
     users.forEach(function(current){
@@ -67,6 +95,10 @@ function usernameAlreadyExists(username){
     return res;
 }
 
+/**
+ * Returns an user object corresponding to the given username.
+ * @param {string} username - Username of the user.
+ */
 function getUserByName(username){
     var user;
 
@@ -93,6 +125,10 @@ function buildRegister() {
     form.appendChild(buildBasicSubmit("Register"));
 }
 
+/**
+ * Brings up a form that the user will use to 
+ * attempt to register a new user account.
+ */
 function register() {
 
     var username = document.getElementById("user_username").value;

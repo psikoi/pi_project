@@ -1,6 +1,18 @@
+/**
+ * Holds information about the users in the database.
+ */
 var users = [];
+
+/**
+ * Holds information about which user is currentely logged in.
+ */
 var currentUser;
 
+/**
+ * Checks and reads cookies about the user that is logged in.
+ * If the browser has cookies refering to a certain user,
+ * it automaticaly logs that user in.
+ */
 function readLogInCookies() {
     var cookie = document.cookie;
 
@@ -19,6 +31,9 @@ function readLogInCookies() {
     }
 }
 
+/**
+ * Gets all user accounts.
+ */
 function getUserAccounts(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/user", false);
@@ -32,6 +47,10 @@ function getUserAccounts(){
     xhr.send();
 }
 
+/**
+ * Gets the id of the current active session, by comparing
+ * its user_id to the id of the currently logged in user.
+ */
 function getCurrentActiveSessionId(){
     var id;
 
@@ -51,6 +70,10 @@ function getCurrentActiveSessionId(){
     return id;
 }
 
+/**
+ * Sends a request to add an active session.
+ * @param {object} user - User being logged in. 
+ */
 function sendLoginRequest(user){
     var success = true;
     var xhr = new XMLHttpRequest();
@@ -67,6 +90,10 @@ function sendLoginRequest(user){
     return success;
 }
 
+/**
+ * Sends a request to delete an active session.
+ * @param {object} user - user being logged out.
+ */
 function sendLogoutRequest(user){
     var success = true;
     var id = getCurrentActiveSessionId();
@@ -85,11 +112,21 @@ function sendLogoutRequest(user){
     return success;
 }
 
+/**
+ * Updates the currently logged in user.
+ * This implies setting cookies for the user and changing the
+ * global variable "currentUser".
+ * @param {object} user - New logged in user.
+ */
 function updateLoggedInUser(user){
     document.cookie = "loggedInUser = " + user.id;
     currentUser = user;
 }
 
+/**
+ * Checks if the username is already taken by any user.
+ * @param {string} username - Username being checked.
+ */
 function userNameExists(username){
     var res = false;
     
@@ -102,6 +139,11 @@ function userNameExists(username){
     return res;
 }
 
+/**
+ * Checks if the password introduced belongs to the user.
+ * @param {string} username - Username of the user.
+ * @param {string} password - Password being checked.
+ */
 function correctPassword(username, password){
     var res = false;
     users.forEach(function(current){
@@ -114,6 +156,10 @@ function correctPassword(username, password){
     return res;
 }
 
+/**
+ * Gets an user object, given its username.
+ * @param {string} username - Username of the user.
+ */
 function getUser(username){
     var user;
 
@@ -126,6 +172,9 @@ function getUser(username){
     return user;
 }
 
+/**
+ * Removes the cookies from the browser.
+ */
 function removeLogInCookies(){
     document.cookie = document.cookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
@@ -141,6 +190,9 @@ function buildLogin() {
     form.appendChild(buildBasicSubmit("Login"));
 }
 
+/**
+ * Logs the user out.
+ */
 function logout() {
     if (confirm("Are you sure you wish to logout?")) {
         var requestOk = sendLogoutRequest(currentUser);
@@ -155,6 +207,10 @@ function logout() {
     }
 }
 
+/**
+ * Brings up a form that the user will use to 
+ * attempt to log in.
+ */
 function login() {
 
     var username = document.getElementById("user_username").value;

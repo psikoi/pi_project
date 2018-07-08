@@ -1,13 +1,22 @@
 var selectedPlayerId;
 
-// Holds the information of the players currently being shown 
+/**
+ * Holds the information of the players currently being shown 
+ */
 var currentPlayers = [];
 
-// Holds the information of the names of the countries available in the database. Key: name, Value: id
+/**
+ * Holds the information of the names of the countries available in the database. 
+ * Key: name, Value: id
+ * 
+ * example, after being populated:
+ * { 1 : "Portugal", 2 : "Spain" }
+ */
 var countries = {}
 
-/******************************************************************** */
-
+/**
+ * Gets the players from the database based on a filter, and populates the currentPlayers array with the result.
+ */
 function getPlayers(filter){
     currentPlayers = []
 
@@ -33,6 +42,9 @@ function getPlayers(filter){
     }
 }
 
+/**
+ * Gets the players from the database given a certain endpoint.
+ */
 function getPlayersFilter(endpoint){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false);
@@ -46,6 +58,9 @@ function getPlayersFilter(endpoint){
     xhr.send();
 }
 
+/**
+ * Gets the number of the last rank in the player table.
+ */
 function getLastPlayerRank(){
     var ranks = [];
 
@@ -70,6 +85,9 @@ function getLastPlayerRank(){
     return minimum;
 }
 
+/**
+ * Gets the countries from the database and populates the countries object with their id and name.
+ */
 function getCountries(){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/countries", false);
@@ -83,6 +101,13 @@ function getCountries(){
     xhr.send();
 }
 
+/**
+ * Sends a request to the database to add a player, using the POST endpoint.
+ * @param {string} username - Username of the player being added.
+ * @param {string} password - Password of the player being added.
+ * @param {string} birthDate - Birth date of the player being added.
+ * @param {string} country - Country of the player being added.
+ */
 function sendAddPlayerRequest(username, password, birthDate, country){
     var countryId = countries[country];
     var rank = getLastPlayerRank() + 1;
@@ -106,6 +131,13 @@ function sendAddPlayerRequest(username, password, birthDate, country){
     return success;
 }
 
+/**
+ * Sends a request to the database to edit a player, using the PUT endpoint.
+ * @param {string} username - Username of the player being edited.
+ * @param {string} password - Password of the player being edited.
+ * @param {string} birthDate - Birth date of the player being edited.
+ * @param {string} country - Country of the player being edited.
+ */
 function sendEditPlayerRequest(username, password, birthDate, country){
     var countryId = countries[country];
 
@@ -132,6 +164,10 @@ function sendEditPlayerRequest(username, password, birthDate, country){
     return success;
 }
 
+/**
+ * Sends a request to the database to ban a player.
+ * To ban a player, the database will change the status field to "Banned".
+ */
 function sendBanPlayerRequest(){
     var success = true;
 
@@ -164,6 +200,9 @@ function sendBanPlayerRequest(){
     return success;
 }
 
+/**
+ * Sends a request to the database to delete a player, using the DELETE endpoint.
+ */
 function deletePlayer(){
     var success = true;
     
@@ -182,8 +221,10 @@ function deletePlayer(){
     return success;
 }
 
-/*********************************************************************** */
-
+/**
+ * Checks if there is already a player with a certain username.
+ * @param {string} username - Username being checked.
+ */
 function nameExists(username){
     var confirmation = false;
 
@@ -203,6 +244,10 @@ function nameExists(username){
     return confirmation;
 }
 
+/**
+ * Returns a player object with a certain id.
+ * @param {int} id - Id of the player being searched.
+ */
 function getPlayerById(id){
     var player;
 
@@ -215,6 +260,10 @@ function getPlayerById(id){
     return player;
 }
 
+/**
+ * Returns the current date in string format.
+ * Example: 2018-07-02
+ */
 function getCurrentDateString(){
     var today = new Date();
     var dd = today.getDate();
@@ -232,7 +281,6 @@ function getCurrentDateString(){
     return yyyy + '-' + mm + '-' + dd;
 }
 
-/*********************************************************************** */
 
 /**
  * Builds the add player form.
@@ -442,9 +490,9 @@ function editPlayer() {
  */
 function banPlayer() {
 
-    requestOk = sendBanPlayerRequest();
+    var requestOk = sendBanPlayerRequest();
 
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Player banned");
         updatePlayersTable();
     } else {
@@ -457,9 +505,9 @@ function banPlayer() {
  */
 function removePlayer() {
     
-    requestOk = deletePlayer();
+    var requestOk = deletePlayer();
 
-    if (requestOk) { //trocar pela variavel que diz se o pedido foi bem sucedido
+    if (requestOk) { 
         alert("Player removed");
         updatePlayersTable();
     } else {
@@ -497,6 +545,13 @@ function updatePlayersTable(filters) {
     preparePlayerSelectionEvents();
 }
 
+/**
+ * Builds an array containing the information necessary to display on the table.
+ * The currentPlayers array contains information that isn't necessary,
+ * and information that isn't yet processed, for example, it contains information
+ * about the player's birth date and not age.
+ * This method will process the necessary information and return it.
+ */
 function buildPlayersTableData(){
     var data = [];
     
@@ -513,6 +568,10 @@ function buildPlayersTableData(){
     return data;
 }
 
+/**
+ * Returns a country's name, based on the id received.
+ * @param {int} id - Id of the country being searched. 
+ */
 function getCountryNameById(id){
     var name;
     for (var key in countries) {
