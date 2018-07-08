@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS `userType`;
 DROP TABLE IF EXISTS `configuration`;
 DROP TABLE IF EXISTS `configurationType`;
 
+DROP PROCEDURE IF EXISTS sp_ban_unban;
 
 CREATE TABLE `country` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
