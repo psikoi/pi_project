@@ -375,9 +375,9 @@ function buildRemovePlayer() {
 function buildChangePlayerStatus() {
     var player = getPlayerById(selectedPlayerId);
     var str = "";
-    if(player.status == "Banned"){
+    if (player.status == "Banned") {
         str = "unbanned";
-    }else{
+    } else {
         str = "banned";
     }
 
@@ -658,7 +658,7 @@ function updatePlayersFilters() {
  * a new and updated table, using the filters given by parameter.
  */
 function updatePlayersTable(filters) {
-    if(filters == undefined){
+    if (filters == undefined) {
         filters = currentFilter;
     }
 
@@ -868,32 +868,34 @@ function preparePlayerSelectionEvents() {
     $("table tbody tr").click(function () {
 
         var row = $(this);
+        var selected = false;
 
         if (row.hasClass("selected_table_row")) {
             row.removeClass('selected_table_row');
-            togglePlayerActions(false);
         } else {
             row.addClass('selected_table_row');
             row.siblings().removeClass('selected_table_row');
-            togglePlayerActions(true);
+            selected = true;
         }
 
         selectedPlayerId = row.find('td:first').html();
         var player = getPlayerById(selectedPlayerId);
-        if(player.status == "Banned"){
+
+        if (player.status == "Banned" && selected) {
             setUnbanButton();
-        }else{
+        } else {
             setBanButton();
         }
 
+        togglePlayerActions(selected);
     });
 }
 
-function setUnbanButton(){
+function setUnbanButton() {
     $("#players_ban").text('Unban');
 }
 
-function setBanButton(){
+function setBanButton() {
     $("#players_ban").text('Ban');
 }
 
