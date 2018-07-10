@@ -422,7 +422,7 @@ INSERT INTO `player` (`id`, `rank`, `username`, `password`, `birth_date`, `count
 (1, 16, 'Hunter Soto', 'd6a!ymvs', STR_TO_DATE('1966-10-20', '%Y-%m-%d'), 82, 'Active', STR_TO_DATE('2018-6-19', '%Y-%m-%d'), 1),
 (2, 19, 'Jill Bates', '7k44awg9pv8!y', STR_TO_DATE('1964-5-9', '%Y-%m-%d'), 172, 'Active', STR_TO_DATE('2018-5-13', '%Y-%m-%d'), 1),
 (3, 11, 'Hailey Long', '3mt3ihugtysmr82smi16r', STR_TO_DATE('1992-10-22', '%Y-%m-%d'), 146, 'Active', STR_TO_DATE('2018-7-19', '%Y-%m-%d'), 1),
-(4, 18, 'Fred Bates', '76my3aht4rgv3', STR_TO_DATE('1957-6-25', '%Y-%m-%d'), 4, 'Active', STR_TO_DATE('2018-6-17', '%Y-%m-%d'), 1),
+(4, 18, 'Fred Bates', '76my3aht4rgv3', STR_TO_DATE('1957-6-25', '%Y-%m-%d'), 4, 'Banned', STR_TO_DATE('2018-6-17', '%Y-%m-%d'), 1),
 (5, 17, 'Ron Vasquez', 'n2luu71', STR_TO_DATE('1990-6-7', '%Y-%m-%d'), 107, 'Active', STR_TO_DATE('2018-5-26', '%Y-%m-%d'), 1),
 (6, 20, 'Aubrey Long', 'rnpaef3f5mcy4g80gnttr', STR_TO_DATE('1974-12-15', '%Y-%m-%d'), 160, 'Active', STR_TO_DATE('2018-7-19', '%Y-%m-%d'), 1),
 (7, 15, 'Jill Long', 'mfal9dzixglwuem5p', STR_TO_DATE('1974-5-7', '%Y-%m-%d'), 49, 'Active', STR_TO_DATE('2018-7-24', '%Y-%m-%d'), 1),
@@ -436,7 +436,7 @@ INSERT INTO `player` (`id`, `rank`, `username`, `password`, `birth_date`, `count
 (15, 1, 'Hunter Vasquez', 'j-tprr5rkusuc', STR_TO_DATE('1986-6-26', '%Y-%m-%d'), 73, 'Active', STR_TO_DATE('2018-7-14', '%Y-%m-%d'), 1),
 (16, 10, 'Wanda Simmons', '73xhe5gy8rp1i6ukvdi', STR_TO_DATE('1986-8-25', '%Y-%m-%d'), 100, 'Active', STR_TO_DATE('2018-7-7', '%Y-%m-%d'), 1),
 (17, 13, 'Ron Soto', 'gio46vnaim-je!', STR_TO_DATE('1957-5-8', '%Y-%m-%d'), 93, 'Active', STR_TO_DATE('2018-7-4', '%Y-%m-%d'), 1),
-(18, 14, 'Kelly Daniels', 'j6lpl6k8sat', STR_TO_DATE('1995-1-21', '%Y-%m-%d'), 145, 'Active', STR_TO_DATE('2018-5-1', '%Y-%m-%d'), 1),
+(18, 14, 'Kelly Daniels', 'j6lpl6k8sat', STR_TO_DATE('1995-1-21', '%Y-%m-%d'), 145, 'Banned', STR_TO_DATE('2018-5-1', '%Y-%m-%d'), 1),
 (19, 2, 'Hunter Vasquez', 'b-leql4u60e35', STR_TO_DATE('1969-5-17', '%Y-%m-%d'), 166, 'Active', STR_TO_DATE('2018-7-7', '%Y-%m-%d'), 1),
 (20, 9, 'John Shaw', 'wj62xk99fk9a', STR_TO_DATE('1978-8-26', '%Y-%m-%d'), 59, 'Active', STR_TO_DATE('2018-6-0', '%Y-%m-%d'), 1);
 
