@@ -17,7 +17,7 @@ app.get("/player/month", requestHandlers.getPlayersMonth);
 app.get("/user", requestHandlers.getUsers);
 app.get("/userType", requestHandlers.getUserType);
 app.get("/session", requestHandlers.getSessions);
-app.get("/session/:id", requestHandlers.getSession);
+app.get("/session/id/:id", requestHandlers.getSession);
 app.get("/session/today", requestHandlers.getSessionsToday);
 app.get("/session/week", requestHandlers.getSessionsWeek);
 app.get("/session/month", requestHandlers.getSessionsMonth);

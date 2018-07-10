@@ -14,6 +14,8 @@ var currentPlayers = [];
  */
 var countries = {}
 
+var currentFilter;
+
 /**
  * Gets the players from the database based on a filter, and populates the currentPlayers array with the result.
  */
@@ -170,8 +172,9 @@ function sendEditPlayerRequest(username, password, birthDate, country) {
 }
 
 /**
- * Sends a request to the database to ban a player.
- * To ban a player, the database will change the status field to "Banned".
+ * Sends a request to the database to change a players status.
+ * If the player is banned, the database will set his status to "Active".
+ * If the player is active, the database will set his status to "Banned".
  */
 function sendChangePlayerStatusRequest() {
     var success = true;
@@ -316,10 +319,12 @@ function buildEditPlayer() {
     var form = pane.children[0];
 
     var username = buildBasicInput("player_username", "Username");
-    var password = buildBasicInput("player_password", "Password");
+    var password = buildPasswordInput("player_password", "Password");
     var passwordConfirm = buildPasswordInput("player_password_confirm", "Password (Confirmation)");
 
     username.value = player.username;
+    password.value = player.password;
+    passwordConfirm.value = player.password;
 
     form.appendChild(username);
     form.appendChild(password);
@@ -365,10 +370,18 @@ function buildRemovePlayer() {
 }
 
 /**
- * Builds the ban player dialog.
+ * Builds the change player status dialog.
  */
-function buildBanPlayer() {
-    if (confirm("Are you sure? This player will be banned.")) {
+function buildChangePlayerStatus() {
+    var player = getPlayerById(selectedPlayerId);
+    var str = "";
+    if(player.status == "Banned"){
+        str = "unbanned";
+    }else{
+        str = "banned";
+    }
+
+    if (confirm("Are you sure? This player will be " + str + ".")) {
         changePlayerStatus();
     }
 }
@@ -595,7 +608,7 @@ function editPlayer() {
 }
 
 /**
- * Makes a server request to ban a player.
+ * Makes a server request to change a players status.
  */
 function changePlayerStatus() {
 
@@ -645,6 +658,10 @@ function updatePlayersFilters() {
  * a new and updated table, using the filters given by parameter.
  */
 function updatePlayersTable(filters) {
+    if(filters == undefined){
+        filters = currentFilter;
+    }
+
     var parent = document.getElementById("players").children[0];
     parent.removeChild(document.getElementById("players_table"));
     parent.appendChild(buildPlayersTable(filters));
@@ -697,6 +714,8 @@ function getCountryNameById(id) {
  * Fetches and builds a data table with given filters.
  */
 function buildPlayersTable(filters) {
+
+    currentFilter = filters;
 
     if (filters == null) {
         filters = {
@@ -819,7 +838,7 @@ function buildPlayers() {
 
     buttonsContainer.appendChild(createActionButton("players_add", buildAddPlayer, "Add"));
     buttonsContainer.appendChild(createActionButton("players_edit", buildEditPlayer, "Edit"));
-    buttonsContainer.appendChild(createActionButton("players_ban", buildBanPlayer, "Ban"));
+    buttonsContainer.appendChild(createActionButton("players_ban", buildChangePlayerStatus, "Ban"));
     buttonsContainer.appendChild(createActionButton("players_remove", buildRemovePlayer, "Remove"));
 
     tableFilter.appendChild(searchContainer);
@@ -860,7 +879,22 @@ function preparePlayerSelectionEvents() {
         }
 
         selectedPlayerId = row.find('td:first').html();
+        var player = getPlayerById(selectedPlayerId);
+        if(player.status == "Banned"){
+            setUnbanButton();
+        }else{
+            setBanButton();
+        }
+
     });
+}
+
+function setUnbanButton(){
+    $("#players_ban").text('Unban');
+}
+
+function setBanButton(){
+    $("#players_ban").text('Ban');
 }
 
 /**

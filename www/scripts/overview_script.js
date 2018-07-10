@@ -98,7 +98,7 @@ function getNumberAlltimePlayers(){
  */
 function getNumberTodaySessions(){
     var number;
-
+    
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/session/today", false);
     xhr.onreadystatechange = function(){
