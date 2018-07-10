@@ -62,7 +62,7 @@ function displayUserNavigation(user) {
         ul.removeChild(ul.firstChild);
     }
 
-    if (user === null) {
+    if (user === null || user === undefined) {
 
         ul.appendChild(buildNavBtn("Login", "javascript:buildLogin()"));
         ul.appendChild(buildNavBtn("Register", "javascript:buildRegister()"));
